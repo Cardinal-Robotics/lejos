@@ -1,0 +1,2 @@
+ev3snapshot/sdcard/sd500.img filter=lfs diff=lfs merge=lfs -text
+kernel/linux-03.20.00.13_20121214.tgz filter=lfs diff=lfs merge=lfs -text
