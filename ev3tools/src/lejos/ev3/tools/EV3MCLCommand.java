@@ -96,6 +96,9 @@ public class EV3MCLCommand extends NavigationPanel {
 		// disable buttons until connected
 		getPoseButton.setEnabled(false);
 		randomButton.setEnabled(false);
+		
+		// disable Connect until maploaded
+		connectButton.setEnabled(false);
 	
 		// When Get pose is pressed, invoke the MCL Pose provider
 		// to take readings and get the pose. Then get the updated
@@ -166,7 +169,8 @@ public class EV3MCLCommand extends NavigationPanel {
 			getPoseButton.setEnabled(true);
 		} else if (navEvent == NavEvent.LOAD_MAP) {
 			// Generate the particles
-			model.generateParticles();			
+			model.generateParticles();
+			connectButton.setEnabled(true);
 		} else if (navEvent == NavEvent.MOVE_STOPPED) {
 			model.getRemoteParticles();
 		}

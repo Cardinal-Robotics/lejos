@@ -72,6 +72,10 @@ public class PCNavigationModel extends NavigationModel {
 	
 	private RMIMenu menu;
 	
+	protected static final int STARTUP_DELAY = 10000;
+	protected static final int CONNECTION_DELAY = 5000;
+	protected static final int MAX_CONNECTION_ATTEMPTS = 5;
+	
 	/**
 	 * Create the model and associate the navigation panel with it
 	 * 
@@ -184,7 +188,7 @@ public class PCNavigationModel extends NavigationModel {
 		    menu.uploadFile("/home/lejos/programs/" + file.getName(), data);
 		    System.out.println("Starting " + file.getName());
 		    menu.runProgram(file.getName().replace(".jar",""));
-		    Delay.msDelay(12000);
+		    Delay.msDelay(STARTUP_DELAY);
 		} catch (IOException e) {
 			panel.error("Failed to upload program to EV3");
 		}
@@ -364,11 +368,17 @@ public class PCNavigationModel extends NavigationModel {
 	public void connect(String ev3Name) {
 		if (connected) panel.error("Already connected");
 		NXTCommConnector connector = new SocketConnector();
-		System.out.println("Connecting to " + ev3Name);
-		NXTConnection conn = connector.connect(ev3Name, NXTConnection.RAW);
-
-		if (conn == null) {
+		NXTConnection conn = null;
+		for(int i=0;i<MAX_CONNECTION_ATTEMPTS;i++) {
+			System.out.println("Connecting to " + ev3Name + " attempt " + (i+1));
+			conn = connector.connect(ev3Name, NXTConnection.RAW);
+			if (conn != null) {
+				connected = true;
+				break;
+			} else Delay.msDelay(CONNECTION_DELAY);
+		}
 		
+		if (!connected) {		
 			panel.error("NO EV3 found");
 			return;
 		}
@@ -377,8 +387,7 @@ public class PCNavigationModel extends NavigationModel {
   
 		dis = new DataInputStream(conn.openInputStream());
 		dos = new DataOutputStream(conn.openOutputStream());
-		connected = true;
-		
+
 		// Start the receiver thread
 		receiver.setDaemon(true);
 		receiver.start();
