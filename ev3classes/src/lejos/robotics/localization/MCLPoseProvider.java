@@ -70,7 +70,7 @@ public class MCLPoseProvider implements PoseProvider, MoveListener, Transmittabl
     this.map = map;
     if (mp != null) mp.addMoveListener(this);
     updated = false;
-    updater.start();
+    //updater.start();
   }
   
   /**
@@ -148,7 +148,9 @@ public class MCLPoseProvider implements PoseProvider, MoveListener, Transmittabl
    */
   public MCLParticleSet getParticles()
   {
-    return particles;
+    synchronized (particles) {
+    	return particles;
+    }
   }
   
   /**
@@ -194,8 +196,9 @@ public class MCLPoseProvider implements PoseProvider, MoveListener, Transmittabl
   public void moveStopped(Move event, MoveProvider mp)
   {
 	if (debug) System.out.println("MCL move stopped");
-    updated = false;
-    updater.moveStopped(event);
+    //updated = false;
+    //updater.moveStopped(event);
+	particles.applyMove(event);
   }
 
   /**
@@ -215,6 +218,7 @@ public class MCLPoseProvider implements PoseProvider, MoveListener, Transmittabl
       return false;
     }
     readings = scanner.getRangeValues();
+    if (debug) readings.printReadings();
     incomplete = readings.incomplete();
     //    if(debug) System.out.println("mcl Update: range readings " + readings.getNumReadings());
     if (incomplete  )
@@ -542,11 +546,17 @@ public class MCLPoseProvider implements PoseProvider, MoveListener, Transmittabl
       {
         while(!events.isEmpty())
         {
-          if(debug) System.out.println("Updater move stop "+events.get(0).getMoveType());
-          busy = true;
-
-          particles.applyMove(events.get(0));      
-          if(debug) System.out.println("applied move ");
+          Move event = events.get(0);
+          if (event == null) System.out.println("MCLPoseProvider: null event");
+          else {
+	          if(debug) System.out.println("Updater move stop "+event.getMoveType());
+	          busy = true;
+	
+	          synchronized (particles) {
+	        	  particles.applyMove(event);      
+	          }
+	          if(debug) System.out.println("applied move ");
+          }
           events.remove(0);
         }
         busy = false;

@@ -284,7 +284,8 @@ public class EV3NavigationModel extends NavigationModel implements MoveListener,
 								particles.dumpClosest(readings, dos, x, y);
 							}
 							break;
-						case PARTICLE_SET: // Particle set send from PC
+						case PARTICLE_SET: // Particle set sent from PC
+							if (map == null) map = new LineMap();
 							if (particles == null) particles = new MCLParticleSet(map,0,0);
 						    particles.loadObject(dis);
 						    mcl.setParticles(particles);
@@ -305,8 +306,10 @@ public class EV3NavigationModel extends NavigationModel implements MoveListener,
 						case GET_PARTICLES: // Request to send particles to the PC
 							if (particles == null) break;
 							if (debug) log("Sending particle set");
-							dos.writeByte(NavEvent.PARTICLE_SET.ordinal());
-							particles.dumpObject(dos);
+							synchronized (particles) {
+								dos.writeByte(NavEvent.PARTICLE_SET.ordinal());
+								particles.dumpObject(dos);
+							}
 							if (debug) log("Sent particle set");
 							break;
 						case GET_ESTIMATED_POSE: // Request to send estimated pose to the PC

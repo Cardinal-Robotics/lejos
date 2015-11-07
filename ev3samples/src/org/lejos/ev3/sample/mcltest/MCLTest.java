@@ -76,5 +76,8 @@ public class MCLTest {
     	model.addNavigator(navigator);
     	// Don't send the pose automatically - PC requests it when required
     	model.setAutoSendPose(false);
+    	// Move started and stopped events not needed
+    	model.setSendMoveStop(false);
+    	model.setSendMoveStart(false);
 	}
 }
