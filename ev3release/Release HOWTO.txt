@@ -6,23 +6,24 @@ For running the ant based release utilities successfully, you will need to have
 To create a new release of leJOS EV3 in Eclipse on Linux, please perform the following steps:
 
 1. Update the following files:
-	release/lejos_ev3/README.md
+	ev3release/lejos_ev3/README.md
 	and other documentation for the release
 2. Update the following files with the current version number:
 	EV3Menu/src/lejos/ev3/startup/Config.java
 	ev3installer/leJOS_EV3_Installer.iss
+	ev3release/build.properties
 4. Ensure you have the latest lejosimage.zip. The release/build.xml does
-   not build it. It is located at ev3sdcard/sdcard.
+   not build it. It is located at ev3snapshot/sdcard.
 5. Test that all the samples and pcsamples run successfully.
 6. Check the the API docs builds without errors or warnings.
-7. Ensure that the release/build.xml script is up to date
+7. Ensure that the ev3release/build.xml script is up to date
 8. Build and test the Eclipse plugin - see EclipsePlugin.HOWTO
 9. Update this file if there are any changes in the way the release is built
 10. Right click on release/build.xml and select "Run As", "Ant Build"
 11. After the ant script has finished, the packed distributions for Linux and Windows may be found
-    inside the folder release/dist.
+    inside the folder ev3release/dist.
 12. Install Inno Setup (unicode version) and open/compile ev3installer/leJOS_EV3_Installer.iss
-13. After that, the installer can be found at ev3_installerr/leJOS_EV3_<version>_win32_setup.exe
+13. After that, the installer can be found at ev3installer/leJOS_EV3_<version>_win32_setup.exe
 
 There are other steps that are needed after this to release the product:
 
