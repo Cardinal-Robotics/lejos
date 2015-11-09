@@ -1927,15 +1927,14 @@ public class GraphicStartup implements Menu {
         int selection = 0;
         do {
             newScreen("System");
-            lcd.drawString("RAM", 0, 1);
-            lcd.drawInt((int) (Runtime.getRuntime().freeMemory()), 11, 1);
-            lcd.drawString("Battery", 0, 2);
-            int millis = LocalEV3.ev3.getPower().getVoltageMilliVolt() + 50;
-            lcd.drawInt((millis - millis % 1000) / 1000, 11, 2);
-            lcd.drawString(".", 12, 2);
-            lcd.drawInt((millis % 1000) / 100, 13, 2);
+            lcd.drawString("Battery", 0, 1);
+            float volts = LocalEV3.ev3.getPower().getVoltage();
+            lcd.drawString(String.format("%6.3f", volts), 10, 1);
             if (rechargeable)
-            	lcd.drawString("R", 15, 2);
+            	lcd.drawString("R", 16, 1);
+            lcd.drawString("Current", 0, 2);
+            float current = LocalEV3.ev3.getPower().getBatteryCurrent();
+            lcd.drawString(String.format("%6.3f", current), 10, 2);
             menuData[1] = "Sleep time: " + (timeout == 0 ? "off" : String.valueOf(timeout));
             File f = getDefaultProgram();
             if (f == null){
