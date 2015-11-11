@@ -18,7 +18,7 @@ public class JarCreator {
 	private boolean debug = false;
 	private ArrayList<String> libs;
 	
-	private String classPath = "/home/root/lejos/lib/ev3classes.jar /home/root/lejos/lib/opencv-300.jar /home/root/lejos/lib/dbusjava.jar /home/root/lejos/libjna/usr/share/java/jna.jar";
+	private String classPath = "/home/root/lejos/lib/ev3classes.jar /home/root/lejos/lib/opencv-2411.jar /home/root/lejos/lib/dbusjava.jar /home/root/lejos/libjna/usr/share/java/jna.jar";
 	
 	public JarCreator(String inputDirectory, String outputFile, String mainClass, ArrayList<String> libs) {
 		this.inputDirectory = inputDirectory.replace("\\", "/");
