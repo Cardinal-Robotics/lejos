@@ -238,6 +238,9 @@
 		<copy todir="${shared.dir}">
 			<fileset dir="${project.ev3snapshot}/sdcard" />
 		</copy>
+		<copy todir="${shared.dir}/lib/ev3/3rdparty">
+			<fileset file="${project.ev3snapshot}/lib/opencv*.jar" />
+		</copy>
 	</target>
 
 	<!-- copies the lejos sources -->
