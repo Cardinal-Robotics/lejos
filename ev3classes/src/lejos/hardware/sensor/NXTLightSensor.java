@@ -36,7 +36,7 @@ import lejos.robotics.LampController;
  * </table>
  * 
  * <p>
- *  @see <a href="http://www.lego.com/en-us/mindstorms/downloads/software/nxt-hdk/"> Mindstorms NXT HDK/SDK </a>
+ *  See <a href="http://www.lego.com/en-us/mindstorms/downloads/software/nxt-hdk/"> Mindstorms NXT HDK/SDK </a>
  *  
  */
 public class NXTLightSensor extends AnalogSensor implements LampController, SensorConstants

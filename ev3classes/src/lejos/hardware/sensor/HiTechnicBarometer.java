@@ -44,12 +44,12 @@ import lejos.utility.EndianTools;
  * The sensor can be calibrated for pressure using the calibrate method.
  * <p>
  * 
- * @see <a
+ * See <a
  *      href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NBR1036">
  *      Sensor Product page </a>
- * @see <a href="http://sourceforge.net/p/lejos/wiki/Sensor%20Framework/"> The
+ * See <a href="http://sourceforge.net/p/lejos/wiki/Sensor%20Framework/"> The
  *      leJOS sensor framework</a>
- * @see {@link lejos.robotics.SampleProvider leJOS conventions for
+ * See {@link lejos.robotics.SampleProvider leJOS conventions for
  *      SampleProviders}
  * 
  *      <p>

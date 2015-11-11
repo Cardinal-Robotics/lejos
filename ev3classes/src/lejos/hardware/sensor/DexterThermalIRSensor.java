@@ -64,11 +64,11 @@ import lejos.utility.EndianTools;
  * 
  * <p>
  * 
- * @see <a href="https://www.sparkfun.com/datasheets/Sensors/Temperature/MLX90614_rev001.pdf"> Sensor datasheet </a>
- * @see <a href="http://www.dexterindustries.com/manual/thermal-infrared-sensor/"> Sensor Product page </a>
- * @see <a href="http://sourceforge.net/p/lejos/wiki/Sensor%20Framework/"> The
+ * See <a href="https://www.sparkfun.com/datasheets/Sensors/Temperature/MLX90614_rev001.pdf"> Sensor datasheet </a>
+ * See <a href="http://www.dexterindustries.com/manual/thermal-infrared-sensor/"> Sensor Product page </a>
+ * See <a href="http://sourceforge.net/p/lejos/wiki/Sensor%20Framework/"> The
  *      leJOS sensor framework</a>
- * @see {@link lejos.robotics.SampleProvider leJOS conventions for
+ * See {@link lejos.robotics.SampleProvider leJOS conventions for
  *      SampleProviders}
  * 
  *      <p>
@@ -162,9 +162,9 @@ import lejos.utility.EndianTools;
      * <p>
     * 
      * @return A sampleProvider
-     * @see {@link lejos.robotics.SampleProvider leJOS conventions for
+     * See {@link lejos.robotics.SampleProvider leJOS conventions for
      *      SampleProviders}
-     * @see <a href="https://www.sparkfun.com/datasheets/Sensors/Temperature/MLX90614_rev001.pdf"> Sensor datasheet </a>
+     * See <a href="https://www.sparkfun.com/datasheets/Sensors/Temperature/MLX90614_rev001.pdf"> Sensor datasheet </a>
      */    
 	public SensorMode getObjectMode() {
         return getMode(0);
@@ -203,9 +203,9 @@ import lejos.utility.EndianTools;
      * <p>
     * 
      * @return A sampleProvider
-     * @see {@link lejos.robotics.SampleProvider leJOS conventions for
+     * See {@link lejos.robotics.SampleProvider leJOS conventions for
      *      SampleProviders}
-     * @see <a href="https://www.sparkfun.com/datasheets/Sensors/Temperature/MLX90614_rev001.pdf"> Sensor datasheet </a>
+     * See <a href="https://www.sparkfun.com/datasheets/Sensors/Temperature/MLX90614_rev001.pdf"> Sensor datasheet </a>
      */	public SensorMode getAmbientMode() {
 		return getMode(1);
 	}

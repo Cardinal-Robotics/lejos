@@ -38,14 +38,14 @@ import lejos.utility.EndianTools;
  * 
  * <p>
  * 
- * @see <a
+ * See <a
  *      href="http://www.adafruit.com/datasheets/HMC5883L_3-Axis_Digital_Compass_IC.pdf">
  *      Sensor datasheet </a>
- * @see <a href="http://www.dexterindustries.com/dCompass.html"> Sensor Product
+ * See <a href="http://www.dexterindustries.com/dCompass.html"> Sensor Product
  *      page </a>
- * @see <a href="http://sourceforge.net/p/lejos/wiki/Sensor%20Framework/"> The
+ * See <a href="http://sourceforge.net/p/lejos/wiki/Sensor%20Framework/"> The
  *      leJOS sensor framework</a>
- * @see {@link lejos.robotics.SampleProvider leJOS conventions for
+ * See {@link lejos.robotics.SampleProvider leJOS conventions for
  *      SampleProviders}
  * 
  *      <p>
@@ -116,9 +116,9 @@ public class DexterCompassSensor extends I2CSensor implements SensorModes{
      * The sensor can be tested using the test method.
      * 
      * @return A sampleProvider
-     * @see {@link lejos.robotics.SampleProvider leJOS conventions for
+     * See {@link lejos.robotics.SampleProvider leJOS conventions for
      *      SampleProviders}
-     * @see <a
+     * See <a
      *      href="http://www.adafruit.com/datasheets/HMC5883L_3-Axis_Digital_Compass_IC.pdf">
      *      Sensor datasheet </a>
      */
