@@ -108,7 +108,7 @@ public interface Chassis {
   /**
    * Returns true if the robot is moving.
    * 
-   * @return
+   * @return true if the robot is moving
    */
   public boolean isMoving();
 
@@ -189,7 +189,7 @@ public interface Chassis {
   /**
    * Returns true if at least one of the wheels is stalled
    * 
-   * @return
+   * @return true if at least one of the wheels is stalled
    */
   public boolean isStalled();
 
@@ -218,7 +218,7 @@ public interface Chassis {
   public void setAcceleration(double forwardAcceleration, double angularAcceleration);
   
   /** Returns an Pose provider that uses odometry to keep track of the pose of the chassis
-   * @return
+   * @return an Pose provider that uses odometry to keep track of the pose of the chassis
    */
   public PoseProvider getPoseProvider();  
   

@@ -60,7 +60,7 @@ import lejos.utility.EndianTools;
  * 
  * <p>
  * <b>Sensor configuration</b><br>
- * The Emissivity value of the sensor can be configured using the {@link setEmissivity} method.
+ * The Emissivity value of the sensor can be configured using the {@link #setEmissivity} method.
  * 
  * <p>
  * 

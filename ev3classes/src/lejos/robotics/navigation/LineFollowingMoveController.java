@@ -69,7 +69,7 @@ public interface LineFollowingMoveController extends ArcRotateMoveController {
    * Note: If you have specified a drift correction in the constructor it will
    * not be applied in this method.
    * 
-   * @param turnRate
+   * @param steerRatio
    *            If positive, the left side of the robot is on the inside of
    *            the turn. If negative, the left side is on the outside.
    */

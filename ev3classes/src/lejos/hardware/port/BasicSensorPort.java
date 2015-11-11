@@ -27,7 +27,7 @@ public interface BasicSensorPort extends SensorConstants {
 
     /**
      * Set the current operating mode for the sensor attached to the port.
-     * @param new mode
+     * @param mode the new mode
      * @return true if the mode has been accepted
      */
     public boolean setMode(int mode);
@@ -37,7 +37,7 @@ public interface BasicSensorPort extends SensorConstants {
      * only used with legacy sensors and for i2c devices (to set the speed and
      * operating voltage). It is not normally used with EV3 sensors.
      * @param type
-     * @return
+     * @return true if type accepted
      */
     public boolean setType(int type);
 	

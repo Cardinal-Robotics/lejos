@@ -16,8 +16,8 @@ import lejos.utility.Matrix;
  * The constructor of the DifferentialChassis class accepts an array of Wheel objects. 
  * Each of the wheel objects describes one of the motorized wheels on the chassis. 
  * A Description of a wheel consists of its diameter, its position, its motor and the gear train between wheel and motor.
- * Wheel objects can be created using a modeler class. A modeler for traditional wheel can be obtained using the {@link #modelWheel() modelWheel} method.
- * A modeler for a holonomic wheel can be obtained using the {@link #modelHolonomicWheel() modelHolonomicWheel} method. </p>.
+ * Wheel objects can be created using a modeler class. A modeler for traditional wheel can be obtained using the {@link #modelWheel} method.
+ * A modeler for a holonomic wheel can be obtained using the {@link #modelHolonomicWheel} method. </p>.
  * <p>
  * This example creates a WheeledChassis for a differential robot.
  * <pre>
@@ -438,7 +438,7 @@ public class WheeledChassis implements Chassis {
    * The regulated motor that drives the wheel
    * @param diameter
    * The diameter of the wheel in a unit of choice.
-   * @return
+   * @return the modeler
    */
   public static HolonomicModeler modelHolonomicWheel(RegulatedMotor motor, double diameter) {
     return new HolonomicModeler(motor, diameter);
@@ -482,7 +482,7 @@ public class WheeledChassis implements Chassis {
      * Angle between wheel axis and the robots x-axis
      * @param radius
      * Distance between center of the wheel and center of the robot
-     * @return
+     * @return the modeler
      */
     public HolonomicModeler polarPosition(double angle, double radius) {
       pose = new Pose((float)(radius * Math.cos(Math.toRadians(angle))), (float) (radius  * Math.sin(Math.toRadians(angle))), (float)(angle) );
@@ -497,7 +497,7 @@ public class WheeledChassis implements Chassis {
      * Y-position of the center of the wheel in respect to the robots origin
      * @param angle
      * Angle between the driving direction of the wheel and the robots x-axis
-     * @return
+     * @return the modeler
      */
     public HolonomicModeler cartesianPosition(double x, double y, double angle) {
       pose = new Pose((float)x, (float)y, (float)angle);
@@ -509,7 +509,7 @@ public class WheeledChassis implements Chassis {
      * 
      * @param val
      *          The ratio between wheel speed and motor speed. A ratio greater than 1 means the wheel turns faster than the motor.
-     * @return
+     * @return the modeler
      */
     public HolonomicModeler gearRatio(double val) {
       this.gearRatio = val;
@@ -520,7 +520,7 @@ public class WheeledChassis implements Chassis {
      * Inverts the motor direction
      * 
      * @param val
-     * @return
+     * @return the modeler
      */
     public HolonomicModeler invert(boolean val) {
       invert = val; 
@@ -551,7 +551,7 @@ public class WheeledChassis implements Chassis {
    * The regulated motor that drives the wheel
    * @param diameter
    * The diameter of the wheel in a unit of choice.
-   * @return
+   * @return the modeler
    */
   public static Modeler modelWheel(RegulatedMotor motor, double diameter) {
     return new Modeler(motor, diameter);
@@ -595,7 +595,7 @@ public class WheeledChassis implements Chassis {
      * @param val
      *          The distance between the robots yPose-axis and the center of the
      *          wheel
-     * @return this
+     * @return the modeler
      */
     public Modeler offset(double val) {
       this.offset = val;
@@ -607,7 +607,7 @@ public class WheeledChassis implements Chassis {
      * 
      * @param val
      *          The ratio between wheel speed and motor speed
-     * @return
+     * @return the modeler
      */
     public Modeler gearRatio(double val) {
       this.gearRatio = val;
@@ -618,7 +618,7 @@ public class WheeledChassis implements Chassis {
      * Inverts the motor direction
      * 
      * @param val
-     * @return
+     * @return the modeler
      */
     public Modeler invert(boolean val) {
       invert = val;
@@ -721,7 +721,7 @@ public class WheeledChassis implements Chassis {
  * @param x
  * @param y
  * @param angular
- * @return
+ * @return the modeler
  */
 protected Matrix toMatrix(double x, double y, double angular) {
   Matrix m = new Matrix(3, 1);
@@ -751,7 +751,7 @@ protected Matrix toPolar(double x, double y, double angular) {
  * Helper method to get some dynamic attributes from each motor
  * 
  * @param attribute
- * @return
+ * @return the mmatrix
  */
 protected synchronized Matrix getAttribute(int attribute) {
   Matrix x = new Matrix(nWheels+dummyWheels, 1);
@@ -795,7 +795,7 @@ protected double getMax(Matrix a) {
  * value of the elements of the source matrix
  * 
  * @param in
- * @return
+ * @return the matrix
  */
 protected Matrix copyAbsolute(Matrix in) {
   Matrix a = in.copy();

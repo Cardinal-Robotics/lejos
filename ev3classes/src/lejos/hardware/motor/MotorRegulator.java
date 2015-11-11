@@ -138,7 +138,7 @@ public interface MotorRegulator
      * endSynchronization method is called). This is all that is needed to ensure that motors
      * will operate in a synchronized fashion. The start/end methods can also be used to ensure
      * that reads of the motor state will also be consistent.
-     * @param syncList an array of motors to synchronize with.
+     * @param rl an array of motors to synchronize with.
      */
     public void synchronizeWith(MotorRegulator[] rl);
 

@@ -55,7 +55,7 @@ import lejos.utility.EndianTools;
  * <p>
  * <b>Sensor configuration</b><br>
  * There are no configurable parameters.<br>
- * The status of the sensor can be checked using the {@link linkStatus()} method.
+ * The status of the sensor can be checked using the {@link #linkStatus} method.
  * 
  * <p>
  * 

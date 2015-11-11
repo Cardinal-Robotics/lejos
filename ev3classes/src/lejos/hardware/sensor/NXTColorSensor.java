@@ -52,7 +52,7 @@ import lejos.robotics.*;
  * <td>RGB</td>
  * <td>Measures the light value when illuminated with a white light source.</td>
  * <td>N/A, normalized</td>
- * <td> {@link #getRGDMode() }</td>
+ * <td> {@link #getRGBMode}</td>
  * </tr>
  * <tr>
  * <td>Ambient</td>
