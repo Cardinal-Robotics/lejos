@@ -36,7 +36,7 @@ public class Bluetooth {
     /**
      * Return a String version of a Bluetooth address given a binary address
      * @param address
-     * @return
+     * @return the Bluetooth address
      */
     public static String getAddress(byte[] address) {
         StringBuilder sb = new StringBuilder();

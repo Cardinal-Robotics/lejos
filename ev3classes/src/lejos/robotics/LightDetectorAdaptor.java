@@ -1,8 +1,6 @@
 package lejos.robotics;
 
-import lejos.hardware.Button;
 import lejos.hardware.sensor.EV3ColorSensor;
-import lejos.hardware.sensor.HiTechnicColorSensor;
 import lejos.hardware.sensor.NXTColorSensor;
 import lejos.hardware.sensor.NXTLightSensor;
 import lejos.hardware.sensor.SensorMode;
@@ -10,10 +8,13 @@ import lejos.robotics.LampController;
 import lejos.robotics.SampleProvider;
 import lejos.utility.Delay;
 
+/**
+ * 
+ * @author Roger Glassey
+ *
+ */
 public class LightDetectorAdaptor {
 	/**
-	 * @author owner.GLASSEY
-	 * 
 	 *         allocates a LightSensorAdaptor ; sets mode to Ambient Accepts as
 	 *         a parameter one of EV3ColorSensor, NXTColorSensor, or
 	 *         NXTLightSensor

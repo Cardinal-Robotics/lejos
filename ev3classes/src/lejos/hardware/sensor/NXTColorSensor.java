@@ -52,7 +52,7 @@ import lejos.robotics.*;
  * <td>RGB</td>
  * <td>Measures the light value when illuminated with a white light source.</td>
  * <td>N/A, normalized</td>
- * <td> {@link #getRGDMode() }</td>
+ * <td> {@link #getRGBMode}</td>
  * </tr>
  * <tr>
  * <td>Ambient</td>
@@ -65,9 +65,9 @@ import lejos.robotics.*;
  * 
  * <p>
  * 
- * @see <a href="http://sourceforge.net/p/lejos/wiki/Sensor%20Framework/"> The
+ * See <a href="http://sourceforge.net/p/lejos/wiki/Sensor%20Framework/"> The
  *      leJOS sensor framework</a>
- * @see {@link lejos.robotics.SampleProvider leJOS conventions for
+ * See {@link lejos.robotics.SampleProvider leJOS conventions for
  *      SampleProviders}
  * 
  *      <p>

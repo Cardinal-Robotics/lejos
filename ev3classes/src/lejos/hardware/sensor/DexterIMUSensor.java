@@ -49,10 +49,10 @@ import lejos.utility.EndianTools;
  * 
  * <p>
  * 
- * @see <a href="http://dexterindustries.com/files/dIMU_Datasheets.zip"> Sensor datasheet </a>
- * @see <a href="http://www.dexterindustries.com/dIMU.html"> Sensor Product page </a>
- * @see <a href="http://sourceforge.net/p/lejos/wiki/Sensor%20Framework/"> The leJOS sensor framework</a>
- * @see {@link lejos.robotics.SampleProvider leJOS conventions for SampleProviders}
+ * See <a href="http://dexterindustries.com/files/dIMU_Datasheets.zip"> Sensor datasheet </a>
+ * See <a href="http://www.dexterindustries.com/dIMU.html"> Sensor Product page </a>
+ * See <a href="http://sourceforge.net/p/lejos/wiki/Sensor%20Framework/"> The leJOS sensor framework</a>
+ * See {@link lejos.robotics.SampleProvider leJOS conventions for SampleProviders}
  * 
  *      <p>
  * 
@@ -97,8 +97,8 @@ public class DexterIMUSensor extends BaseSensor implements SensorModes {
      * The sensor is configured for a dynamic range of -2G tot 2G and an internal update rate of 125 Hertz. Currently there are no configurable settings.
      * 
      * @return A sampleProvider
-     * @see {@link lejos.robotics.SampleProvider leJOS conventions for SampleProviders}
-     * @see <a href="http://www.freescale.com/files/sensors/doc/data_sheet/MMA7455L.pdf"> Freescale MMA7455L datasheet </a>
+     * See {@link lejos.robotics.SampleProvider leJOS conventions for SampleProviders}
+     * See <a href="http://www.freescale.com/files/sensors/doc/data_sheet/MMA7455L.pdf"> Freescale MMA7455L datasheet </a>
      */
     public SampleProvider getAccelerationMode() {
         return getMode(1);
@@ -118,8 +118,8 @@ public class DexterIMUSensor extends BaseSensor implements SensorModes {
      * Currently there are no configurable settings.
      * 
      * @return A sampleProvider
-     * @see {@link lejos.robotics.SampleProvider leJOS conventions for SampleProviders}
-     * @see <a href="http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/CD00265057.pdf">ST L3G4200D datasheet </a>
+     * See {@link lejos.robotics.SampleProvider leJOS conventions for SampleProviders}
+     * See <a href="http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/CD00265057.pdf">ST L3G4200D datasheet </a>
      */
     public SampleProvider getRateMode() {
         return getMode(0);
@@ -139,8 +139,8 @@ public class DexterIMUSensor extends BaseSensor implements SensorModes {
      * The temperature range of the sensor is -40 to 85 degrees Celcius. The update rate is 1 Hertz. There are no configurable settings.
      * 
      * @return A sampleProvider
-     * @see {@link lejos.robotics.SampleProvider leJOS conventions for SampleProviders}
-     * @see <a href="http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/CD00265057.pdf">ST L3G4200D datasheet </a>
+     * See {@link lejos.robotics.SampleProvider leJOS conventions for SampleProviders}
+     * See <a href="http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/CD00265057.pdf">ST L3G4200D datasheet </a>
      */
     public SampleProvider getTemperatureMode() {
         return getMode(2);

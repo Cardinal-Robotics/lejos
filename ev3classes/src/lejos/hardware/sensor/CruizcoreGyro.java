@@ -54,14 +54,14 @@ import lejos.utility.EndianTools;
  * 
  * <p>
  * 
- * @see <a
+ * See <a
  *      href="http://www.minfinity.com/Manual/CruizCore_XG1300L_User_Manual.pdf">
  *      Sensor datasheet </a>
- * @see <a href="http://www.minfinity.com/eng/page.php?Main=1&sub=1&tab=5">
+ * See <a href="http://www.minfinity.com/eng/page.php?Main=1&sub=1&tab=5">
  *      Sensor Product page </a>
- * @see <a href="http://sourceforge.net/p/lejos/wiki/Sensor%20Framework/"> The
+ * See <a href="http://sourceforge.net/p/lejos/wiki/Sensor%20Framework/"> The
  *      leJOS sensor framework</a>
- * @see {@link lejos.robotics.SampleProvider leJOS conventions for
+ * See {@link lejos.robotics.SampleProvider leJOS conventions for
  *      SampleProviders}
  * 
  *      <p>
@@ -190,9 +190,9 @@ public class CruizcoreGyro extends I2CSensor {
      * of the sensor class.
      * 
      * @return A sampleProvider
-     * @see {@link lejos.robotics.SampleProvider leJOS conventions for
+     * See {@link lejos.robotics.SampleProvider leJOS conventions for
      *      SampleProviders}
-     * @see <a
+     * See <a
      *      href="http://www.minfinity.com/Manual/CruizCore_XG1300L_User_Manual.pdf">
      *      Sensor datasheet </a>
      */
@@ -235,9 +235,9 @@ public class CruizcoreGyro extends I2CSensor {
      * There are no configurable parameters.
      * 
      * @return A sampleProvider
-     * @see {@link lejos.robotics.SampleProvider leJOS conventions for
+     * See {@link lejos.robotics.SampleProvider leJOS conventions for
      *      SampleProviders}
-     * @see <a
+     * See <a
      *      href="http://www.minfinity.com/Manual/CruizCore_XG1300L_User_Manual.pdf">
      *      Sensor datasheet </a>
      */
@@ -277,9 +277,9 @@ public class CruizcoreGyro extends I2CSensor {
      * the sensor class.
      * 
      * @return A sampleProvider
-     * @see {@link lejos.robotics.SampleProvider leJOS conventions for
+     * See {@link lejos.robotics.SampleProvider leJOS conventions for
      *      SampleProviders}
-     * @see <a
+     * See <a
      *      href="http://www.minfinity.com/Manual/CruizCore_XG1300L_User_Manual.pdf">
      *      Sensor datasheet </a>
      */

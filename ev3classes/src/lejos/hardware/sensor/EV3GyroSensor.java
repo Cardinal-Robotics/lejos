@@ -48,10 +48,10 @@ import lejos.robotics.SampleProvider;
  * 
  * <p>
  * 
- * @see <a href="http://www.ev-3.net/en/archives/849"> Sensor Product page </a>
- * @see <a href="http://sourceforge.net/p/lejos/wiki/Sensor%20Framework/"> The
+ * See <a href="http://www.ev-3.net/en/archives/849"> Sensor Product page </a>
+ * See <a href="http://sourceforge.net/p/lejos/wiki/Sensor%20Framework/"> The
  *      leJOS sensor framework</a>
- * @see {@link lejos.robotics.SampleProvider leJOS conventions for
+ * See {@link lejos.robotics.SampleProvider leJOS conventions for
  *      SampleProviders}
  * 
  *      <p>
@@ -89,7 +89,7 @@ public class EV3GyroSensor extends UARTSensor {
    * The start position can be set to the current position using the reset method of the sensor.
    * 
    * @return A sampleProvider
-   * @see {@link lejos.robotics.SampleProvider leJOS conventions for
+   * See {@link lejos.robotics.SampleProvider leJOS conventions for
    *      SampleProviders}
    */
   public SampleProvider getAngleMode() {
@@ -110,7 +110,7 @@ public class EV3GyroSensor extends UARTSensor {
    * The sensor can be recalibrated using the reset method of the sensor.
    * 
    * @return A sampleProvider
-   * @see {@link lejos.robotics.SampleProvider leJOS conventions for
+   * See {@link lejos.robotics.SampleProvider leJOS conventions for
    *      SampleProviders}
    */
   public SampleProvider getRateMode() {
@@ -131,7 +131,7 @@ public class EV3GyroSensor extends UARTSensor {
    * The sensor can be recalibrated using the reset method of the sensor.
    * 
    * @return A sampleProvider
-   * @see {@link lejos.robotics.SampleProvider leJOS conventions for
+   * See {@link lejos.robotics.SampleProvider leJOS conventions for
    *      SampleProviders}
    */
   public SampleProvider getAngleAndRateMode() {

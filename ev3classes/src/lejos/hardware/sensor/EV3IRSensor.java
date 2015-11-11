@@ -39,10 +39,10 @@ import lejos.hardware.port.UARTPort;
  * The sensor can be used as a receiver for up to four Lego Ev3 IR remote controls using the {@link #getRemoteCommand} and {@link #getRemoteCommands} methods.
 *  
  * 
- * @see <a href="http://www.ev-3.net/en/archives/848"> Sensor Product page </a>
- * @see <a href="http://sourceforge.net/p/lejos/wiki/Sensor%20Framework/"> The
+ * See <a href="http://www.ev-3.net/en/archives/848"> Sensor Product page </a>
+ * See <a href="http://sourceforge.net/p/lejos/wiki/Sensor%20Framework/"> The
  *      leJOS sensor framework</a>
- * @see {@link lejos.robotics.SampleProvider leJOS conventions for
+ * See {@link lejos.robotics.SampleProvider leJOS conventions for
  *      SampleProviders}
  * 
  *      <p>
@@ -134,9 +134,9 @@ public class EV3IRSensor extends UARTSensor
      * 
      * 
      * @return A sampleProvider
-     * @see {@link lejos.robotics.SampleProvider leJOS conventions for
+     * See {@link lejos.robotics.SampleProvider leJOS conventions for
      *      SampleProviders}
-     * @see <a href="http://www.ev-3.net/en/archives/848"> Sensor Product page </a>
+     * See <a href="http://www.ev-3.net/en/archives/848"> Sensor Product page </a>
      */    public SensorMode getDistanceMode()
     {
         return getMode(0);
@@ -188,9 +188,9 @@ public class EV3IRSensor extends UARTSensor
      * <p>
      * 
      * @return A sampleProvider
-     * @see {@link lejos.robotics.SampleProvider leJOS conventions for
+     * See {@link lejos.robotics.SampleProvider leJOS conventions for
      *      SampleProviders}
-     * @see <a href="http://www.ev-3.net/en/archives/848"> Sensor Product page </a>
+     * See <a href="http://www.ev-3.net/en/archives/848"> Sensor Product page </a>
      */    public SensorMode getSeekMode()
     {
         return getMode(1);

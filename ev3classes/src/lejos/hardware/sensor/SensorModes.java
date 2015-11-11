@@ -37,7 +37,7 @@ public interface SensorModes extends SensorMode
     
     /**
      * Sets the current mode for fetching samples
-     * @param mode the name of the mode. name corresponds with the item value of the list from getAvailableModes().
+     * @param modeName the name of the mode. name corresponds with the item value of the list from getAvailableModes().
      */
     public void setCurrentMode(String modeName);
     

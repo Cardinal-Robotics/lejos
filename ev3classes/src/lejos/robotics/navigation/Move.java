@@ -112,9 +112,8 @@ public class Move implements Transmittable {
   
   /**
    * use this method to recycle an existing Move instead of creating a new one
-   * @param distance
-   * @param angle
-   * @param isMoving
+   * @param travelSpeed the new travelspeed
+   * @param rotateSpeed the new rotate speed
    */
   public void setDynamics(float travelSpeed, float rotateSpeed)
   {

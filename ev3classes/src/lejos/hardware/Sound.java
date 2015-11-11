@@ -105,8 +105,8 @@ public class Sound implements Sounds
     
     /**
      * Plays a tone, given its frequency and duration. 
-     * @param aFrequency The frequency of the tone in Hertz (Hz).
-     * @param aDuration The duration of the tone, in milliseconds.
+     * @param freq The frequency of the tone in Hertz (Hz).
+     * @param duration The duration of the tone, in milliseconds.
      */
     public static void playTone(int freq, int duration)
     {

@@ -43,12 +43,12 @@ import lejos.hardware.port.Port;
  * 
  * <p>
  * 
- * @see <a
+ * See <a
  *      href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NSK1042">
  *      Sensor Product page </a>
- * @see <a href="http://sourceforge.net/p/lejos/wiki/Sensor%20Framework/"> The
+ * See <a href="http://sourceforge.net/p/lejos/wiki/Sensor%20Framework/"> The
  *      leJOS sensor framework</a>
- * @see {@link lejos.robotics.SampleProvider leJOS conventions for
+ * See {@link lejos.robotics.SampleProvider leJOS conventions for
  *      SampleProviders}
  * 
  *      <p>

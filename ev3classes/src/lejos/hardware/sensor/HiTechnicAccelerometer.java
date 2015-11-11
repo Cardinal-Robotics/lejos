@@ -31,14 +31,14 @@ import lejos.hardware.port.Port;
  * 
  * <p>
  * 
- * @see <a
+ * See <a
  *      href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NAC1040">
  *      Sensor Product page </a> (Some details from HTAC-driver.h from
  *      http://botbench.com/blog/robotc-driver-suite/)
  * 
- * @see <a href="http://sourceforge.net/p/lejos/wiki/Sensor%20Framework/"> The
+ * See <a href="http://sourceforge.net/p/lejos/wiki/Sensor%20Framework/"> The
  *      leJOS sensor framework</a>
- * @see {@link lejos.robotics.SampleProvider leJOS conventions for
+ * See {@link lejos.robotics.SampleProvider leJOS conventions for
  *      SampleProviders}
  * 
  *      <p>
@@ -123,9 +123,9 @@ public class HiTechnicAccelerometer extends I2CSensor {
    * <p>
    * 
    * @return A sampleProvider
-   * @see {@link lejos.robotics.SampleProvider leJOS conventions for
+   * See {@link lejos.robotics.SampleProvider leJOS conventions for
    *      SampleProviders}
-   * @see <a
+   * See <a
    *      href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NAC1040">
    *      Sensor datasheet </a>
    */

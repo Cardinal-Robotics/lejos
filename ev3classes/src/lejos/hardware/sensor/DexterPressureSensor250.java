@@ -46,11 +46,11 @@ import lejos.robotics.SampleProvider;
  * 
  * <p>
  * 
- * @see <a href="http://www.dexterindustries.com/manual/dpressure/"> Sensor datasheet </a>
- * @see <a href="http://www.dexterindustries.com/Products-dPressure.html"> Sensor Product page </a>
- * @see <a href="http://sourceforge.net/p/lejos/wiki/Sensor%20Framework/"> The
+ * See <a href="http://www.dexterindustries.com/manual/dpressure/"> Sensor datasheet </a>
+ * See <a href="http://www.dexterindustries.com/Products-dPressure.html"> Sensor Product page </a>
+ * See <a href="http://sourceforge.net/p/lejos/wiki/Sensor%20Framework/"> The
  *      leJOS sensor framework</a>
- * @see {@link lejos.robotics.SampleProvider leJOS conventions for
+ * See {@link lejos.robotics.SampleProvider leJOS conventions for
  *      SampleProviders}
  * 
  *      <p>
@@ -108,9 +108,9 @@ public class DexterPressureSensor250 extends AnalogSensor implements SensorConst
      * <p>
      * 
      * @return A sampleProvider
-     * @see {@link lejos.robotics.SampleProvider leJOS conventions for
+     * See {@link lejos.robotics.SampleProvider leJOS conventions for
      *      SampleProviders}
-     * @see <a href="http://www.dexterindustries.com/manual/dpressure/"> Sensor datasheet </a>
+     * See <a href="http://www.dexterindustries.com/manual/dpressure/"> Sensor datasheet </a>
      */
     public SampleProvider getPressureMode() {
         return getMode(0);

@@ -55,14 +55,14 @@ import lejos.utility.EndianTools;
  * <p>
  * <b>Sensor configuration</b><br>
  * There are no configurable parameters.<br>
- * The status of the sensor can be checked using the {@link linkStatus()} method.
+ * The status of the sensor can be checked using the {@link #linkStatus} method.
  * 
  * <p>
  * 
- * @see <a href="http://www.dexterindustries.com/manual/dgps-2/"> Sensor datasheet </a>
- * @see <a href="http://www.dexterindustries.com/dGPS.html"> Sensor Product page </a>
- * @see <a href="http://sourceforge.net/p/lejos/wiki/Sensor%20Framework/"> The leJOS sensor framework</a>
- * @see {@link lejos.robotics.SampleProvider leJOS conventions for SampleProviders}
+ * See <a href="http://www.dexterindustries.com/manual/dgps-2/"> Sensor datasheet </a>
+ * See <a href="http://www.dexterindustries.com/dGPS.html"> Sensor Product page </a>
+ * See <a href="http://sourceforge.net/p/lejos/wiki/Sensor%20Framework/"> The leJOS sensor framework</a>
+ * See {@link lejos.robotics.SampleProvider leJOS conventions for SampleProviders}
  * 
  *      <p>
  * 
@@ -136,8 +136,8 @@ public class DexterGPSSensor extends I2CSensor {
      * 
      * 
      * @return A sampleProvider
-     * @see {@link lejos.robotics.SampleProvider leJOS conventions for SampleProviders}
-     * @see <a href="http://www.dexterindustries.com/manual/dgps-2/"> Sensor datasheet </a>
+     * See {@link lejos.robotics.SampleProvider leJOS conventions for SampleProviders}
+     * See <a href="http://www.dexterindustries.com/manual/dgps-2/"> Sensor datasheet </a>
      */
     public SampleProvider getPositionMode() {
         return getMode(0);
@@ -176,8 +176,8 @@ public class DexterGPSSensor extends I2CSensor {
      * The sample contains one element representing the heading (in degrees) of the sensor. Accurate heading information can only be given when the sensor is in motion.
      * 
      * @return A sampleProvider
-     * @see {@link lejos.robotics.SampleProvider leJOS conventions for SampleProviders}
-     * @see <a href="http://www.dexterindustries.com/manual/dgps-2/"> Sensor datasheet </a>
+     * See {@link lejos.robotics.SampleProvider leJOS conventions for SampleProviders}
+     * See <a href="http://www.dexterindustries.com/manual/dgps-2/"> Sensor datasheet </a>
      */
     public SampleProvider getAngleMode() {
         return getMode(1);
@@ -213,8 +213,8 @@ public class DexterGPSSensor extends I2CSensor {
      * 
      * 
      * @return A sampleProvider
-     * @see {@link lejos.robotics.SampleProvider leJOS conventions for SampleProviders}
-     * @see <a href="http://www.dexterindustries.com/manual/dgps-2/"> Sensor datasheet </a>
+     * See {@link lejos.robotics.SampleProvider leJOS conventions for SampleProviders}
+     * See <a href="http://www.dexterindustries.com/manual/dgps-2/"> Sensor datasheet </a>
      */
     public SampleProvider getVelocityMode() {
         return getMode(2);
@@ -250,8 +250,8 @@ public class DexterGPSSensor extends I2CSensor {
      * The sample contains one elements representing the UTC time (hhmmss) .
      * 
      * @return A sampleProvider
-     * @see {@link lejos.robotics.SampleProvider leJOS conventions for SampleProviders}
-     * @see <a href="http://www.dexterindustries.com/manual/dgps-2/"> Sensor datasheet </a>
+     * See {@link lejos.robotics.SampleProvider leJOS conventions for SampleProviders}
+     * See <a href="http://www.dexterindustries.com/manual/dgps-2/"> Sensor datasheet </a>
      */
     public SampleProvider getTimeMode() {
         return getMode(3);
