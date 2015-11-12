@@ -13,6 +13,19 @@ import lejos.robotics.SampleProvider;
 import lejos.robotics.filter.PublishFilter;
 import lejos.utility.Delay;
 
+/**
+ * This sample uses the PublishFilter in lejos.robotics.filter to publish sensor readings.
+ * 
+ * It assumes that there is an IR sensor attached to sensor port 1, an ultrasonic sensor
+ * attached to port 2, and a Gyro sensor attached to port 3.
+ * 
+ * Another program, which would normally be running on a PC, can then subscribe to the topics to see the data.
+ * 
+ * If you run the PublishedSamples PC sample program, you can see a list of the available topics to subscribe to.
+ * 
+ * @author Lawrie Griffiths
+ *
+ */
 public class Publish {
 	public static void main(String[] args) throws IOException {
 		float frequency = 1; // 1 sample per second

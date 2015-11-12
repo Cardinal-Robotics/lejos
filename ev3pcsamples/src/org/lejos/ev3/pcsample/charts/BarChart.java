@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.FileReader;
+import java.rmi.ConnectException;
 import java.util.Properties;
 
 import javax.swing.JFrame;
@@ -23,7 +24,18 @@ import org.jfree.data.category.DefaultCategoryDataset;
 /**
  * Sample program to draw a real-time bar chart of any EV3 sensor that supports the SampleProvider interface.
  * 
- * The chart.properties file defines the sensor to use and all the other parameters for the sensor and the chart
+ * The program runs on the PC so it should be run as a Java program, not a leJOS EV3 program.
+ * 
+ * It uses the RMI remote API, and so does not require any program other than the menu to be running on the EV3.
+ * 
+ * The chart.properties file defines the sensor to use and all the other parameters for the sensor and the chart.
+ * 
+ * The default chart.properties file expects an EV3 IR sensor plugged into sensor port 1.
+ * 
+ * The default IP adddress in chart.properties is 10.0.1.1 which is usually correct if you are using a USB
+ * connection. Otherwise, you should change chart.properties to specify the IP address of the EV3.
+ * 
+ * jfreechart is used to draw the bar chart.
  * 
  * @author Lawrie Griffiths
  *
@@ -92,13 +104,19 @@ public class BarChart extends JFrame {
 		p.load(new FileReader("chart.properties"));
 		
 		String[] labels = p.getProperty("labels").split(",");
-        BarChart demo = new BarChart(p.getProperty("host"), p.getProperty("class"), p.getProperty("port"), p.getProperty("mode"),
+		BarChart demo;
+		
+        try {
+        	demo = new BarChart(p.getProperty("host"), p.getProperty("class"), p.getProperty("port"), p.getProperty("mode"),
         		                     p.getProperty("category"), labels, p.getProperty("units"), 
         		                     Float.parseFloat(p.getProperty("min")), Float.parseFloat(p.getProperty("max")), 
         		                     Integer.parseInt(p.getProperty("width")), Integer.parseInt(p.getProperty("height")), 
         		                     Float.parseFloat(p.getProperty("frequency")),Float.parseFloat(p.getProperty("factor", "1.0")));
-        demo.pack();
-        demo.setVisible(true);
-        demo.run();
+            demo.pack();
+            demo.setVisible(true);
+            demo.run();
+        } catch (ConnectException e) {
+        	System.err.println("Failed to connect - check the IP address in chart.properties.");
+        }
 	}
 }
