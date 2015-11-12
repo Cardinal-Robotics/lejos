@@ -1,4 +1,5 @@
 package org.lejos.ev3.sample.followbeacon;
+
 import lejos.hardware.Button;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.Font;
@@ -9,8 +10,14 @@ import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3IRSensor;
 import lejos.hardware.sensor.SensorMode;
 import lejos.robotics.RegulatedMotor;
-import lejos.utility.Delay;
 
+/**
+ * Requires a wheeled vehicle with two independently controlled
+ * motors connected to motor ports B and C, and 
+ * an EV3 IR sensor connected to port 4.
+ * 
+ * @author Lawrie Griffiths
+ */
 public class Follow {
 	
 	  public static void introMessage() {

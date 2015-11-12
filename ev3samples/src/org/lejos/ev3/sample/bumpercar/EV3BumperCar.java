@@ -18,7 +18,7 @@ import lejos.robotics.subsumption.Behavior;
  * 
  * Requires a wheeled vehicle with two independently controlled
  * motors connected to motor ports B and C, and 
- * an ultrasonic sensor connected to port 4;
+ * an EV3 IR sensor connected to port 4;
  * 
  * @author Brian Bagnall and Lawrie Griffiths, modified by Roger Glassey
  *
@@ -249,16 +249,16 @@ class DetectWall implements Behavior
 
   public void action()
   {
-      EV3BumperCar.leftMotor.rotate(-180, true);// start Motor.A rotating backward
+      EV3BumperCar.leftMotor.rotate(-180, true);// start Motor.B rotating backward
       EV3BumperCar.rightMotor.rotate(-180);  // rotate C farther to make the turn
     if ((System.currentTimeMillis() & 0x1) != 0)
     {
-        EV3BumperCar.leftMotor.rotate(-180, true);// start Motor.A rotating backward
+        EV3BumperCar.leftMotor.rotate(-180, true);// start Motor.B rotating backward
         EV3BumperCar.rightMotor.rotate(180);  // rotate C farther to make the turn
     }
     else
     {
-        EV3BumperCar.rightMotor.rotate(-180, true);// start Motor.A rotating backward
+        EV3BumperCar.rightMotor.rotate(-180, true);// start Motor.B rotating backward
         EV3BumperCar.leftMotor.rotate(180);  // rotate C farther to make the turn        
     }
   }
