@@ -17,12 +17,12 @@ import lejos.robotics.filter.SubscribedProvider;
 /**
  * This is a PC sample program that should be run as a Java program on the PC, not as a leJOS EV3 program.
  * 
- * It lists all the sensor data topics that hae been published using the PublishFilter in lejos.robotics.filter.
+ * It lists all the sensor data topics that have been published using the PublishFilter in lejos.robotics.filter.
  * 
- * The programs tha publish sensor data will normally be running on the EV3. 
+ * The programs that publish sensor data will normally be running on the EV3. 
  * 
  * The Publish sample program is an example. If you run that on an EV3, then this program will show you 
- * all the availables published topics.
+ * all the available published topics.
  * 
  * @author Lawrie Griffiths
  *
