@@ -13,12 +13,6 @@
 			<include name="**/*.jar" />
 		</fileset>
 	</path>
-	
-	<condition property="d32Flag" value="-d32" else="-Dblank.dummy.arg=">
-		<and>
-			<os family="mac" />
-		</and>
-	</condition>
 
 	<!-- deletes generated files -->
 	<target name="clean" description="clean up all generated files">
@@ -50,7 +44,6 @@
 	<target name="run" description="run the debug tool" depends="compile">
 		<java classname="${main.class}" fork="true" failonerror="true">
 			<sysproperty key="ev3.home" file="${ev3.home}"/>
-			<jvmarg value="${d32Flag}" />
 			<classpath refid="libraries.path" />
 			<classpath location="${classes.dir}" />
 		</java>
