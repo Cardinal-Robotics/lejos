@@ -5,7 +5,7 @@
 
     <path id="libraries.path">    
         <fileset dir="${ev3.home}/lib">
-            <include name="*.jar"/>
+            <include name="**/*.jar"/>
         </fileset>
     </path>
 
