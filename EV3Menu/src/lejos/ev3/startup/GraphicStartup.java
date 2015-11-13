@@ -2323,7 +2323,7 @@ public class GraphicStartup implements Menu {
             	  System.out.println("Killing the process");
             	  program.destroy(); 
             	  // reset motors after program is aborted
-            	  resetMotors();
+            	  //resetMotors();
                   break;
               }
               if (!echoIn.isAlive() && !echoErr.isAlive()) break;           
@@ -2339,7 +2339,7 @@ public class GraphicStartup implements Menu {
           }
           finally
           {
-              resetMotors();
+              //resetMotors();
               Button.LEDPattern(0);
               program = null;
               menu.resume();
@@ -2394,7 +2394,7 @@ public class GraphicStartup implements Menu {
           }
           finally
           {
-              resetMotors();
+              //resetMotors();
               // Turn the LED off, in case left on
               Button.LEDPattern(0);
               program = null;
