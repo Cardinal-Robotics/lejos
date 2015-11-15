@@ -1,18 +1,13 @@
 package org.lejos.android.sample.control;
 
-import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 import lejos.hardware.Audio;
 import lejos.hardware.lcd.TextLCD;
-import lejos.hardware.sensor.EV3TouchSensor;
-import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.remote.ev3.RemoteRequestEV3;
 import lejos.remote.ev3.RemoteRequestSampleProvider;
 import lejos.robotics.RegulatedMotor;
-import lejos.robotics.SampleProvider;
 import android.os.AsyncTask;
-import android.os.AsyncTask.Status;
 import android.os.Bundle;
 import android.os.Handler;
 import android.app.Activity;
@@ -33,6 +28,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	private RemoteRequestSampleProvider sp;
 	private AsyncTask<String, Integer, Long> task;
 	private float distance;
+	private static final String EV3_IP = "192.168.0.12";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +66,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		else if (v.getId() == R.id.backward) task = new Control().execute("backward");
 		else if (v.getId() == R.id.connect) {
 			if (ev3 == null) {
-				task = new Control().execute("connect","192.168.0.51");
+				task = new Control().execute("connect",EV3_IP);
 				connect.setText("Disconnect");
 				timerHandler.postDelayed(timerRunnable, 5000);
 			}
@@ -83,11 +79,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		try {
 			task.get();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 	
@@ -97,7 +89,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
         @Override
         public void run() {
-        	if (ev3 == null) return;
+        	if (sp == null) return;
         	new Control().execute("touch");
             timerHandler.postDelayed(this, 1000);
         }
@@ -122,18 +114,22 @@ public class MainActivity extends Activity implements OnClickListener {
 					return 1l;
 				}
 			 } else if (cmd[0].equals("disconnect") && ev3 != null) {
-				 audio.systemSound(2);
-				 if (sp != null) sp.close();
-				 left.close();
-				 right.close();
-				 ev3.disConnect();
-				 ev3 = null;
-				 return 0l;
+				 try {
+					 audio.systemSound(2);
+					 if (sp != null) sp.close();
+					 sp = null;
+					 left.close();
+					 right.close();
+					 ev3.disConnect();
+					 ev3 = null;
+					 return 0l;
+				 } catch (Exception e) {
+					ex = e;
+					return 1l;
+				}
 			 } 
 			 
 			 if (ev3 == null) return 2l;
-			 
-			 //ev3.getAudio().systemSound(1);
 			 
 			 if (cmd[0].equals("stop")) {
 				 lcd.clear();
@@ -159,7 +155,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				 lcd.drawString("Right", 4, 3);
 				 left.forward();
 				 right.backward();
-			 } else if (cmd[0].equals("touch")) {
+			 } else if (cmd[0].equals("touch") && sp != null) {
 				 try {
 					 float[] sample = new float[1];
 					 sp.fetchSample(sample, 0);
