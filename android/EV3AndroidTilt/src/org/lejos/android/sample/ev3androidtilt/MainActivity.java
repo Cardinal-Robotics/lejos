@@ -1,7 +1,5 @@
 package org.lejos.android.sample.ev3androidtilt;
 
-import java.io.IOException;
-
 import lejos.remote.ev3.RemoteRequestEV3;
 import lejos.remote.ev3.RemoteRequestPilot;
 import lejos.utility.Delay;
@@ -35,7 +33,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 		xAccel = (TextView) findViewById(R.id.xAccel);
 		yAccel = (TextView) findViewById(R.id.yAccel);
 		zAccel = (TextView) findViewById(R.id.zAccel);
-		new Control().execute("192.168.0.9");
+		new Control().execute("192.168.0.12");
 	}
 	
 	 @Override 
