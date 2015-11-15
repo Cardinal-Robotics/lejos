@@ -45,6 +45,7 @@
         <make-jar jar.file="Follow.jar" main.class="org.lejos.ev3.sample.followbeacon.Follow"/>
         <make-jar jar.file="MapTest.jar" main.class="org.lejos.ev3.sample.maptest.MapTest"/>
         <make-jar jar.file="MCLTest.jar" main.class="org.lejos.ev3.sample.mcltest.MCLTest"/>
+        <make-jar jar.file="Chassis.jar" main.class="org.lejos.ev3.sample.chassis.RcControlChassis"/>
     </target>
 
     <target name="upload" depends="pc.files">

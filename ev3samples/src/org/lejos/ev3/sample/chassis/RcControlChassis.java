@@ -12,6 +12,17 @@ import lejos.robotics.localization.PoseProvider;
 import lejos.robotics.navigation.Pose;
 import lejos.utility.Delay;
 
+/**
+ * 
+ * Test of the Chassis classes
+ * 
+ * Requires a wheeled vehicle with differential steering with motors connected to ports A and D.
+ * 
+ * An IR sensor on port 1 is used to control the vehicle.
+ * 
+ * @author Aswin
+ *
+ */
 public class RcControlChassis {
   public static void main(String[] args) {
   
