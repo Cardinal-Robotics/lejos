@@ -22,7 +22,7 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity implements OnTouchListener,
 		RotationListener, OnSeekBarChangeListener {
-	private static final String HOST = "192.168.0.9";
+	private static final String HOST = "192.168.0.12";
 	private RemoteRequestEV3 ev3;
 	private RemoteRequestPilot pilot;
 	private int angle;
