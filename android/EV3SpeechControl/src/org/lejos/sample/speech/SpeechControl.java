@@ -68,7 +68,7 @@ public class SpeechControl extends Activity implements OnClickListener {
         if (v.getId() == R.id.speech_btn) listen();
         else if (v.getId() == R.id.connect_btn && ev3 == null) {
             try {
-    			ev3 = new RemoteRequestEV3("192.168.0.9");
+    			ev3 = new RemoteRequestEV3("192.168.0.12");
     			left = ev3.createRegulatedMotor("A", 'L');
     			right = ev3.createRegulatedMotor("B", 'L');
     		} catch (IOException e) {
