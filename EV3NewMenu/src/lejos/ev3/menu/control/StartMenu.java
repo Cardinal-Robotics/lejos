@@ -20,7 +20,6 @@ public class StartMenu {
                      .addChild(new NodeSounds(control))
                      .addChild(new NodeTools(control))
                      .addChild(new NodeSettings(control))
-                     .addChild(new NodeLibs(control))
                    )
                    .addChild(new NodePrograms(control))
                    .addChild(new NodeSamples(control))
