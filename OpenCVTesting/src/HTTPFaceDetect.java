@@ -30,8 +30,17 @@ import org.opencv.objdetect.CascadeClassifier;
  * 
  * Very sensitive to lighting of course!
  * 
- * @author mcrosbie
- * @date 22/11/2015
+ * This code heavily borrows code written by Lawrie Griffiths available at
+ * https://lejosnews.wordpress.com/2015/09/26/opencv-web-streaming/
+ * 
+ * As a convenience you can run this from the command line to play around with the accuracy
+ * parameters:
+ * jrun -cp HTTPFaceDetect.jar HTTPFaceDetect <minNeighbours> <scale> <l/h>
+ * l = LBP feature classifier
+ * h = Haar feeature classifier (slower but more accurate)
+ * 
+ * @author mcrosbie http://thinkbricks.net
+ * @date 29/11/2015
  *
  */
 public class HTTPFaceDetect {
