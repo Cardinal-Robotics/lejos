@@ -68,8 +68,8 @@ class DetectFaceDemo {
 	private int flags = 0;
 	private double scaleFactor = 1.8;
 	private int minNeighbours = 2;
-    private Size minSize = new Size(10,10);
-    private Size maxSize = new Size(320,240);
+    private Size minSize = new Size(20,20);
+    private Size maxSize = new Size(160,120);
     private final String HaarFeatures = "/haarcascade_frontalface_alt.xml";  //classifiers to detect eyes and face.
     private final String LbpFeatures = "/lbpcascade_frontalface.xml";
     private String features;
