@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="snapshot" basedir="." default="all">
+    <property file="local.properties" />
+    <property file="build.properties" />
+    
+    <target name="all" depends="subproject.ev3classes,subproject.ev3menu,subproject.ev3samples,subproject.ev3pcsamples,subproject.ev3tools,subproject.ev3scripts, subproject.ev3menutools">
+		<echo message="Done." />
+	</target>
+	
+    <target name="subproject.ev3classes" depends="subproject.dbusjava">
+		<echo message="*** entering ev3classes project" />
+		<ant inheritAll="false" dir="../ev3classes" antfile="build.xml">
+			<target name="pc.files" />
+		</ant>
+		<copy todir="lib">
+			<fileset file="../ev3classes/ev3classes.jar" />
+			<fileset file="../ev3classes/ev3classes-src.zip" />
+		</copy>
+		<echo message="*** leaving ev3classes project" />
+	</target>
+	
+    <target name="subproject.dbusjava">
+        <echo message="*** entering dbusjava project" />
+        <ant inheritAll="false" dir="../DBusJava" antfile="build.xml">
+            <target name="pc.files" />
+        </ant>
+        <copy todir="lib">
+            <fileset file="../DBusJava/dbusjava.jar" />
+            <fileset file="../DBusJava/dbusjava-src.zip" />
+        </copy>
+        <echo message="*** leaving dbusjava project" />
+    </target>
+    
+    <target name="subproject.jna">
+        <echo message="*** entering jna project" />
+        <ant inheritAll="false" dir="../jna-3.2.7/jnalib" antfile="build.xml">
+            <target name="pc.files" />
+        </ant>
+        <copy todir="lib">
+            <fileset file="../jna-3.2.7/jnalib/build/jna.jar" />
+            <fileset file="../jna-3.2.7/jnalib/build/jna-src.zip" />
+        </copy>
+        <echo message="*** leaving dbusjava project" />
+    </target>
+            
+    <target name="subproject.ev3tools">
+		<echo message="*** entering ev3tools project" />
+		<ant inheritAll="false" dir="../ev3tools" antfile="build.xml">
+			<target name="pc.files" />
+		</ant>
+		<copy todir="lib">
+			<fileset file="../ev3tools/dist/ev3tools.jar" />
+			<fileset file="../ev3tools/dist/ev3tools-src.zip" />
+			<fileset file="../ev3tools/thirdparty/lib/*.jar" />
+			<fileset file="../ev3tools/thirdparty/lib/*.zip" />
+		</copy>
+		<echo message="*** leaving ev3tools project" />
+	</target>
+	
+     <target name="subproject.ev3pcsamples">
+		<echo message="*** entering ev3pcsamples project" />
+		<ant inheritAll="false" dir="../ev3pcsamples" antfile="build.xml">
+			<target name="pc.files" />
+		</ant>
+		<copy todir="lib">
+			<fileset file="../ev3pcsamples/thirdparty/lib/*.jar" />
+			<fileset file="../ev3pcsamples/thirdparty/lib/*.zip" />
+		</copy>
+		<echo message="*** leaving ev3pcsamples project" />
+	</target>
+	
+    <target name="subproject.ev3scripts">
+		<echo message="*** entering ev3scripts project" />
+		<ant inheritAll="false" dir="../ev3scripts" antfile="build.xml">
+			<target name="all" />
+		</ant>
+		<copy todir="bin">
+			<fileset file="../ev3scripts/build/linux/*" />
+			<fileset file="../ev3scripts/build/windows/*" />
+		</copy>
+		<echo message="*** leaving ev3scripts project" />
+	</target>
+	
+    <target name="subproject.ev3menu">
+		<echo message="*** entering EV3Menu project" />
+		<ant inheritAll="false" dir="../EV3Menu" antfile="build.xml">
+			<target name="jar" />
+		</ant>
+		<copy todir="bin/utils">
+			<fileset file="../EV3Menu/dist/EV3Menu.jar" />
+			<fileset file="../EV3Menu/src/wpa_supplicant.txt" />
+		</copy>
+		<echo message="*** leaving EV3Menu project" />
+	</target>
+
+    <target name="subproject.ev3samples">
+		<echo message="*** entering ev3samples project" />
+		<ant inheritAll="false" dir="../ev3samples" antfile="build.xml">
+			<target name="pc.files" />
+		</ant>
+		<copy todir="samples">
+			<fileset file="../ev3samples/*.jar" />
+		</copy>
+		<echo message="*** leaving ev3samples project" />
+	</target>
+	
+    <target name="subproject.ev3menutools">
+		<echo message="*** entering ev3menutools project" />
+		<ant inheritAll="false" dir="../ev3menutools" antfile="build.xml">
+			<target name="pc.files" />
+		</ant>
+		<copy todir="tools">
+			<fileset file="../ev3menutools/*.jar" />
+		</copy>
+		<echo message="*** leaving ev3menutools project" />
+	</target>
+	
+    <target name="upload">
+    	<scp todir="root:@${ev3.host}:/home/root/lejos/lib/" trust="true">
+    	    <fileset file="lib/ev3classes.jar"/>
+    	    <fileset file="lib/dbusjava.jar"/>
+    	</scp>
+    	<scp todir="root:@${ev3.host}:/home/root/lejos/bin/utils/" trust="true">
+    	    <fileset file="bin/utils/EV3Menu.jar"/>
+    	    <fileset file="bin/utils/wpa_supplicant.txt"/>
+    	</scp>
+    	<scp todir="root:@${ev3.host}:/home/root/lejos/samples/" trust="true">
+    	    <fileset file="samples/*.jar"/>
+    	</scp>
+    	<scp todir="root:@${ev3.host}:/home/root/lejos/tools/" trust="true">
+    	    <fileset file="tools/*.jar"/>
+    	</scp>
+    </target>
+</project>
