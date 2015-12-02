@@ -1,7 +1,11 @@
 package lejos.ev3.menu.control;
 
 import java.io.File;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 import lejos.internal.io.Settings;
@@ -29,6 +33,16 @@ public class Control implements MenuControl {
   public String getVersion() {
     return "0.9.1-beta";
   }
+  
+  @Override
+  public String getProperty(String key) {
+    return getProperty(key,"");
+  }
+
+  @Override
+  public int getNumericProperty(String key) {
+    return getNumericProperty(key,0);
+  }
 
   @Override
   public String getProperty(String key, String defaultValue) {
@@ -44,7 +58,7 @@ public class Control implements MenuControl {
   @Override
   public int getNumericProperty(String key, int defaultValue) {
     // TODO Auto-generated method stub
-    String s = Settings.getProperty(key, null);
+    String s = Settings.getProperty(key, "");
     if (s == null)
       return defaultValue;
       
@@ -76,7 +90,61 @@ public class Control implements MenuControl {
     }
     return list;
   }
+
+
   
+//  public String getWlanIP() {
+//    
+//  }
+//  
+//  public String getPanIP() {
+//    
+//  }
+//  
+// private String getIPAddress()
+//    {
+//        //System.out.println("Update IP addresses");
+//        List<String> result = new ArrayList<String>();
+//        Enumeration<NetworkInterface> interfaces;
+//        String oldWlan = wlanAddress;
+//        String oldPan = panAddress;
+//        wlanAddress = null;
+//        panAddress = null;
+//        ips.clear();
+//        try
+//        {
+//            interfaces = NetworkInterface.getNetworkInterfaces();
+//        } catch (SocketException e)
+//        {
+//            System.err.println("Failed to get network interfaces: " + e);
+//            return null;
+//        }
+//        while (interfaces.hasMoreElements()){
+//            NetworkInterface current = interfaces.nextElement();
+//             try
+//            {
+//                if (!current.isUp() || current.isLoopback() || current.isVirtual()) continue;
+//            } catch (SocketException e)
+//            {
+//              System.err.println("Failed to get network properties: " + e);
+//            }
+//            Enumeration<InetAddress> addresses = current.getInetAddresses();
+//            while (addresses.hasMoreElements()){
+//                InetAddress current_addr = addresses.nextElement();
+//                if (current_addr.isLoopbackAddress()) continue;
+//                result.add(current_addr.getHostAddress());
+//                //System.out.println("Interface name " + current.getName());
+//                if (current.getName().equals(WLAN_INTERFACE))
+//                    wlanAddress = current_addr.getHostAddress();
+//                else if (current.getName().equals(PAN_INTERFACE))
+//                    panAddress = current_addr.getHostAddress();
+//            }
+//        }
+//        ips = result;
+//        // have any of the important addresses changed?
+//        return !(oldWlan == wlanAddress || (oldWlan != null && wlanAddress != null && wlanAddress.equals(oldWlan))) ||
+//                !(oldPan == panAddress || (oldPan != null && panAddress != null && panAddress.equals(oldPan)));
+//    } 
   
   
   

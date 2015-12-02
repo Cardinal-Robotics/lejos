@@ -2,75 +2,146 @@ package lejos.ev3.menu.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import lejos.ev3.menu.control.MenuControl;
-import lejos.ev3.menu.viewer.CommandMenu;
-import lejos.ev3.menu.viewer.Config;
-import lejos.ev3.menu.viewer.Editor;
 
-public abstract class BaseDetail implements Detail {
-  @Override
+public class BaseDetail implements Detail {
+ 
   
-  public void runMenu(int x, int y) {
-  }
-
   protected boolean editable = false;
-  private List<String> menu;
-  protected Editor editor;
+  private List<String> commands;
   protected MenuControl control;
   String label ;
+  private final int type;
+  private final Properties props = new Properties();
+  private final int possibility;
+  private int nValue;
+  private String sValue;
+  
 
-
-
-
-
-  @Override
-  public void setLabel(String label) {
-    this.label = label;
-  }
-
-  @Override
-  public String getLabel() {
-    return label;
-  }
-
-  public BaseDetail(MenuControl control) {
+  public BaseDetail(MenuControl control, String label, String value, String format, int type ) {
     this.control = control;
+    this.type = STRING;
+    this.sValue = value;
+    this.possibility = type;
+    props.setProperty("label", label);
+    props.setProperty("format", format);
   }
+  
+  public BaseDetail(MenuControl control, String label, int value, String format, int type ) {
+    this.control = control;
+    this.type = NUMERIC;
+    this.nValue = value;
+    this.possibility = type;
+    props.setProperty("label", label);
+    props.setProperty("format", format);
+  }
+  
+
 
   @Override
-  public boolean isEditable() {
-    return editable;
-  }
-
-
-  @Override
-  public Detail addMenuItem(String label) {
-    if (menu == null) menu = new ArrayList<String>();
-    menu.add(label);
+  public Detail setLabel(String label) {
+    props.setProperty("label", label);
     return this;
   }
 
   @Override
-  public void edit(int x, int y) {
+  public String getLabel() {
+    return props.getProperty("label", "");
+  }
+
+
+  @Override
+  public boolean isEditable() {
+    return possibility == TYPE_EDITABLE ? true : false;
+  }
+
+
+  @Override
+  public Detail addCommand(String label) {
+    if (commands == null) commands = new ArrayList<String>();
+    commands.add(label);
+    return this;
+  }
+
+
+  @Override
+  public boolean hasCommands() {
+    return commands == null ? false : true;
   }
 
   @Override
-  public boolean hasMenu() {
+  public String toString() {
+    if (type == NUMERIC) 
+      return String.format(props.getProperty("label") + props.getProperty("format"),getNValue());
+    else 
+      return String.format(props.getProperty("label") + props.getProperty("format"),getSValue());
+  }
+
+  @Override
+  public boolean isSelectable() {
+    return possibility == TYPE_SELECTABLE ? true : false;
+  }
+
+  @Override
+  public Detail setNValue(int value) {
+    nValue = value;
+    return this;
+  }
+
+  @Override
+  public int getNValue() {
+    return nValue;
+  }
+
+  @Override
+  public Detail setSValue(String value) {
+    sValue = value;
+    return this;
     
-    return menu == null ? false : true;
   }
 
   @Override
-  public int runMenu(int defaultItem, int x, int y) {
-    if (!hasMenu()) throw new RuntimeException("No menu for this item");
-    CommandMenu command = new CommandMenu(menu);
-    return command.select(defaultItem, x + Config.DETAILS.font.stringWidth(label), y);
+  public String getSValue() {
+    return sValue;
+  }
+
+  @Override
+  public Detail setFormat(String format) {
+    props.setProperty("format", format);
+    return this;
+  }
+
+  @Override
+  public String getFormat() {
+    return props.getProperty("format");
+  }
+
+  @Override
+  public Properties getProperties() {
+    return props;
+  }
+
+  @Override
+  public List<String> getCommands() {
+    return commands;
   }
   
   @Override
-  public String toString() {
-    return label;
+  public int getType() {
+    // TODO Auto-generated method stub
+    return type;
+  }
+
+  @Override
+  public Detail setProperty(String key, String value) {
+    props.setProperty(key, value);
+    return this;
+  }
+
+  @Override
+  public void executeCommand(int index) {
   }
   
  

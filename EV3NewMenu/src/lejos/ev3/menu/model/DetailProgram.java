@@ -7,42 +7,25 @@ public class DetailProgram extends BaseDetail {
 
 
   public DetailProgram(MenuControl control, String file) {
-    super(control);
-    this.label = file;
-    this.addMenuItem("Run");
-    this.addMenuItem("Debug");
-    this.addMenuItem("Delete");
-    this.addMenuItem("Set default");
-    this.addMenuItem("Set autorun");
-    this.addMenuItem("View output");
-    this.addMenuItem("View error");
+    super(control, "",file,"%s", Detail.TYPE_SELECTABLE);
+    this.addCommand("Run");
+    this.addCommand("Debug");
+    this.addCommand("Delete");
+    this.addCommand("Set default");
+    this.addCommand("Set autorun");
+    this.addCommand("View output");
+    this.addCommand("View error");
   }
 
   @Override
-  public void runMenu( int x, int y) {
-    switch(super.runMenu(0, x, y)) {
-      case 0: {
-        break;
+  public void executeCommand(int index) {
+    switch (index) {
+      default: {
+        System.out.println("Command not implemented");
+        //throw new RuntimeException("Command not implemented");
       }
-      case 1: {
-        break;
-      }
-      case 2: {
-        break;
-      }
-      case 3: {
-        break;
-      }
-      case 4: {
-        break;
-      }
-      case 5: {
-        break;
-      }
-      case 6: {
-        break;
-      }
-    };
+    }
   }
+
 
 }
