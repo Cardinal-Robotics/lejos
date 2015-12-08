@@ -1,7 +1,7 @@
 package lejos.ev3.menu.model;
 
-import java.util.List;
-import java.util.Properties;
+import lejos.hardware.lcd.GraphicsLCD;
+
 
 public interface Detail {
   
@@ -10,13 +10,14 @@ public interface Detail {
   static int TYPE_INFO = 0;
   static int TYPE_SELECTABLE = 1;
   static int TYPE_EDITABLE = 2;
+  static int TYPE_COMMAND = 3;
 
 
   public boolean isEditable();
 
   public boolean isSelectable();
-
-  public boolean hasCommands();
+  
+  public boolean isCommand();
 
   public int getType();
 
@@ -36,14 +37,12 @@ public interface Detail {
 
   public String getFormat();
   
-  public Detail setProperty(String key, String value);
+  public String getID();
+  
+  public boolean edit(GraphicsLCD canvas);
+  
+  public int getDetailType();
 
-  public Properties getProperties();
-
-  public List<String> getCommands();
-
-  public Detail addCommand(String label);
-
-  public void executeCommand(int index);
+  public boolean canHaveFocus();
 
 }

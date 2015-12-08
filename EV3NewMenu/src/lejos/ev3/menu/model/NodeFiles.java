@@ -3,7 +3,6 @@ package lejos.ev3.menu.model;
 import java.util.List;
 
 import lejos.ev3.menu.control.MenuControl;
-import lejos.ev3.menu.viewer.Icons;
 import lejos.hardware.lcd.GraphicsLCD;
 import lejos.hardware.lcd.Image;
 
@@ -20,7 +19,7 @@ public class NodeFiles extends BaseNode {
     List<String> list = control.getFiles(path, filter);
     
     for (String fn : list) {
-          addDetail(new DetailProgram(control, fn));
+          addDetail(new DetailProgram(control, fn, path + "/" + fn + filter));
         }
     }
   

@@ -1,89 +1,89 @@
 package lejos.ev3.menu.model;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
 
 import lejos.ev3.menu.control.MenuControl;
+import lejos.ev3.menu.viewer.Editor;
+import lejos.hardware.lcd.GraphicsLCD;
 
 public class BaseDetail implements Detail {
  
   
   protected boolean editable = false;
-  private List<String> commands;
   protected MenuControl control;
   String label ;
   private final int type;
-  private final Properties props = new Properties();
-  private final int possibility;
-  private int nValue;
-  private String sValue;
+  private final int detailType;
+  protected int nValue;
+  protected String sValue;
+  String ID;
+  protected Editor editor;
+  private String format;
   
 
-  public BaseDetail(MenuControl control, String label, String value, String format, int type ) {
+  public BaseDetail(MenuControl control, String label, String value, String format, int detailType ) {
     this.control = control;
     this.type = STRING;
     this.sValue = value;
-    this.possibility = type;
-    props.setProperty("label", label);
-    props.setProperty("format", format);
+    this.detailType = detailType;
+    this.label = label;
+    this.format = format;
   }
   
-  public BaseDetail(MenuControl control, String label, int value, String format, int type ) {
+  public BaseDetail(MenuControl control, String label, int value, String format, int detailType ) {
     this.control = control;
     this.type = NUMERIC;
     this.nValue = value;
-    this.possibility = type;
-    props.setProperty("label", label);
-    props.setProperty("format", format);
+    this.detailType = detailType;
+    this.label = label;
+    this.format = format;
   }
   
 
 
   @Override
   public Detail setLabel(String label) {
-    props.setProperty("label", label);
+    this.label = label;
     return this;
   }
 
   @Override
   public String getLabel() {
-    return props.getProperty("label", "");
+    return label;
   }
 
 
   @Override
   public boolean isEditable() {
-    return possibility == TYPE_EDITABLE ? true : false;
-  }
-
-
-  @Override
-  public Detail addCommand(String label) {
-    if (commands == null) commands = new ArrayList<String>();
-    commands.add(label);
-    return this;
-  }
-
-
-  @Override
-  public boolean hasCommands() {
-    return commands == null ? false : true;
+    return detailType == TYPE_EDITABLE ? true : false;
   }
 
   @Override
   public String toString() {
     if (type == NUMERIC) 
-      return String.format(props.getProperty("label") + props.getProperty("format"),getNValue());
+      return String.format(label + format,getNValue());
     else 
-      return String.format(props.getProperty("label") + props.getProperty("format"),getSValue());
+      return String.format(label + format,getSValue());
   }
 
   @Override
   public boolean isSelectable() {
-    return possibility == TYPE_SELECTABLE ? true : false;
+    return detailType == TYPE_SELECTABLE ? true : false;
   }
 
+  @Override
+  public boolean isCommand() {
+    return detailType == TYPE_COMMAND ? true : false;
+  }
+  
+  @Override
+  public boolean canHaveFocus() {
+    return detailType > 0 ? true : false;
+  }
+
+  
+  
+
+  
   @Override
   public Detail setNValue(int value) {
     nValue = value;
@@ -109,42 +109,36 @@ public class BaseDetail implements Detail {
 
   @Override
   public Detail setFormat(String format) {
-    props.setProperty("format", format);
+    this.format = format;
     return this;
   }
 
   @Override
   public String getFormat() {
-    return props.getProperty("format");
+    return format;
   }
 
-  @Override
-  public Properties getProperties() {
-    return props;
-  }
 
-  @Override
-  public List<String> getCommands() {
-    return commands;
-  }
-  
   @Override
   public int getType() {
-    // TODO Auto-generated method stub
     return type;
   }
 
   @Override
-  public Detail setProperty(String key, String value) {
-    props.setProperty(key, value);
-    return this;
+  public int getDetailType() {
+    return detailType;
+  }
+
+
+  @Override
+  public String getID() {
+    // TODO Auto-generated method stub
+    return ID;
   }
 
   @Override
-  public void executeCommand(int index) {
+  public boolean edit(GraphicsLCD canvas) {
+    if (editor == null) throw new RuntimeException("No editor defined");
+    return editor.edit(this, canvas);
   }
-  
- 
-  
-
 }

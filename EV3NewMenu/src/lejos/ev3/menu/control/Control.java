@@ -46,7 +46,6 @@ public class Control implements MenuControl {
 
   @Override
   public String getProperty(String key, String defaultValue) {
-    // TODO Auto-generated method stub
     return Settings.getProperty(key, defaultValue);
   }
 
@@ -89,6 +88,11 @@ public class Control implements MenuControl {
         }
     }
     return list;
+  }
+
+  @Override
+  public void execute(String command, String id) {
+    // TODO Auto-generated method stub
   }
 
 

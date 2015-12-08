@@ -19,6 +19,8 @@ public interface MenuControl {
   void setNumericProperty(String key, int value);
   
   public List<String> getFiles(String path, String filter);
+
+  void execute(String command, String id);
   
 
   

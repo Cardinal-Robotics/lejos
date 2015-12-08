@@ -23,7 +23,7 @@ public class CommandMenu {
 
   public int select (int defaultItem, int x, int y) {
     selected = defaultItem;
-    Font font = Config.DETAILS.font;
+    Font font = Config.DETAIL.font;
     int height = font.getHeight() + 3;
     int width = 0;
     int nItems= menu.size();
@@ -38,7 +38,7 @@ public class CommandMenu {
     g.fillRect(x, y, width, height *nItems);
     g.setColor(GraphicsLCD.BLACK);
     
-    g.setFont(Config.DETAILS.font);
+    g.setFont(Config.DETAIL.font);
     for (int i =0; i<nItems; i++) {
       g.drawRect(x, y + i * height, width, height );
       g.drawString(menu.get(i), x+2 + icon.width, y + 2 + i * height , 0);
