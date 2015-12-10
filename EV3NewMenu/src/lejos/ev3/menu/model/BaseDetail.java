@@ -1,32 +1,49 @@
 package lejos.ev3.menu.model;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import lejos.ev3.menu.control.MenuControl;
-import lejos.ev3.menu.viewer.CommandMenu;
-import lejos.ev3.menu.viewer.Config;
 import lejos.ev3.menu.viewer.Editor;
+import lejos.hardware.lcd.GraphicsLCD;
 
-public abstract class BaseDetail implements Detail {
-  @Override
+public class BaseDetail implements Detail {
+ 
   
-  public void runMenu(int x, int y) {
-  }
-
   protected boolean editable = false;
-  private List<String> menu;
-  protected Editor editor;
   protected MenuControl control;
   String label ;
+  private final int type;
+  private final int detailType;
+  protected int nValue;
+  protected String sValue;
+  String ID;
+  protected Editor editor;
+  private String format;
+  
 
-
-
+  public BaseDetail(MenuControl control, String label, String value, String format, int detailType ) {
+    this.control = control;
+    this.type = STRING;
+    this.sValue = value;
+    this.detailType = detailType;
+    this.label = label;
+    this.format = format;
+  }
+  
+  public BaseDetail(MenuControl control, String label, int value, String format, int detailType ) {
+    this.control = control;
+    this.type = NUMERIC;
+    this.nValue = value;
+    this.detailType = detailType;
+    this.label = label;
+    this.format = format;
+  }
+  
 
 
   @Override
-  public void setLabel(String label) {
+  public Detail setLabel(String label) {
     this.label = label;
+    return this;
   }
 
   @Override
@@ -34,46 +51,94 @@ public abstract class BaseDetail implements Detail {
     return label;
   }
 
-  public BaseDetail(MenuControl control) {
-    this.control = control;
-  }
 
   @Override
   public boolean isEditable() {
-    return editable;
+    return detailType == TYPE_EDITABLE ? true : false;
   }
 
+  @Override
+  public String toString() {
+    if (type == NUMERIC) 
+      return String.format(label + format,getNValue());
+    else 
+      return String.format(label + format,getSValue());
+  }
 
   @Override
-  public Detail addMenuItem(String label) {
-    if (menu == null) menu = new ArrayList<String>();
-    menu.add(label);
+  public boolean isSelectable() {
+    return detailType == TYPE_SELECTABLE ? true : false;
+  }
+
+  @Override
+  public boolean isCommand() {
+    return detailType == TYPE_COMMAND ? true : false;
+  }
+  
+  @Override
+  public boolean canHaveFocus() {
+    return detailType > 0 ? true : false;
+  }
+
+  
+  
+
+  
+  @Override
+  public Detail setNValue(int value) {
+    nValue = value;
     return this;
   }
 
   @Override
-  public void edit(int x, int y) {
+  public int getNValue() {
+    return nValue;
   }
 
   @Override
-  public boolean hasMenu() {
+  public Detail setSValue(String value) {
+    sValue = value;
+    return this;
     
-    return menu == null ? false : true;
   }
 
   @Override
-  public int runMenu(int defaultItem, int x, int y) {
-    if (!hasMenu()) throw new RuntimeException("No menu for this item");
-    CommandMenu command = new CommandMenu(menu);
-    return command.select(defaultItem, x + Config.DETAILS.font.stringWidth(label), y);
+  public String getSValue() {
+    return sValue;
   }
-  
-  @Override
-  public String toString() {
-    return label;
-  }
-  
- 
-  
 
+  @Override
+  public Detail setFormat(String format) {
+    this.format = format;
+    return this;
+  }
+
+  @Override
+  public String getFormat() {
+    return format;
+  }
+
+
+  @Override
+  public int getType() {
+    return type;
+  }
+
+  @Override
+  public int getDetailType() {
+    return detailType;
+  }
+
+
+  @Override
+  public String getID() {
+    // TODO Auto-generated method stub
+    return ID;
+  }
+
+  @Override
+  public boolean edit(GraphicsLCD canvas) {
+    if (editor == null) throw new RuntimeException("No editor defined");
+    return editor.edit(this, canvas);
+  }
 }

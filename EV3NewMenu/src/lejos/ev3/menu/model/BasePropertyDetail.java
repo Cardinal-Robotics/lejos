@@ -2,72 +2,47 @@ package lejos.ev3.menu.model;
 
 
 import lejos.ev3.menu.control.MenuControl;
-import lejos.ev3.menu.viewer.Config;
+import lejos.ev3.menu.viewer.Editor;
+import lejos.hardware.lcd.GraphicsLCD;
 
-public abstract class BasePropertyDetail extends BaseDetail {
+public  class BasePropertyDetail extends BaseDetail {
   
   protected String key;
   
-  private boolean numeric =false;
-  protected int  nValue;
-  protected String sValue;
-  protected String format ;
-  protected int nDefault;
-  protected String sDefault;
   
-  
-  protected BasePropertyDetail(MenuControl control, String label, String key, String format,  int defaultValue) {
-    super(control);
-    editable = true;
-    this.label = label;
-    this.format = format;
+  public BasePropertyDetail(MenuControl control, String label, String key, String format,  int defaultValue, Editor editor) {
+    super(control, label, control.getNumericProperty(key,defaultValue), format, Detail.TYPE_EDITABLE );
     this.key = key;
-    this.numeric = true;
-    nDefault = defaultValue;
-    nValue = control.getNumericProperty(key,nDefault);
+    this.editor = editor;
   }
 
-  protected BasePropertyDetail(MenuControl control, String label, String key, String format,  String defaultValue) {
-    super(control);
-    editable = true;
-    this.label = label;
-    this.format = format;
+  public BasePropertyDetail(MenuControl control, String label, String key, String format,  String defaultValue, Editor editor) {
+    super(control, label, control.getProperty(key,defaultValue), format, Detail.TYPE_EDITABLE );
     this.key = key;
-    this.numeric = false;
-    sDefault = defaultValue;
-    sValue = control.getProperty(key, sDefault);
+    this.editor = editor;
   }
-
-
-  
-  public boolean isNumeric() {
-    return numeric;
-  }
-
-  
-  
-
 
   @Override
-  public void edit( int x, int y) {
-    if (editable) {
-      if (editor == null) throw new RuntimeException("No editor defined");
-      if (numeric) {
-       nValue = editor.edit(nValue, x + Config.DETAILS.font.stringWidth(label), y);
-       control.setNumericProperty(key, nValue);
-      }
-      else {
-        sValue = editor.edit(sValue, x + Config.DETAILS.font.stringWidth(label), y);
-        control.setProperty(key, sValue);
-      }
-    }
+  public boolean edit(GraphicsLCD canvas) {
+    return super.edit(canvas);
   }
 
-
-  public String toString() {
-    if (numeric) 
-      return label + String.format(format, nValue);
-    return label + String.format(format, sValue);
+  @Override
+  public Detail setNValue(int value) {
+    control.setNumericProperty(key, value);
+    return super.setNValue(value);
   }
+
+  @Override
+  public Detail setSValue(String value) {
+    control.setProperty(key, value);
+    return super.setSValue(value);
+  }
+  
+  
+  
+  
+  
+  
 
 }

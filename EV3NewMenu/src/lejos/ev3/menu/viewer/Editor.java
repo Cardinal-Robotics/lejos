@@ -1,8 +1,10 @@
 package lejos.ev3.menu.viewer;
 
+import lejos.ev3.menu.model.Detail;
+import lejos.hardware.lcd.GraphicsLCD;
+
+
 public interface Editor {
   
-  public int edit(int value, int x, int y);
-  public String edit(String value, int x, int y);
-  
+  public boolean edit(Detail control, GraphicsLCD canvas);
 }

@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lejos.ev3.menu.control.MenuControl;
+import lejos.ev3.menu.viewer.Icons;
 import lejos.hardware.lcd.GraphicsLCD;
 import lejos.hardware.lcd.Image;
 
-public abstract class BaseNode implements Node{
+public class BaseNode implements Node{
   
   private Image icon;
   
@@ -19,8 +20,17 @@ public abstract class BaseNode implements Node{
   
   private MenuControl control;
   
+  private String ID;
+  
   protected int alignment = GraphicsLCD.HCENTER | GraphicsLCD.TOP;
+  
   protected boolean selectableDetails = false;
+  
+  public BaseNode(MenuControl control, String label, Image icon) {
+    this.control = control;
+    this.label = label;
+    this.icon = icon;
+  }
 
   @Override
   public int getAlignment() {
@@ -29,8 +39,8 @@ public abstract class BaseNode implements Node{
 
 
 
-  public BaseNode(MenuControl control) {
-    this.control = control;
+  public BaseNode(MenuControl control, String label) {
+    this(control, label, Icons.DEFAULT);
   }
   
 
@@ -56,7 +66,7 @@ public abstract class BaseNode implements Node{
     return icon;
   }
 
-  protected void setLabel(String label) {
+  public void setLabel(String label) {
     this.label = label;
   }
   
@@ -75,6 +85,7 @@ public abstract class BaseNode implements Node{
   public Node addDetail(Detail detail) {
     if (details == null) details = new ArrayList<Detail>();
     details.add(detail);
+    if (detail.isEditable() | detail.isSelectable() | detail.isCommand()) selectableDetails = true;
     return this;
   }
 
@@ -101,5 +112,18 @@ public abstract class BaseNode implements Node{
   public boolean hasChildren() {
     return children == null ? false : true;
   }
+
+  @Override
+  public void setID(String id) {
+    this.ID = id;
+  }
+
+  @Override
+  public void execute(String command) {
+    control.execute(command, ID);
+    
+  }
+  
+  
   
 }

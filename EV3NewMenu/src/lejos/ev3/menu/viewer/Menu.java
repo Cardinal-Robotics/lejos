@@ -5,167 +5,273 @@ import java.util.List;
 
 import lejos.ev3.menu.model.Detail;
 import lejos.ev3.menu.model.Node;
-import lejos.ev3.menu.viewer.Config.Panel;
 import lejos.hardware.Button;
 import lejos.hardware.ev3.LocalEV3;
-import lejos.hardware.lcd.CustomFont;
-import lejos.hardware.lcd.Font;
 import lejos.hardware.lcd.GraphicsLCD;
-import lejos.hardware.lcd.Image;
 
 public class Menu {
 
-  private List<Node>   nodes;
-  private int          selectedIndex  = -1;
-  private Node         selectedNode;
-  private GraphicsLCD  g              = LocalEV3.get().getGraphicsLCD();
-  private List<Detail> details;
-  private int          toprow         = 0;
-  private int          selectedDetail = 0;
-  private int          nrows          = (128 - Config.DETAILS.y) / Config.DETAILS.height;  
-  private List<Node>   navigationStack = new ArrayList<Node>(0);
-  private List<Integer>    navigationIndex = new ArrayList<Integer>(0);
-  private Node top;
-  
+  private List<Node>    siblings;
+  private int           iNode           = -1;
+  private Node          currentNode;
+  private GraphicsLCD   g               = LocalEV3.get().getGraphicsLCD();
+  private List<Detail>  details;
+  private int           toprow          = 0;
+  private int           iDetail         = -1;
+  private int           visibleDetails  = (Config.DETAILS.height) / (Config.DETAIL.height);
+  private List<Node>    navigationStack = new ArrayList<Node>(0);
+  private List<Integer> navigationIndex = new ArrayList<Integer>(0);
+  private Node          top;
+  private ScrollBar     bar;
+  private int           nDetails;
+
   public Menu(Node top) {
     this.top = top;
-    nodes = top.getChildren();
+    siblings = top.getChildren();
     selectNode(0);
   }
-  
 
   public void run() {
-    selectNode(0);
     draw();
-    while(true) {  
+    while (true) {
       switch (Button.waitForAnyPress()) {
       case Button.ID_LEFT: {
-        if (selectedIndex >0) 
-          selectNode(selectedIndex-1);
-        else 
-          selectNode(nodes.size()-1);
+        if (iNode > 0)
+          selectNode(iNode - 1);
+        else
+          selectNode(siblings.size() - 1);
         draw();
         break;
       }
       case Button.ID_RIGHT: {
-        if (selectedIndex <  nodes.size()-1) 
-          selectNode(selectedIndex+1);
+        if (iNode < siblings.size() - 1)
+          selectNode(iNode + 1);
         else
           selectNode(0);
         draw();
         break;
       }
       case Button.ID_DOWN: {
-        if (selectedNode.hasSelectableDetails()) {
-          if (selectedDetail < details.size() - 1) {
-            selectedDetail++;
-            if (selectedDetail >= toprow + nrows )
-              toprow = selectedDetail - nrows + 1;
+        if (currentNode.hasSelectableDetails()) {
+          iDetail = findNext(iDetail);
+          if (iDetail >= toprow + visibleDetails)
+            toprow = iDetail - visibleDetails + 1;
+          if (bar != null)
+            bar.setToprow(toprow);
+          draw();
+        } else {
+          if (toprow < details.size() - visibleDetails) {
+            toprow++;
+            if (bar != null)
+              bar.setToprow(toprow);
             draw();
           }
-        } else {
-          if (toprow < details.size() - nrows) {
-            toprow++;
-            draw();
-          } 
         }
         break;
       }
       case Button.ID_UP: {
-        if (selectedNode.hasSelectableDetails()) {
-          if (selectedDetail > 0) {
-            selectedDetail--;
-            if (selectedDetail < toprow)
-              toprow = selectedDetail;
-            draw();
-          }
+        if (currentNode.hasSelectableDetails()) {
+          iDetail = findPrevious(iDetail);
+          if (iDetail < toprow)
+            toprow = iDetail;
+          if (bar != null)
+            bar.setToprow(toprow);
+          draw();
         } else {
           if (toprow > 0) {
             toprow--;
+            if (bar != null)
+              bar.setToprow(toprow);
             draw();
           }
         }
         break;
       }
       case Button.ID_ENTER: {
-        if (selectedNode.hasChildren()){
-          navigationStack.add(top);
-          navigationIndex.add(selectedIndex);
-          top = selectedNode;
-          nodes = top.getChildren();
-          selectNode(0);
+        if (currentNode.hasSelectableDetails()) {
+          Detail d = details.get(iDetail);
+          switch (d.getDetailType()) {
+          case Detail.TYPE_SELECTABLE: {
+            String ID = d.getID();
+            String label = String.format(d.getFormat(), d.getSValue());
+            for (Node n : currentNode.getChildren()) {
+              n.setID(ID);
+              n.setLabel(label);
+            }
+            navigationStack.add(top);
+            navigationIndex.add(iNode);
+            top = currentNode;
+            siblings = top.getChildren();
+            selectNode(0);
+            break;
+          }
+          case Detail.TYPE_EDITABLE: {
+            d.edit(g);
+            break;
+          }
+          case Detail.TYPE_COMMAND: {
+            currentNode.execute(d.getSValue());
+            break;
+          }
+          }
+
+        } else {
         }
-        else {
-          Detail detail = details.get(selectedDetail);
-          if (detail.hasMenu()) {
-            detail.runMenu( Config.DETAILS.x, Config.DETAILS.y + (selectedDetail - toprow) * Config.DETAILS.height);
-          }
-          if (detail.isEditable()) {
-            detail.edit(Config.DETAILS.x, Config.DETAILS.y + (selectedDetail - toprow) * Config.DETAILS.height);
-          }
-        };
+        ;
         draw();
         break;
       }
       case Button.ID_ESCAPE: {
-        if (navigationStack.isEmpty()) return;
-        top = navigationStack.remove(navigationStack.size()-1);
-        nodes = top.getChildren();
-        selectNode(navigationIndex.remove(navigationIndex.size()-1));
+        if (navigationStack.isEmpty())
+          return;
+        top = navigationStack.remove(navigationStack.size() - 1);
+        siblings = top.getChildren();
+        selectNode(navigationIndex.remove(navigationIndex.size() - 1));
         draw();
       }
-    }
+      }
     }
   }
 
   private void selectNode(int i) {
-    selectedIndex = i;
-    selectedNode = nodes.get(selectedIndex);
-    details = selectedNode.getDetails();
     toprow = 0;
-    selectedDetail = 0;
+    iDetail = -1;
+    iNode = i;
+    bar = null;
+
+    currentNode = siblings.get(iNode);
+    details = currentNode.getDetails();
+    Config.ICON.icon = currentNode.getIcon();
+    Config.TITLE.label = currentNode.getLabel();
+
+    if (details != null) {
+      nDetails = details.size();
+      if (currentNode.hasSelectableDetails())
+        iDetail = findFirst();
+
+      if (nDetails > visibleDetails) {
+        bar = new ScrollBar(g, Config.DETAILS.right - 12, Config.DETAILS.y + 3, Config.DETAILS.height - 3, nDetails, visibleDetails,
+            iDetail);
+      }
+    }
+
   }
 
   private void draw() {
     g.clear();
-    drawStatus();
-    drawTitleBar();
-    drawDetails();
-  }
-  
-  private void drawStatus() {
-    g.setFont(Config.STATUS.font);
-    g.drawString("Status bar", Config.STATUS.x, Config.STATUS.y, Config.STATUS.alignment);
-    g.setFont(Font.getDefaultFont());
-  }
-  
-  private void drawTitleBar() {
-    g.drawRegion(Config.ICONLEFT.icon, 0, 0,  Config.ICONLEFT.width, Config.ICONLEFT.height, 0,  Config.ICONLEFT.x, Config.ICONLEFT.y,Config.ICONLEFT.alignment);
-    g.drawRegion(Config.ICONRIGHT.icon, 0, 0,  Config.ICONRIGHT.width, Config.ICONRIGHT.height, 0,  Config.ICONRIGHT.x, Config.ICONRIGHT.y,Config.ICONRIGHT.alignment);
-    g.drawRegion(selectedNode.getIcon(), 0, 0,  Config.ICONNODE.width, Config.ICONNODE.height, 0,  Config.ICONNODE.x, Config.ICONNODE.y,Config.ICONNODE.alignment);
-    g.setFont(Config.TITLE.font);
-    g.drawString(selectedNode.toString(), Config.TITLE.x, Config.TITLE.y, Config.TITLE.alignment);
-    g.setFont(Font.getDefaultFont());
-  }
-  
-  private void drawDetails() {
-    g.setFont(Config.DETAILS.font);
-    for (int i =0; i< nrows; i++) {
-      if (i+toprow < details.size())
-        g.drawString(details.get(i+toprow).toString(), Config.DETAILS.x, Config.DETAILS.y + i * Config.DETAILS.height , Config.DETAILS.alignment);
+    Config.STATUS.draw(g);
+    Config.NODE.draw(g);
+    Config.ICON.draw(g);
+    Config.TITLE.draw(g);
+    ;
+    Config.DETAILS.draw(g);
+
+    for (int i = 0; i < visibleDetails; i++) {
+      if (i + toprow < details.size()) {
+        Detail d = details.get(i + toprow);
+        String label;
+        if (d.getType() == Detail.NUMERIC)
+          label = d.getLabel() + String.format(d.getFormat(), d.getNValue());
+        else
+          label = d.getLabel() + String.format(d.getFormat(), d.getSValue());
+        Config.DETAIL.label = label;
+        Config.DETAIL.draw(g, 0, i * Config.DETAIL.height);
+      }
     }
-    g.setFont(Font.getDefaultFont());
 
-    if (toprow != 0) 
-      g.drawRegion(Config.ICONUP.icon, 0, 0,  Config.ICONUP.width, Config.ICONUP.height, 0,  Config.ICONUP.x, Config.ICONUP.y,Config.ICONUP.alignment);
-    if (details.size() > toprow + nrows ) 
-      g.drawRegion(Config.ICONDOWN.icon, 0, 0,  Config.ICONDOWN.width, Config.ICONDOWN.height, 0,  Config.ICONDOWN.x, Config.ICONDOWN.y,Config.ICONDOWN.alignment);
-    if (selectedNode.hasSelectableDetails() && selectedDetail >-1 ) 
-      g.drawRegion(Config.ICONSELECT.icon, 0, 0,  Config.ICONSELECT.width, Config.ICONSELECT.height, 0,  Config.ICONSELECT.x, Config.DETAILS.y + (selectedDetail - toprow) * Config.DETAILS.height ,Config.ICONSELECT.alignment);
+    if (iDetail != -1)
+      Config.ICONSELECT.draw(g, 0, (iDetail - toprow) * Config.DETAIL.height);
+
+    if (bar != null)
+      bar.draw();
+
   }
-  
-  
 
-  
+  private int findPrevious(int current) {
+    if (current == 0)
+      return 0;
+    for (int i = current - 1; i >= 0; i--) {
+      Detail d = details.get(i);
+      if (d.canHaveFocus())
+        return i;
+    }
+    return current;
+  }
+
+  private int findNext(int current) {
+    if (current == nDetails - 1)
+      return current;
+    for (int i = current + 1; i < nDetails; i++) {
+      Detail d = details.get(i);
+      if (d.canHaveFocus())
+        return i;
+    }
+    return current;
+  }
+
+  private int findFirst() {
+    for (int i = 0; i < nDetails; i++) {
+      Detail d = details.get(i);
+      if (d.canHaveFocus())
+        return i;
+    }
+    return -1;
+  }
+
+  // private void drawStatus() {
+  // Config.STATUS.draw(g);
+  // clearRegion(Config.STATUS, g.BLACK);
+  // g.setColor(g.WHITE);
+  // g.setFont(Config.STATUS.font);
+  // g.drawString("Status bar", Config.STATUS.x, Config.STATUS.y+1,
+  // Config.STATUS.alignment);
+  // g.setColor(g.BLACK);
+  // g.setFont(Font.getDefaultFont());
+  // }
+  //
+  // private void drawTitleBar() {
+  // //g.drawRegion(Config.ICONLEFT.icon, 0, 0, Config.ICONLEFT.width,
+  // Config.ICONLEFT.height, 0, Config.ICONLEFT.x,
+  // Config.ICONLEFT.y,Config.ICONLEFT.alignment);
+  // //g.drawRegion(Config.ICONRIGHT.icon, 0, 0, Config.ICONRIGHT.width,
+  // Config.ICONRIGHT.height, 0, Config.ICONRIGHT.x,
+  // Config.ICONRIGHT.y,Config.ICONRIGHT.alignment);
+  // //g.drawRegion(currentNode.getIcon(), 0, 0, Config.ICONNODE.width,
+  // Config.ICONNODE.height, 0, Config.ICONNODE.x,
+  // Config.ICONNODE.y,Config.ICONNODE.alignment);
+  // clearRegion(Config.TITLE, g.WHITE);
+  // g.setFont(Config.TITLE.font);
+  // g.drawString(currentNode.toString(), Config.TITLE.x + Config.TITLE.width /
+  // 2, Config.TITLE.y, Config.TITLE.alignment);
+  // g.setFont(Font.getDefaultFont());
+  // g.drawLine(Config.TITLE.x, Config.TITLE.bottom, Config.TITLE.width,
+  // Config.TITLE.bottom);
+  // }
+  //
+  // private void drawDetails() {
+  // clearRegion(Config.DETAILS, g.WHITE);
+  // if (bar != null) bar.draw();
+  // g.setFont(Config.DETAIL.font);
+  // for (int i =0; i< visibleDetails; i++) {
+  // if (i+toprow < details.size()) {
+  // Detail d = details.get(i+toprow);
+  // String label;
+  // if (d.getType()==Detail.NUMERIC)
+  // label = d.getLabel() + String.format(d.getFormat(), d.getNValue());
+  // else
+  // label = d.getLabel() + String.format(d.getFormat(), d.getSValue());
+  // g.drawString(label, Config.DETAILS.x + Config.DETAIL.x, Config.DETAILS.y +
+  // i * (Config.DETAIL.y + Config.DETAIL.height) , Config.DETAIL.alignment);
+  // }
+  // }
+  // g.setFont(Font.getDefaultFont());
+  //
+  // if (iDetail != -1 )
+  // g.drawRegion(Config.ICONSELECT.icon, 0, 0,
+  // Config.ICONSELECT.icon.getWidth(), Config.ICONSELECT.icon.getHeight(), 0 ,
+  // Config.DETAILS.x + Config.DETAIL.x -1, Config.DETAILS.y + (iDetail -
+  // toprow) * (Config.DETAIL.y + Config.DETAIL.height) , g.TOP | g.RIGHT);
+  // }
+  //
 
 }
