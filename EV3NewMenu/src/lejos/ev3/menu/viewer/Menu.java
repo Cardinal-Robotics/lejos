@@ -160,6 +160,8 @@ public class Menu {
   private void draw() {
     g.clear();
     Config.STATUS.draw(g);
+    Config.STATUSTEXT.label = "8.0   Brick1";
+    Config.STATUSTEXT.draw(g);
     Config.NODE.draw(g);
     Config.ICON.draw(g);
     Config.TITLE.draw(g);

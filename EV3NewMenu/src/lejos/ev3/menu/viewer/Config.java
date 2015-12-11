@@ -6,18 +6,19 @@ import lejos.hardware.lcd.Image;
 
 public class Config {
 
-  public static Panel STATUS     = new Panel(0, 0, 178, 12, true, 0);
-  public static Panel NODE       = new Panel(0, 12, 178, 26, false, 14);
-  public static Icon  ICON       = new Icon(1, 13, 24, 24, false, 0);
-  public static Label TITLE      = new Label(25, 13, 128, 24, false, 0, Font.getDefaultFont());
+  public static Panel STATUS     = new Panel(0, 0, 178, 13, true, 0);
+  public static Label STATUSTEXT = new Label(5, 1, 168, 12, true, 0, Fonts.Courier12);
+  public static Panel NODE       = new Panel(0, 13, 178, 26, false, 14);
+  public static Icon  ICON       = new Icon(2, 14, 24, 24, false, 0);
+  public static Label TITLE      = new Label(29, 17, 128, 20, false, 0, Fonts.Courier17);
 
-  public static Panel DETAILS    = new Panel(0, 40, 178, 85, false, 0);
+  public static Panel DETAILS    = new Panel(0, 40, 178, 87, false, 0);
   public static Icon  ICONSELECT = new Icon(0, 44, 10, 10, false, 0, Icons.ARROW_RIGHT);
-  public static Label DETAIL     = new Label(10, 41, 157, Font.getDefaultFont().height + 1, false, 0, Font.getDefaultFont());
+  public static Label DETAIL     = new Label(10, 42, 157, Fonts.Courier13.height+1 , false, 0, Fonts.Courier13);
   
   public static Panel EDITOR     = new Panel(5,47,170, 24, false, 15 );
   public static Panel SHADE     = new Panel(8,50,170, 24, true, 0 );
-  public static Label EDITORLINE = new Label(8,51,160, Font.getDefaultFont().height + 1, false, 0, Font.getDefaultFont());
+  public static Label EDITORLINE = new Label(8,51,160, Fonts.Courier13.height+1 , false, 0, Fonts.Courier13);
 
   private Config() {
   };
@@ -93,6 +94,7 @@ public class Config {
     @Override
     public void draw(GraphicsLCD canvas, int xOffset, int yOffset) {
       super.draw(canvas, xOffset, yOffset);
+      canvas.setFont(font);
       if (reverse)
         canvas.setColor(GraphicsLCD.WHITE);
       if (label != null)
