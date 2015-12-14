@@ -4,6 +4,12 @@ import lejos.hardware.lcd.Font;
 import lejos.hardware.lcd.GraphicsLCD;
 import lejos.hardware.lcd.Image;
 
+/**
+ * Defines the lay out of the Graphic Menu
+ * 
+ * @author Aswin Bouwmeester
+ *
+ */
 public class Config {
 
   public static Panel STATUS     = new Panel(0, 0, 178, 13, true, 0);
@@ -14,11 +20,11 @@ public class Config {
 
   public static Panel DETAILS    = new Panel(0, 40, 178, 87, false, 0);
   public static Icon  ICONSELECT = new Icon(0, 44, 10, 10, false, 0, Icons.ARROW_RIGHT);
-  public static Label DETAIL     = new Label(10, 42, 157, Fonts.Courier13.height+1 , false, 0, Fonts.Courier13);
-  
-  public static Panel EDITOR     = new Panel(5,47,170, 24, false, 15 );
-  public static Panel SHADE     = new Panel(8,50,170, 24, true, 0 );
-  public static Label EDITORLINE = new Label(8,51,160, Fonts.Courier13.height+1 , false, 0, Fonts.Courier13);
+  public static Label DETAIL     = new Label(10, 42, 157, Fonts.Courier13.height + 1, false, 0, Fonts.Courier13);
+
+  public static Panel EDITOR     = new Panel(5, 47, 170, 24, false, 15);
+  public static Panel SHADE      = new Panel(8, 50, 170, 24, true, 0);
+  public static Label EDITORLINE = new Label(8, 51, 160, Fonts.Courier13.height + 1, false, 0, Fonts.Courier13);
 
   private Config() {
   };
@@ -56,7 +62,7 @@ public class Config {
       canvas.fillRect(x + xOffset, y + yOffset, width, height);
       if (reverse)
         canvas.setColor(GraphicsLCD.WHITE);
-      else 
+      else
         canvas.setColor(GraphicsLCD.BLACK);
       if ((borders & 1) != 0)
         canvas.drawLine(x + xOffset, y + yOffset, right + xOffset, y + yOffset);

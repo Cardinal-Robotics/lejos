@@ -1,95 +1,40 @@
 package lejos.ev3.menu.viewer;
 
-
+import lejos.ev3.menu.control.EV3Control;
 import lejos.ev3.menu.control.Control;
-import lejos.ev3.menu.control.MenuControl;
 import lejos.ev3.menu.model.*;
 
+/**
+ * Defines the menu structure of the leJOS menu and starts the menu
+ * 
+ * @author Aswin Bouwmeester
+ *
+ */
 public class StartMenu {
 
   public static void main(String[] args) {
-    MenuControl control = new Control();
-    Node top;
-   
-//    top = new BaseNode(control,"Top", Icons.EV3)
-//                   .addChild(new BaseNode(control,"System", Icons.EV3)
-//                     .addDetail(new BaseDetail(control, "Name :", "EV3", "%s", Detail.TYPE_INFO))
-//                     .addDetail(new BaseDetail(control, "VM :", "Lejos EV3", "%s", Detail.TYPE_INFO))
-//                     .addDetail(new BaseDetail(control, "Version :", "0.9.1-beta", "%s", Detail.TYPE_INFO))
-//                     .addDetail(new BaseDetail(control, "IP :", "0:0:0:0", "%s", Detail.TYPE_INFO))
-//                     .addDetail(new BaseDetail(control, "IP :", "0:0:0:0", "%s", Detail.TYPE_INFO))
-//                     .addChild(new BaseNode(control,"Sound",Icons.SOUND)
-//                       .addDetail(new BasePropertyDetail(control, "Volume  :", "volume", "%3d", 0 ))
-//                       .addDetail(new BasePropertyDetail(control, "Key Vol :", "keyVolume", "%3d", 0 ))
-//                       .addDetail(new BasePropertyDetail(control, "Key length :", "keyLength", "%3d", 0 ))
-//                       .addDetail(new BasePropertyDetail(control, "Key freq:", "keyFreq", "%5d", 0 )) 
-//                     )
-//                     .addChild(new BaseNode(control, "Tools", Icons.TOOLS)
-//                       .addChild(new NodeFiles(control, "Tools", Icons.TOOLS, NodeFiles.TOOLS_DIRECTORY, ".jar"))
-//                     .addChild(new BaseNode(control, "Settings", Icons.LEJOS))
-//                   )
-//                   .addChild(new NodeFiles(control, "Programs", Icons.PROGRAM, NodeFiles.PROGRAMS_DIRECTORY, ".jar"))
-//                   .addChild(new NodeFiles(control, "Samples", Icons.PROGRAM, NodeFiles.SAMPLES_DIRECTORY, ".jar"))
-//                   )
-//                   ;
+    Control control = new EV3Control();
+    MenuItem top;
 
-    top = new BaseNode(control,"Top", Icons.EV3)
-      .addChild(new BaseNode(control,"System", Icons.EYE)
-      .addDetail(new BaseDetail(control, "", "Brick1", "%s", Detail.TYPE_INFO))
-      .addDetail(new BaseDetail(control, "", "Lejos EV3", "%s", Detail.TYPE_INFO))
-      .addDetail(new BaseDetail(control, "", "0.9.1-beta", "%s", Detail.TYPE_INFO))
-      .addDetail(new BaseDetail(control, "", "0:0:0:0", "%s", Detail.TYPE_INFO))
-      .addDetail(new BaseDetail(control, "", "0:0:0:0", "%s", Detail.TYPE_INFO))
-       )
-      .addChild(new NodeFiles(control, "Programs", Icons.EYE, NodeFiles.PROGRAMS_DIRECTORY, ".jar")
-        .addChild(new BaseNode(control,"Program name", Icons.EYE)
-        .addDetail(new BaseDetail(control,"Run","RUN","", Detail.TYPE_COMMAND))
-        .addDetail(new BaseDetail(control,"Debug","DEBUG","", Detail.TYPE_COMMAND))
-        .addDetail(new BaseDetail(control,"Delete","DELETE","", Detail.TYPE_COMMAND))
-        .addDetail(new BaseDetail(control,"Set as default","SET_DEFAULT","", Detail.TYPE_COMMAND))
-        )
-        .addChild(new BaseNode(control,"Properties", Icons.EYE)
-        .addDetail(new BaseDetail(control,"Preperties viewer","","", Detail.TYPE_INFO))
-        )
-        .addChild(new BaseNode(control,"Log", Icons.EYE)
-        .addDetail(new BaseDetail(control,"Log viewer","","", Detail.TYPE_INFO))
-        )
-        .addChild(new BaseNode(control,"Error", Icons.EYE)
-        .addDetail(new BaseDetail(control,"Error viewer","","", Detail.TYPE_INFO))
-        )
-      )
-      .addChild(new NodeFiles(control, "Samples", Icons.EYE, NodeFiles.SAMPLES_DIRECTORY, ".jar")
-        .addChild(new BaseNode(control,"Program name", Icons.EYE)
-        .addDetail(new BaseDetail(control,"Run","RUN","", Detail.TYPE_COMMAND))
-        .addDetail(new BaseDetail(control,"Debug","DEBUG","", Detail.TYPE_COMMAND))
-        .addDetail(new BaseDetail(control,"Delete","DELETE","", Detail.TYPE_COMMAND))
-        .addDetail(new BaseDetail(control,"Set as default","SET_DEFAULT","", Detail.TYPE_COMMAND))
-        )
-        .addChild(new BaseNode(control,"Properties", Icons.EYE)
-        .addDetail(new BaseDetail(control,"Preperties viewer","","", Detail.TYPE_INFO))
-        )
-        .addChild(new BaseNode(control,"Log", Icons.EYE)
-        .addDetail(new BaseDetail(control,"Log viewer","","", Detail.TYPE_INFO))
-        )
-        .addChild(new BaseNode(control,"Error", Icons.EYE)
-        .addDetail(new BaseDetail(control,"Error viewer","","", Detail.TYPE_INFO))
-        )
-      )
-      .addChild(new BaseNode(control,"Sound",Icons.EYE)
-      .addDetail(new BasePropertyDetail(control, "Volume    :", "volume", "%4d", 0, new EditorNumeric(0,100,10,"%2d") ))
-      .addDetail(new BasePropertyDetail(control, "Key Vol   :", "keyVolume", "%4d", 0, new EditorNumeric(0,100,10,"%2d") ))
-      .addDetail(new BasePropertyDetail(control, "Key length:", "keyLength", "%4d", 0, new EditorNumeric(100,2000,100,"%4d") ))
-      .addDetail(new BasePropertyDetail(control, "Key freq  :", "keyFreq", "%4d", 0, new EditorNumeric(100,2000,100,"%4d") )) 
-      )
+    top = new ItemBase(control, "Top", Icons.EV3)
+        .addChild(
+            new ItemBase(control, "System", Icons.EYE).addDetail(new DetailStringValue(control, "Name", "BRICKNAME", "%s: %s"))
+                .addDetail(new DetailStringValue(control, "Version", "VERSION", "%s: %s")).addDetail(new DetailLabel("0:0:0:0"))
+                .addDetail(new DetailLabel("0:0:0:0")))
+        .addChild(new ItemFiles(control, ItemFiles.PROGRAMS_DIRECTORY, ".jar"))
+        .addChild(new ItemFiles(control, ItemFiles.SAMPLES_DIRECTORY, ".jar"))
+        .addChild(new ItemFiles(control, ItemFiles.TOOLS_DIRECTORY, ".jar"))
+        .addChild(
+            new ItemBase(control, "Sound", Icons.EYE)
+                .addDetail(new DetailNumericValue(control, "Volume", "VOLUME", "%s : %4d", EditorNumeric.class))
+                .addDetail(new DetailNumericValue(control, "Key Vol", "keyVolume", "%s : %4d", EditorNumeric.class))
+                .addDetail(new DetailNumericValue(control, "Key length", "keyLength", "%s : %4d", EditorNumeric.class))
+                .addDetail(new DetailNumericValue(control, "Key freq", "keyFreq", "%s : %4d", EditorNumeric.class)))
 
     ;
 
-    
-   Menu menu = new Menu(top);
-   menu.run();
-   
-   
-
+    GraphicMenu menu = new GraphicMenu(top);
+    menu.run();
 
   }
 

@@ -1,88 +1,68 @@
 package lejos.ev3.menu.viewer;
 
-import lejos.ev3.menu.model.Detail;
+import lejos.ev3.menu.model.DetailNumericValue;
+import lejos.ev3.menu.model.DetailStringValue;
 import lejos.hardware.Button;
 import lejos.hardware.ev3.LocalEV3;
-import lejos.hardware.lcd.Font;
 import lejos.hardware.lcd.GraphicsLCD;
 
-  public class EditorNumeric implements Editor {
-  protected int upperLimit=Integer.MAX_VALUE;
-  protected int lowerLimit=Integer.MIN_VALUE;
-  protected int increment =1;
-  private GraphicsLCD  g              = LocalEV3.get().getGraphicsLCD();
-  protected String format = "%d";
-
+/**
+ * A simple editor for numeric values that uses the up and down keys to change
+ * the value
+ * 
+ * @author Aswin Bouwmeester
+ *
+ */
+public class EditorNumeric implements Editor {
 
   public EditorNumeric() {
   }
 
-  
-  public EditorNumeric(int  lowerLimit, int upperLimit, int increment, String format) {
-    this.lowerLimit = lowerLimit;
-    this.upperLimit = upperLimit;
-    this.increment = increment;
-    this.format = format;
-  }
-
-  
-  public EditorNumeric setLimits (int min, int max) {
-    upperLimit = max;
-    lowerLimit = min;
-    return this;
-  }
-  
-  public EditorNumeric setIncrement(int increment) {
-    this.increment = increment;
-    return this;
-  }
-  
-  public EditorNumeric setFormat(String format) {
-    this.format = format;
-    return this;
-  }
-  
-  
-  
   @Override
-  public boolean edit(Detail control, GraphicsLCD canvas) {
-    int value = control.getNValue();
-    String format = control.getFormat();
-    String label = control.getLabel();
+  public void edit(DetailNumericValue model) {
+    GraphicsLCD canvas = LocalEV3.get().getGraphicsLCD();
+    int lowerLimit = model.getMinValue();
+    int upperLimit = model.getMaxValue();
+    int increment = model.getIncrement();
+    String format = model.getFormat();
+    String label = model.getLabel();
+    int value = model.getValue();
+
     int old = value;
     Config.SHADE.draw(canvas);
     Config.EDITOR.draw(canvas);
-    g.setFont(Config.EDITORLINE.font);
+    canvas.setFont(Config.EDITORLINE.font);
 
     while (true) {
       Config.EDITORLINE.clear(canvas);
-    g.drawString(String.format(label + format, value), Config.EDITORLINE.x,  Config.EDITORLINE.y , 0);
-    
-      switch(Button.waitForAnyEvent()) {
-        case (Button.ID_UP): {
-          if ( value + increment <= upperLimit)
-            value+=increment;
-          break;
+      canvas.drawString(String.format(format, label, value), Config.EDITORLINE.x, Config.EDITORLINE.y, 0);
+
+      switch (Button.waitForAnyEvent()) {
+      case (Button.ID_UP): {
+        if (value + increment <= upperLimit)
+          value += increment;
+        break;
+      }
+      case (Button.ID_DOWN): {
+        if (value - increment >= lowerLimit)
+          value -= increment;
+        break;
+      }
+      case (Button.ID_ENTER): {
+        if (value != old) {
+          model.setValue(value);
         }
-        case (Button.ID_DOWN): {
-          if ( value - increment >= lowerLimit)
-            value-=increment;
-          break;
-        }
-        case (Button.ID_ENTER): {
-          if (value != old) {
-            control.setNValue(value);
-            return true;
-          }
-          else return false;
-        }
-        case (Button.ID_ESCAPE): {
-          return false;
-        }
+        return;
+      }
+      case (Button.ID_ESCAPE): {
+        return;
+      }
       }
     }
   }
 
-
+  @Override
+  public void edit(DetailStringValue model) {
+  }
 
 }
