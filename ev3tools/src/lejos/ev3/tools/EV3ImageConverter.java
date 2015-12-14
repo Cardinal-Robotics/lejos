@@ -136,7 +136,7 @@ public class EV3ImageConverter {
 			case '\\':
 			case '"':
 				sb.append('\\');
-				sb.append(c);
+				sb.append((char)c);
 				break;
 			default:
 				sb.append("\\u");
