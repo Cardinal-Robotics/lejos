@@ -100,12 +100,12 @@ public class DetailStringValue extends DetailAbstractValue {
     return String.format(format, label,  !getValue().isEmpty() ? getValue() : "not set" );
   }
 
-  protected void setValue(String value) {
+  public void setValue(String value) {
     this.value = value;
     control.setProperty(key, value);
   }
 
-  protected String getValue() {
+  public String getValue() {
     if (!isInitialized) initialize();
     if (value == null) return "";
     return value;
