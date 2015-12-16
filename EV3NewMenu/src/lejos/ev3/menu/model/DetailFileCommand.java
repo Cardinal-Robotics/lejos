@@ -1,5 +1,7 @@
 package lejos.ev3.menu.model;
 
+import java.nio.file.Path;
+
 import lejos.ev3.menu.control.Control;
 
 /**
@@ -11,7 +13,7 @@ import lejos.ev3.menu.control.Control;
 public class DetailFileCommand extends DetailLabel {
 
   private String command;
-  private String fileName;
+  protected Path path;
 
   /**
    * @param control
@@ -22,15 +24,11 @@ public class DetailFileCommand extends DetailLabel {
    * @param command
    *          The command as is understoood by the control
    */
-  public DetailFileCommand(Control control, String label, String command) {
+  public DetailFileCommand(Control control, String label, String command, Path path) {
     super(control, label);
     this.isSelectable = true;
     this.command = command;
-  }
-
-  public DetailFileCommand(Control control, String label, String command, String fileName) {
-    this(control, label, command);
-    this.fileName = fileName;
+    this.path = path;
     isInitialized = true;
   }
 
@@ -39,8 +37,7 @@ public class DetailFileCommand extends DetailLabel {
    * 
    */
   protected void select() {
-    if (isInitialized)
-      control.execute(command, fileName);
+      control.execute(command, path);
   }
 
   @Override

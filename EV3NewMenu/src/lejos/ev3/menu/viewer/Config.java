@@ -19,13 +19,21 @@ public class Config {
   public static Label TITLE      = new Label(29, 17, 128, 20, false, 0, Fonts.Courier17);
 
   public static Panel DETAILS    = new Panel(0, 40, 178, 87, false, 0);
-  public static Icon  ICONSELECT = new Icon(0, 44, 10, 10, false, 0, Icons.ARROW_RIGHT);
-  public static Label DETAIL     = new Label(10, 42, 157, Fonts.Courier13.height + 1, false, 0, Fonts.Courier13);
+  public static Icon  ICONSELECT = new Icon(0, 42, 8, 10, false, 0, Icons.ARROW_RIGHT);
+  public static Label DETAIL     = new Label(8, 42, 160, Fonts.Courier13.height + 1, false, 0, Fonts.Courier13);
 
   public static Panel EDITOR     = new Panel(5, 47, 170, 24, false, 15);
   public static Panel SHADE      = new Panel(8, 50, 170, 24, true, 0);
   public static Label EDITORLINE = new Label(8, 51, 160, Fonts.Courier13.height + 1, false, 0, Fonts.Courier13);
+  
+  public static Panel VIEWER     = new Panel(0, 14, 178, 115, false, 0);
+  public static Label VIEWLINE   = new Label(8, 51, 160, Fonts.Courier13.height + 1, false, 0, Fonts.Courier12);
 
+  public static Panel NOTIFY     = new Panel(5, 47, 170, 24, false, 15);
+  public static Panel NOTIFYSHADE= new Panel(8, 50, 170, 24, true, 0);
+  public static Label NOTIFYLINE = new Label(8, 51, 160, Fonts.Courier13.height + 1, false, 0, Fonts.Courier13);
+
+  
   private Config() {
   };
 

@@ -1,5 +1,8 @@
 package lejos.ev3.menu.viewer;
 
+import java.io.File;
+import java.nio.file.Paths;
+
 import lejos.ev3.menu.control.EV3Control;
 import lejos.ev3.menu.control.Control;
 import lejos.ev3.menu.model.*;
@@ -18,12 +21,16 @@ public class StartMenu {
 
     top = new ItemBase(control, "Top", Icons.EV3)
         .addChild(
-            new ItemBase(control, "System", Icons.EYE).addDetail(new DetailStringValue(control, "Name", "BRICKNAME", "%s: %s"))
-                .addDetail(new DetailStringValue(control, "Version", "VERSION", "%s: %s")).addDetail(new DetailLabel("0:0:0:0"))
-                .addDetail(new DetailLabel("0:0:0:0")))
-        .addChild(new ItemFiles(control, ItemFiles.PROGRAMS_DIRECTORY, ".jar"))
-        .addChild(new ItemFiles(control, ItemFiles.SAMPLES_DIRECTORY, ".jar"))
-        .addChild(new ItemFiles(control, ItemFiles.TOOLS_DIRECTORY, ".jar"))
+            new ItemBase(control, "leJOS EV3", Icons.EYE)
+                .addDetail(new DetailRunDefault(control))
+                .addDetail(new DetailStringValue(control, "Name", "HOSTNAME", "%s: %s"))
+                .addDetail(new DetailStringValue(control, "Version", "VERSION", "%s: %s"))
+                .addDetail(new DetailStringValue(control, "Wifi", "WIFI_WLAN0", "%s: %s"))
+                .addDetail(new DetailStringValue(control, "PAN", "WIFI_BR0", "%s: %s")))
+        .addChild(new ItemFiles(control, ItemFiles.PROGRAMS_DIRECTORY))
+        .addChild(new ItemFiles(control, ItemFiles.SAMPLES_DIRECTORY ))
+        .addChild(new ItemFiles(control, ItemFiles.TOOLS_DIRECTORY))
+        .addChild(new ItemFiles(control, Paths.get("/home")))
         .addChild(
             new ItemBase(control, "Sound", Icons.EYE)
                 .addDetail(new DetailNumericValue(control, "Volume", "VOLUME", "%s : %4d", EditorNumeric.class))

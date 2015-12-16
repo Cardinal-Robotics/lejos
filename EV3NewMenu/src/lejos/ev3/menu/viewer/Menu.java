@@ -16,4 +16,8 @@ public interface Menu {
    * Selects the parent menu item of the current menu
    */
   public void selectParent();
+  
+  public void notifyOn(String message);
+  
+  public void notifyOff();
 }

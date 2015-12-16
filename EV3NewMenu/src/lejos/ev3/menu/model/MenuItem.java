@@ -21,6 +21,11 @@ public interface MenuItem {
    * @return this
    */
   public MenuItem addChild(MenuItem child);
+  
+  /**
+   * Removes all child items
+   */
+  public void removeChildren();
 
   /**
    * Returns a list of all the child nodes (sub menu items)
@@ -50,6 +55,11 @@ public interface MenuItem {
    * @return this
    */
   public MenuItem addDetail(MenuDetail detail);
+  
+  /**
+   * Removes all Details
+   */
+  public void removeDetails();
 
   /**
    * Returns a list of all the details of this node

@@ -1,9 +1,16 @@
 package lejos.ev3.menu.control;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.URI;
+import java.nio.charset.Charset;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -29,7 +36,7 @@ public class EV3Control implements Control {
 
   @Override
   public String getProperty(String key) {
-    return getProperty(key, "");
+    return getProperty(key, null);
   }
 
   @Override
@@ -39,7 +46,16 @@ public class EV3Control implements Control {
 
   @Override
   public String getProperty(String key, String defaultValue) {
-    return Settings.getProperty(key, defaultValue);
+    switch (key) {
+    case ("WIFI_WLAN0"): return getIPAddresses("wlan0");
+    case ("WIFI_BR0"): return getIPAddresses("br0");
+    case ("HOSTNAME"): {
+      List<String> f = readFile(Paths.get("/etc/hostname"));
+      if (f == null) return null;
+      return f.get(0);
+    }
+    default: return Settings.getProperty(key, defaultValue);
+    }
   }
 
   @Override
@@ -67,19 +83,87 @@ public class EV3Control implements Control {
   }
 
   @Override
-  public void execute(String command, String id) {
-    // TODO Auto-generated method stub
+  public void execute(String command, Path path) {
+    switch(command) {
+    case "RUN": {
+      break;
+    }
+    case "RUN_SEPERATE": {
+      break;
+    }
+    case "DEBUG": {
+      break;
+    }
+    case "DELETE": {
+      break;
+    }
+    }
   }
 
-  @Override
-  public File getFile(String name) {
-    // TODO Auto-generated method stub
-    return new File(name);
+
+  
+  
+  
+  private String getIPAddresses(String wifiInterface)
+  {
+      Enumeration<NetworkInterface> interfaces;
+      try
+      {
+          interfaces = NetworkInterface.getNetworkInterfaces();
+          while (interfaces.hasMoreElements()){
+            NetworkInterface current = interfaces.nextElement();
+            try
+            {
+                if (!current.isUp() || current.isLoopback() || current.isVirtual()) continue;
+            } catch (SocketException e)
+            {
+              System.err.println("Failed to get network properties: " + e);
+            }
+            Enumeration<InetAddress> addresses = current.getInetAddresses();
+            while (addresses.hasMoreElements()){
+                InetAddress current_addr = addresses.nextElement();
+                if (current_addr.isLoopbackAddress()) continue;
+                if (current.getName().equals(wifiInterface))
+                    return current_addr.getHostAddress();
+            }
+        }
+      } catch (SocketException e)
+      {
+          System.err.println("Failed to get network interfaces: " + e);
+      }
+      return null;
+
+  } 
+  
+  
+@Override
+  public List<String> readFile(Path path) {
+    try {
+      return   Files.readAllLines(path, Charset.defaultCharset());
+    } catch (IOException e) {
+      System.err.println("Failed to read file: " + path + e);
+    }
+    return null;
   }
 
-  public void execute(String target) {
-    // TODO Auto-generated method stub
 
-  }
+@Override 
+public List<Path> getEntries(Path path, String glob) {
+  List<Path> entries = new ArrayList<Path>();  
+  try (DirectoryStream<Path> stream = Files.newDirectoryStream(path, glob)) {
+     for (Path entry: stream) {
+         entries.add(entry);
+     }
+ } catch (IOException e) {
+     System.err.println("Failed to read directory:" + path + e);
+ }
+  return entries;
+  
+}
+
+@Override
+public boolean isDirectory(Path path) {
+  return Files.isDirectory(path);
+}
 
 }

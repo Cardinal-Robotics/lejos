@@ -12,7 +12,7 @@ import lejos.ev3.menu.viewer.Menu;
  *
  */
 public class DetailStringValue extends DetailAbstractValue {
-  private String value;
+  protected String value;
   private int    maxLength = 255;
   private char[] validChars;
 
@@ -98,7 +98,7 @@ public class DetailStringValue extends DetailAbstractValue {
   @Override
   public String toString() {
     super.toString();
-    return String.format(format, label, value);
+    return String.format(format, label,  (value != null) ? value : "not set" );
   }
 
   protected void setValue(String value) {

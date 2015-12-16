@@ -2,6 +2,8 @@ package lejos.ev3.menu.model;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import lejos.ev3.menu.control.Control;
@@ -16,16 +18,16 @@ import lejos.hardware.lcd.Image;
  *
  */
 public class ItemFiles extends ItemBase {
-  public static final String PROGRAMS_DIRECTORY = "/home/lejos/programs";
-  public static final String LIB_DIRECTORY      = "/home/lejos/lib";
-  public static final String SAMPLES_DIRECTORY  = "/home/root/lejos/samples";
-  public static final String TOOLS_DIRECTORY    = "/home/root/lejos/tools";
+  public static final Path PROGRAMS_DIRECTORY = Paths.get("/home/lejos/programs");
+  public static final Path LIB_DIRECTORY      = Paths.get("/home/lejos/lib");
+  public static final Path SAMPLES_DIRECTORY  = Paths.get("/home/root/lejos/samples");
+  public static final Path TOOLS_DIRECTORY    = Paths.get("/home/root/lejos/tools");
   protected boolean          initialized        = false;
-  protected String           path;
-  protected String           filter;
+  protected Path           path;
+  protected String           glob = "*";
 
-  public ItemFiles(Control control, String path) {
-    this(control, path, "/");
+  public ItemFiles(Control control, Path path) {
+    this(control, path, "*");
   }
 
   /**
@@ -33,14 +35,14 @@ public class ItemFiles extends ItemBase {
    *          The control that provides access to the directory
    * @param path
    *          The name of the directory
-   * @param filter
+   * @param glob
    *          A filter string to filter files from the directory (use ".jar"
    *          format).
    */
-  public ItemFiles(Control control, String path, String filter) {
-    super(control, path.substring(path.lastIndexOf('/') + 1, path.length()), Icons.FILES);
+  public ItemFiles(Control control, Path path, String glob) {
+    super(control, path.getFileName().toString() , Icons.FILES);
     this.path = path;
-    this.filter = filter;
+    this.glob = glob;
   }
 
   @Override
@@ -56,43 +58,16 @@ public class ItemFiles extends ItemBase {
       initialize();
     return super.getDetail(index);
   }
-
+  
   protected void initialize() {
-    String[] members;
-    File file = control.getFile(path);
-    if (filter.isEmpty()) {
-      members = file.list();
-    } else {
-      FilenameFilter f = new FilenameFilter() {
-
-        @Override
-        public boolean accept(File dir, String name) {
-          if (name.lastIndexOf('.') > 0) {
-            // get last index for '.' char
-            int lastIndex = name.lastIndexOf('.');
-
-            // get extension
-            String str = name.substring(lastIndex);
-
-            // match path name extension
-            if (str.equals(filter)) {
-              return true;
-            }
-          }
-          return false;
-        }
-      };
-      members = file.list(f);
-    }
-    for (String fn : members) {
-      addDetail(new DetailFile(control, path + "/" + fn, this));
+    List<Path> entries = control.getEntries(path, glob);
+    this.removeChildren();
+    for (Path entry : entries) {
+      addDetail(new DetailFile(control, entry, this));
     }
     initialized = true;
   }
+ 
 
-  protected void removeChildren() {
-    this.children = null;
-
-  }
 
 }

@@ -1,6 +1,7 @@
 package lejos.ev3.menu.control;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -66,16 +67,16 @@ public interface Control {
    * 
    * @param command
    *          {RUN | DEBUG | SET_DEFAULT | DELETE}
-   * @param id
+   * @param path
    */
-  void execute(String command, String id);
+  void execute(String command, Path path);
 
-  /**
-   * Returns a file from the local file system
-   * 
-   * @param name
-   * @return
-   */
-  File getFile(String name);
+
+  List<String> readFile(Path path);
+
+  List<Path> getEntries(Path path, String Glob);
+
+  
+  boolean isDirectory(Path path);
 
 }

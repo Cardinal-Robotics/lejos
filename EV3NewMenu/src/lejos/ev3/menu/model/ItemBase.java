@@ -18,9 +18,9 @@ public class ItemBase implements MenuItem {
 
   private Image            icon;
 
-  protected List<MenuItem> children;
+  protected List<MenuItem> children = new ArrayList<MenuItem>();
 
-  private List<MenuDetail> details;
+  private List<MenuDetail> details  = new ArrayList<MenuDetail>();
 
   private String           label;
 
@@ -49,8 +49,6 @@ public class ItemBase implements MenuItem {
 
   @Override
   public MenuItem addChild(MenuItem child) {
-    if (children == null)
-      children = new ArrayList<MenuItem>();
     children.add(child);
     return this;
   }
@@ -85,8 +83,6 @@ public class ItemBase implements MenuItem {
 
   @Override
   public MenuItem addDetail(MenuDetail detail) {
-    if (details == null)
-      details = new ArrayList<MenuDetail>();
     details.add(detail);
     if (detail.isSelectable())
       selectableDetails = true;
@@ -100,6 +96,7 @@ public class ItemBase implements MenuItem {
 
   @Override
   public MenuDetail getDetail(int index) {
+    if (index >= details.size()) throw new IndexOutOfBoundsException();
     return details.get(index);
   }
 
@@ -110,13 +107,23 @@ public class ItemBase implements MenuItem {
 
   @Override
   public boolean hasChildren() {
-    return children == null ? false : true;
+    return children.isEmpty() ? false : true;
   }
 
   @Override
   public boolean hasDetails() {
-    if (details == null)
-      return false;
-    return true;
+    return details.isEmpty() ? false : true;
+  }
+
+  @Override
+  public void removeChildren() {
+    children.clear();
+    
+  }
+
+  @Override
+  public void removeDetails() {
+    details.clear();
+    
   }
 }

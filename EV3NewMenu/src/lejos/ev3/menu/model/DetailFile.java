@@ -1,6 +1,8 @@
 package lejos.ev3.menu.model;
 
-import java.io.File;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import lejos.ev3.menu.control.Control;
 import lejos.ev3.menu.viewer.Icons;
@@ -15,7 +17,7 @@ import lejos.ev3.menu.viewer.Menu;
 public class DetailFile extends DetailBase {
 
   protected String  label;
-  protected String  fullName;
+  protected Path  path;
   private ItemFiles parent;
 
   /**
@@ -26,10 +28,10 @@ public class DetailFile extends DetailBase {
    * @param parent
    *          The Files Menu Item that displays this detail
    */
-  public DetailFile(Control control, String fullName, ItemFiles parent) {
+  public DetailFile(Control control, Path path, ItemFiles parent) {
     super(control);
-    this.label = fullName.substring(fullName.lastIndexOf('/') + 1, fullName.length());
-    this.fullName = fullName;
+    this.label = path.getFileName().toString();
+    this.path = path;
     isInitialized = true;
     this.isSelectable = true;
     this.parent = parent;
@@ -47,32 +49,53 @@ public class DetailFile extends DetailBase {
   /**
    * Selects this file. A new menu screen will be displayed. If the file is a
    * directory this new menu screen will display all the files within this
-   * directory. If the file is a file then the nem menu screen will display a
+   * directory. If the file is a file then the menu screen will display a
    * list of commands that can be executed on this file.
+   * In case no commands are available for the file type the method does nothing.
    * 
    */
   @Override
   public void select(Menu menu) {
     parent.removeChildren();
-    File file = control.getFile(fullName);
-    if (file.isDirectory()) {
-      parent.addChild(new ItemFiles(control, fullName));
-    } else {
+    if (control.isDirectory(path)) {
+      parent.addChild(new ItemFiles(control, path));
+    }
+    else {
       MenuItem child = new ItemBase(control, label, Icons.EYE);
-      if (fullName.contains(".jar")) {
-        child.addDetail(new DetailFileCommand(control, "Run", "RUN", fullName));
-        if (fullName.contains(ItemFiles.PROGRAMS_DIRECTORY)) {
-          child.addDetail(new DetailFileCommand(control, "Debug", "DEBUG", fullName));
-          child.addDetail(new DetailFileCommand(control, "Set as default", "SET_DEFAULT", fullName));
+      if (isFiletype("jar") && path.getNameCount()>0) {
+        if (path.getParent().equals(ItemFiles.PROGRAMS_DIRECTORY)) {
+          child.addDetail(new DetailFileCommand(control, "Run", "RUN_SEPERATE", path));
+          child.addDetail(new DetailFileCommand(control, "Debug", "DEBUG", path));
+          Path d = Paths.get(control.getProperty("lejos.default_program"),"");
+          if (d.equals(path))
+            child.addDetail(new DetailUnsetDefault(control, path));
+          else
+            child.addDetail(new DetailSetDefault(control, path));
+        }
+        else if (path.getParent().equals(ItemFiles.TOOLS_DIRECTORY) | path.getParent().equals(ItemFiles.SAMPLES_DIRECTORY)) {
+          child.addDetail(new DetailFileCommand(control, "Run", "RUN", path));
         }
       }
-      if (file.canWrite()) {
-        child.addDetail(new DetailFileCommand(control, "Delete", "DELETE", fullName));
+      else if (isFiletype("{out,err,txt}") ) {
+        child.addDetail(new DetailViewCommand(control, path));
       }
-
+      if (path.getParent().equals(ItemFiles.PROGRAMS_DIRECTORY)) {
+        child.addDetail(new DetailFileCommand(control, "Delete", "DELETE", path));
+      }
+      if (!child.hasDetails()) return;
       parent.addChild(child);
     }
     menu.selectChild();
   }
+  
+  /**
+   * @param glob file extention in glob format without the dot or wildcard
+   * @return
+   */
+  protected boolean isFiletype( String glob) {
+    return FileSystems.getDefault().getPathMatcher("glob:**."+ glob).matches(path);
+  }
+  
+
 
 }

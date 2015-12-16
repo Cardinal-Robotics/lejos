@@ -127,7 +127,6 @@ public class GraphicMenu implements Menu {
     Config.ICON.icon = currentNode.getIcon();
     Config.TITLE.label = currentNode.getLabel();
 
-    if (details != null) {
       nDetails = details.size();
       if (currentNode.hasSelectableDetails())
         iDetail = findFirst();
@@ -136,8 +135,7 @@ public class GraphicMenu implements Menu {
         bar = new ScrollBar(canvas, Config.DETAILS.right - 12, Config.DETAILS.y + 3, Config.DETAILS.height - 3, nDetails, visibleDetails,
             iDetail);
       }
-    }
-
+ 
   }
 
   private void draw() {
@@ -220,6 +218,21 @@ public class GraphicMenu implements Menu {
       draw();
     } else
       top = null;
+  }
+
+  @Override
+  public void notifyOn(String message) {
+    Config.NOTIFYSHADE.draw(canvas);
+    Config.NOTIFY.draw(canvas);
+    Config.NOTIFYLINE.label = message;
+    Config.NOTIFYLINE.draw(canvas);
+    
+  }
+
+  @Override
+  public void notifyOff() {
+    draw();
+    
   }
 
 }
