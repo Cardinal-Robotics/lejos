@@ -84,8 +84,8 @@ public class DetailNumericValue extends DetailAbstractValue {
 
   @Override
   public String toString() {
-    super.toString();
-    return String.format(format, label, value);
+    if (!isInitialized) initialize();
+    return String.format(format, label, getValue());
   }
 
   public void setValue(int value) {
@@ -94,6 +94,7 @@ public class DetailNumericValue extends DetailAbstractValue {
   }
 
   public int getValue() {
+    if (!isInitialized) initialize();
     return value;
   }
 

@@ -36,7 +36,7 @@ public class EV3Control implements Control {
 
   @Override
   public String getProperty(String key) {
-    return getProperty(key, null);
+    return getProperty(key, "");
   }
 
   @Override

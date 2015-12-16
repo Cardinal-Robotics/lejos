@@ -40,7 +40,6 @@ public abstract class DetailBase implements MenuDetail {
   public String toString() {
     if (!isInitialized) {
       initialize();
-      isInitialized = true;
     }
     return null;
   }

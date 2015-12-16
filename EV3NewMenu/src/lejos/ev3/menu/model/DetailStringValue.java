@@ -97,8 +97,7 @@ public class DetailStringValue extends DetailAbstractValue {
 
   @Override
   public String toString() {
-    super.toString();
-    return String.format(format, label,  (value != null) ? value : "not set" );
+    return String.format(format, label,  !getValue().isEmpty() ? getValue() : "not set" );
   }
 
   protected void setValue(String value) {
@@ -107,6 +106,8 @@ public class DetailStringValue extends DetailAbstractValue {
   }
 
   protected String getValue() {
+    if (!isInitialized) initialize();
+    if (value == null) return "";
     return value;
   }
 
