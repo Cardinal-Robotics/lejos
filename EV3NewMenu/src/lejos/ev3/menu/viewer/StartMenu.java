@@ -1,6 +1,5 @@
 package lejos.ev3.menu.viewer;
 
-import java.io.File;
 import java.nio.file.Paths;
 
 import lejos.ev3.menu.control.EV3Control;
@@ -39,7 +38,7 @@ public class StartMenu {
                 .addDetail(new DetailNumericValue(control, "Key freq", "keyFreq", "%s : %4d", EditorNumeric.class)))
 
     ;
-
+    DetailFile.setMaxLength(Config.DETAIL.width / Config.DETAIL.font.width);
     GraphicMenu menu = new GraphicMenu(top);
     menu.run();
 

@@ -15,6 +15,7 @@ import lejos.ev3.menu.viewer.Menu;
  *
  */
 public class DetailFile extends DetailBase {
+  private static int maxLength = 17; 
 
   protected String  label;
   protected Path  path;
@@ -30,11 +31,21 @@ public class DetailFile extends DetailBase {
    */
   public DetailFile(Control control, Path path, ItemFiles parent) {
     super(control);
-    this.label = path.getFileName().toString();
+    this.label = truncate(path.getFileName().toString());
     this.path = path;
     isInitialized = true;
     this.isSelectable = true;
     this.parent = parent;
+  }
+  
+  public static void setMaxLength(int length) {
+    maxLength = length;
+  }
+  
+  protected String truncate(String in) {
+    if (in.length()<maxLength) return in;
+    return in.substring(0, maxLength-5)+"."+in.substring(in.length()-4);
+    
   }
 
   @Override
