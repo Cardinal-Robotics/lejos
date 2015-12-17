@@ -106,9 +106,11 @@ public class EV3Control implements Control {
     }
   }
 
-
-  
-  
+  @Override
+  public void kill(String command) {
+	// TODO Auto-generated method stub
+	
+  }
   
   private String getIPAddresses(String wifiInterface)
   {

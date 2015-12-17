@@ -39,7 +39,7 @@ public class DetailFileCommand extends DetailLabel {
    */
   @Override
   public void select(Menu menu) {
-      control.execute(command, path);
+     menu.execute(control, command, path);
   }
 
   @Override

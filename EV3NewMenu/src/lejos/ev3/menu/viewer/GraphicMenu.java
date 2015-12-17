@@ -1,8 +1,10 @@
 package lejos.ev3.menu.viewer;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import lejos.ev3.menu.control.Control;
 import lejos.ev3.menu.model.MenuDetail;
 import lejos.ev3.menu.model.MenuItem;
 import lejos.hardware.Button;
@@ -233,6 +235,13 @@ public class GraphicMenu implements Menu {
   public void notifyOff() {
     draw();
     
+  }
+
+  @Override
+  public void execute(Control control, String command, Path path) {
+	canvas.clear();
+	control.execute(command, path);
+	draw();
   }
 
 }

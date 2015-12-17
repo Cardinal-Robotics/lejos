@@ -70,7 +70,8 @@ public interface Control {
    * @param path
    */
   void execute(String command, Path path);
-
+  
+  void kill(String command);
 
   List<String> readFile(Path path);
 

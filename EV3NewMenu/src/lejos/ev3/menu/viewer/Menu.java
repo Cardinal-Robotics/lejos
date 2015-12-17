@@ -1,5 +1,9 @@
 package lejos.ev3.menu.viewer;
 
+import java.nio.file.Path;
+
+import lejos.ev3.menu.control.Control;
+
 /**
  * Represents a menu for leJOS
  * 
@@ -20,4 +24,7 @@ public interface Menu {
   public void notifyOn(String message);
   
   public void notifyOff();
+  
+  void execute(Control control, String command, Path path);
+  
 }
