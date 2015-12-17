@@ -75,17 +75,20 @@ public class DetailFile extends DetailBase {
       MenuItem child = new ItemBase(control, label, Icons.EYE);
       if (isFiletype("jar") && path.getNameCount()>0) {
         if (path.getParent().equals(ItemFiles.PROGRAMS_DIRECTORY)) {
-          child.addDetail(new DetailFileCommand(control, "Run", "RUN_SEPERATE", path));
-          child.addDetail(new DetailFileCommand(control, "Debug", "DEBUG", path));
+          child.addDetail(new DetailFileCommand(control, "Run", "RUN_PROGRAM", path));
+          child.addDetail(new DetailFileCommand(control, "Debug", "DEBUG_PROGRAM", path));
           Path d = Paths.get(control.getProperty("lejos.default_program"),"");
           if (d.equals(path))
             child.addDetail(new DetailUnsetDefault(control, path));
           else
             child.addDetail(new DetailSetDefault(control, path));
         }
-        else if (path.getParent().equals(ItemFiles.TOOLS_DIRECTORY) | path.getParent().equals(ItemFiles.SAMPLES_DIRECTORY)) {
-          child.addDetail(new DetailFileCommand(control, "Run", "RUN", path));
+        else if (path.getParent().equals(ItemFiles.TOOLS_DIRECTORY)) {
+          child.addDetail(new DetailFileCommand(control, "Run", "RUN_TOOL", path));
         }
+        else if ( path.getParent().equals(ItemFiles.SAMPLES_DIRECTORY)) {
+            child.addDetail(new DetailFileCommand(control, "Run", "RUN_SAMPLE", path));
+          }
       }
       else if (isFiletype("{out,err,txt}") ) {
         child.addDetail(new DetailViewCommand(control, path));

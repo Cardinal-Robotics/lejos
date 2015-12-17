@@ -9,7 +9,9 @@ import lejos.ev3.menu.model.MenuDetail;
 import lejos.ev3.menu.model.MenuItem;
 import lejos.hardware.Button;
 import lejos.hardware.ev3.LocalEV3;
+import lejos.hardware.lcd.Font;
 import lejos.hardware.lcd.GraphicsLCD;
+import lejos.hardware.lcd.LCD;
 
 /**
  * A menu implementation for leJOS EV3.
@@ -240,8 +242,23 @@ public class GraphicMenu implements Menu {
   @Override
   public void execute(Control control, String command, Path path) {
 	canvas.clear();
+	if (!command.equals("RUN_TOOL") && !command.equals("DELETE")) {
+		canvas.setAutoRefresh(false);
+		drawLaunchScreen();
+	}
 	control.execute(command, path);
+	canvas.setAutoRefresh(true);
 	draw();
+  }
+  
+  private void drawLaunchScreen() {
+  	canvas.setFont(Font.getDefaultFont());
+  	canvas.drawRegion(Icons.HOUR_GLASS, 0, 0, Icons.HOUR_GLASS.getWidth(), Icons.HOUR_GLASS.getHeight(), GraphicsLCD.TRANS_NONE, 50, 65, GraphicsLCD.HCENTER | GraphicsLCD.VCENTER);
+  	int x = LCD.SCREEN_WIDTH/2;
+  	canvas.drawString("Wait", x, 40, 0);
+  	canvas.drawString("a", x, 55, 0);
+  	canvas.drawString("second...", x, 70, 0);
+  	canvas.refresh();
   }
 
 }

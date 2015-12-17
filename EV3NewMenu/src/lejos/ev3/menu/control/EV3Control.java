@@ -1,7 +1,9 @@
 package lejos.ev3.menu.control;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -14,9 +16,12 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.jar.JarFile;
 
+import lejos.hardware.Button;
 import lejos.internal.io.Settings;
 import lejos.internal.io.SystemSettings;
+import lejos.utility.Delay;
 
 public class EV3Control implements Control {
 
@@ -33,6 +38,13 @@ public class EV3Control implements Control {
   private static final String WIFI_BASE          = "wpa_supplicant.txt";
   private static final String WLAN_INTERFACE     = "wlan0";
   private static final String PAN_INTERFACE      = "br0";
+  
+  private static final String JAVA_RUN_CP = "jrun -cp ";
+  private static final String JAVA_DEBUG_CP = "jrun -Xdebug -Xrunjdwp:transport=dt_socket,server=y,address=8000,suspend=y -cp ";
+  
+  private static final String EV3_WRAPPER = "lejos.internal.ev3.EV3Wrapper";
+  
+  private Process program;
 
   @Override
   public String getProperty(String key) {
@@ -85,7 +97,7 @@ public class EV3Control implements Control {
   @Override
   public void execute(String command, Path path) {
     switch(command) {
-    case "RUN": {
+    case "RUN_TOOL": {
       try {
 		JarMain.executeJar(path.toFile());
 	  } catch (Exception e) {
@@ -94,22 +106,50 @@ public class EV3Control implements Control {
 	  }
       break;
     }
-    case "RUN_SEPERATE": {
-      break;
-    }
-    case "DEBUG": {
+    case "RUN_PROGRAM":
+    case "DEBUG_PROGRAM":
+    case "RUN_SAMPLE" :
+    {
+	  try {
+	    JarFile jar = new JarFile(path.toFile());
+	    String prefix = (command.equals("DEBUG_PROGRAM") ? JAVA_DEBUG_CP : JAVA_RUN_CP);
+	    String cmd = prefix + path.toString() + " " + EV3_WRAPPER + "  " + jar.getManifest().getMainAttributes().getValue("Main-class");
+	    jar.close();
+	    String directory = (command.equals("RUN_SAMPLE") ? SAMPLES_DIRECTORY : PROGRAMS_DIRECTORY);
+	    program = new ProcessBuilder(cmd.split(" ")).directory(new File(directory)).start();
+	    	
+        BufferedReader input = new BufferedReader(new InputStreamReader(program.getInputStream()));
+        BufferedReader err= new BufferedReader(new InputStreamReader(program.getErrorStream()));
+            
+        EchoThread echoIn = new EchoThread(path.toString().replace(".jar", ".out"), input, System.out);
+        EchoThread echoErr = new EchoThread(path.toString().replace(".jar", ".err"), err, System.err);
+            
+        echoIn.start(); 
+        echoErr.start();
+            
+        while(true) {
+          int b = Button.getButtons(); 
+          if (b == 6) {
+            program.destroy(); 
+            break;
+          }
+          if (!echoIn.isAlive() && !echoErr.isAlive()) break;           
+          Delay.msDelay(200);
+        }
+            
+        program.waitFor();
+        program = null;
+
+      } catch (Exception e) {
+			e.printStackTrace();
+	  }
       break;
     }
     case "DELETE": {
+    	path.toFile().delete();
       break;
     }
     }
-  }
-
-  @Override
-  public void kill(String command) {
-	// TODO Auto-generated method stub
-	
   }
   
   private String getIPAddresses(String wifiInterface)
