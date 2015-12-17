@@ -3,7 +3,7 @@ package lejos.ev3.menu.model;
 import java.nio.file.Path;
 
 import lejos.ev3.menu.control.Control;
-import lejos.ev3.menu.viewer.FileViewer;
+import lejos.ev3.menu.viewer.Viewer;
 import lejos.ev3.menu.viewer.Menu;
 
 /** Command to view a file
@@ -18,8 +18,7 @@ public class DetailViewCommand extends DetailFileCommand {
   
   @Override 
   public void select(Menu menu) {
-    FileViewer view = new FileViewer(control, path);
-    
+    Viewer.view(control, path);
   }
 
 }

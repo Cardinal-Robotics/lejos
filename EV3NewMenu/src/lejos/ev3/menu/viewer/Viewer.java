@@ -13,14 +13,21 @@ import lejos.utility.Delay;
  * @author Aswin Bouwmeester
  *
  */
-public class FileViewer {
+public class Viewer {
+  private static GraphicsLCD canvas = LocalEV3.get().getGraphicsLCD(); 
   
-  public FileViewer(Control control, Path path) {
-    GraphicsLCD canvas = LocalEV3.get().getGraphicsLCD();
+  private Viewer(){};
+  
+  
+public static void view(Control control, Path path) {
     List <String> lines = control.readFile(path);
+    view (lines);
+}
+    
+public static void view(List<String> lines) {    
     int top = 0;
     int start = 0;
-    int longest = 0;
+    int longest = 0; 
     int oldstart =-1;
     int oldtop =-1;
     int n = Config.VIEWER.height / Config.VIEWLINE.height;
