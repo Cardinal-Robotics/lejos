@@ -3,6 +3,7 @@ package lejos.ev3.menu.model;
 import java.nio.file.Path;
 
 import lejos.ev3.menu.control.Control;
+import lejos.ev3.menu.viewer.Menu;
 
 /**
  * Detail representing a file command
@@ -22,7 +23,7 @@ public class DetailFileCommand extends DetailLabel {
    * @param label
    *          The text to represent the command to the user
    * @param command
-   *          The command as is understoood by the control
+   *          The command as is understood by the control
    */
   public DetailFileCommand(Control control, String label, String command, Path path) {
     super(control, label);
@@ -36,7 +37,8 @@ public class DetailFileCommand extends DetailLabel {
    * Instructs the control to execute the command
    * 
    */
-  protected void select() {
+  @Override
+  public void select(Menu menu) {
       control.execute(command, path);
   }
 

@@ -86,6 +86,12 @@ public class EV3Control implements Control {
   public void execute(String command, Path path) {
     switch(command) {
     case "RUN": {
+      try {
+		JarMain.executeJar(path.toFile());
+	  } catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	  }
       break;
     }
     case "RUN_SEPERATE": {
