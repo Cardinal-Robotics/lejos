@@ -11,7 +11,7 @@ public class DetailRunDefault extends DetailStringValue {
   private Path path;
 
   public DetailRunDefault(Control control) {
-    super(control, "Run", "lejos.defaults_program", "%s %s");
+    super(control, "Run", "lejos.default_program", "%s %s");
     initialize();
     if (getValue().isEmpty()) {
       isSelectable =false;
@@ -31,8 +31,7 @@ public class DetailRunDefault extends DetailStringValue {
   
   @Override
   public void select(Menu menu) {
-    control.execute("RUN",path );
+    menu.execute(control, "RUN_PROGRAM", path);
   }
-
 
 }
