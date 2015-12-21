@@ -1,11 +1,11 @@
-package lejos.ev3.menu.model;
+package lejos.ev3.menu.presenter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import lejos.ev3.menu.components.Icons;
 import lejos.ev3.menu.control.Control;
-import lejos.ev3.menu.viewer.Icons;
-import lejos.hardware.lcd.GraphicsLCD;
+import lejos.ev3.menu.viewer.Menu;
 import lejos.hardware.lcd.Image;
 
 /**
@@ -24,9 +24,11 @@ public class ItemBase implements MenuItem {
 
   private String           label;
 
-  protected Control        control;
-
   protected boolean        selectableDetails = false;
+  
+  protected static Control control;
+  protected static Menu menu;
+
 
   /**
    * @param control
@@ -37,14 +39,14 @@ public class ItemBase implements MenuItem {
    * @param icon
    *          The icon of this menu item
    */
-  public ItemBase(Control control, String label, Image icon) {
-    this.control = control;
+  public ItemBase( String label, Image icon) {
+    if (control == null || menu == null) throw new RuntimeException("Menu Items can only be instantiated after both Menu and Control are set");
     this.label = label;
     this.icon = icon;
   }
 
-  public ItemBase(Control control, String label) {
-    this(control, label, Icons.DEFAULT);
+  public ItemBase( String label) {
+    this( label, Icons.DEFAULT);
   }
 
   @Override
@@ -125,5 +127,13 @@ public class ItemBase implements MenuItem {
   public void removeDetails() {
     details.clear();
     
+  }
+  
+  public static void setControl(Control c) {
+    control = c;
+  }
+
+  public static void setMenu(Menu m) {
+    menu = m;
   }
 }

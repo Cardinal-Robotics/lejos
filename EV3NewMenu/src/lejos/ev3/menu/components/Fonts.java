@@ -1,4 +1,4 @@
-package lejos.ev3.menu.viewer;
+package lejos.ev3.menu.components;
 
 import lejos.hardware.Button;
 import lejos.hardware.ev3.LocalEV3;

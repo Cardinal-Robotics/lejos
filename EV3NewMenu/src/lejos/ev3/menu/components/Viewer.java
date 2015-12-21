@@ -1,9 +1,10 @@
-package lejos.ev3.menu.viewer;
+package lejos.ev3.menu.components;
 
 import java.nio.file.Path;
 import java.util.List;
 
 import lejos.ev3.menu.control.Control;
+import lejos.ev3.menu.viewer.Config;
 import lejos.hardware.Button;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.GraphicsLCD;

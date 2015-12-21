@@ -1,4 +1,4 @@
-package lejos.ev3.menu.model;
+package lejos.ev3.menu.presenter;
 
 import java.nio.file.Path;
 
@@ -12,8 +12,8 @@ import lejos.ev3.menu.viewer.Menu;
 public class DetailUnsetDefault extends DetailStringValue {
 
 
-  public DetailUnsetDefault(Control control, Path path) {
-    super(control, "Unset as default", "lejos.default_program", "%s");
+  public DetailUnsetDefault( Path path) {
+    super("Unset as default", "lejos.default_program", "%s");
     this.value = "";
     isSelectable = true;
     isInitialized = true;

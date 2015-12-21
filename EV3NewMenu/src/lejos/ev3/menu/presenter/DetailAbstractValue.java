@@ -1,7 +1,6 @@
-package lejos.ev3.menu.model;
+package lejos.ev3.menu.presenter;
 
-import lejos.ev3.menu.control.Control;
-import lejos.ev3.menu.viewer.Editor;
+import lejos.ev3.menu.components.Editor;
 
 /**
  * Abstraction for a property or setting of the leJOS VM
@@ -27,8 +26,8 @@ public abstract class DetailAbstractValue extends DetailBase {
    * @param format
    *          The format to display the label value pair on the screen
    */
-  public DetailAbstractValue(Control control, String label, String key, String format) {
-    super(control);
+  public DetailAbstractValue( String label, String key, String format) {
+    super();
     this.label = label;
     this.key = key;
     this.format = format;
@@ -47,8 +46,8 @@ public abstract class DetailAbstractValue extends DetailBase {
    *          The class to be used to modify the value of the property or
    *          setting
    */
-  public DetailAbstractValue(Control control, String label, String key, String format, Class<? extends Editor> editor) {
-    this(control, label, key, format);
+  public DetailAbstractValue( String label, String key, String format, Class<? extends Editor> editor) {
+    this( label, key, format);
     this.key = key;
     this.format = format;
     this.editor = editor;

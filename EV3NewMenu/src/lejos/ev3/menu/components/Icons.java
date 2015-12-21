@@ -1,4 +1,4 @@
-package lejos.ev3.menu.viewer;
+package lejos.ev3.menu.components;
 
 import lejos.ev3.startup.Utils;
 import lejos.hardware.lcd.Image;

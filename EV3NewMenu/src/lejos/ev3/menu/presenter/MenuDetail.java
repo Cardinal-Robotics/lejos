@@ -1,4 +1,4 @@
-package lejos.ev3.menu.model;
+package lejos.ev3.menu.presenter;
 
 import lejos.ev3.menu.viewer.Menu;
 

@@ -1,5 +1,7 @@
 package lejos.ev3.menu.viewer;
 
+import lejos.ev3.menu.components.Fonts;
+import lejos.ev3.menu.components.Icons;
 import lejos.hardware.lcd.Font;
 import lejos.hardware.lcd.GraphicsLCD;
 import lejos.hardware.lcd.Image;
@@ -11,6 +13,7 @@ import lejos.hardware.lcd.Image;
  *
  */
 public class Config {
+  // TODO: Get rid of this, replace by something better
 
   public static Panel STATUS     = new Panel(0, 0, 178, 13, true, 0);
   public static Label STATUSTEXT = new Label(5, 1, 168, 12, true, 0, Fonts.Courier12);
@@ -58,7 +61,7 @@ public class Config {
       this.borders = borders;
     }
 
-    void draw(GraphicsLCD canvas) {
+    public void draw(GraphicsLCD canvas) {
       draw(canvas, 0, 0);
     }
 
@@ -83,7 +86,7 @@ public class Config {
       canvas.setColor(GraphicsLCD.BLACK);
     }
 
-    void clear(GraphicsLCD canvas) {
+    public void clear(GraphicsLCD canvas) {
       clear(canvas, 0, 0);
     }
 
@@ -98,7 +101,7 @@ public class Config {
   public static class Label extends Panel {
     public String label;
     private int   anchor = 0;
-    Font          font;
+    public Font          font;
 
     private Label(int x, int y, int width, int height, boolean reverse, int borders, Font font) {
       super(x, y, width, height, reverse, borders);

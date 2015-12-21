@@ -1,11 +1,11 @@
-package lejos.ev3.menu.model;
+package lejos.ev3.menu.presenter;
 
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import lejos.ev3.menu.components.Icons;
 import lejos.ev3.menu.control.Control;
-import lejos.ev3.menu.viewer.Icons;
 import lejos.ev3.menu.viewer.Menu;
 
 /**
@@ -29,8 +29,8 @@ public class DetailFile extends DetailBase {
    * @param parent
    *          The Files Menu Item that displays this detail
    */
-  public DetailFile(Control control, Path path, ItemFiles parent) {
-    super(control);
+  public DetailFile( Path path, ItemFiles parent) {
+    super();
     this.label = truncate(path.getFileName().toString());
     this.path = path;
     isInitialized = true;
@@ -69,32 +69,32 @@ public class DetailFile extends DetailBase {
   public void select(Menu menu) {
     parent.removeChildren();
     if (control.isDirectory(path)) {
-      parent.addChild(new ItemFiles(control, path));
+      parent.addChild(new ItemFiles( path));
     }
     else {
-      MenuItem child = new ItemBase(control, label, Icons.EYE);
+      MenuItem child = new ItemBase( label, Icons.EYE);
       if (isFiletype("jar") && path.getNameCount()>0) {
         if (path.getParent().equals(ItemFiles.PROGRAMS_DIRECTORY)) {
-          child.addDetail(new DetailFileCommand(control, "Run", "RUN_PROGRAM", path));
-          child.addDetail(new DetailFileCommand(control, "Debug", "DEBUG_PROGRAM", path));
+          child.addDetail(new DetailManagedCommand( "Run", "RUN_PROGRAM", path));
+          child.addDetail(new DetailManagedCommand( "Debug", "DEBUG_PROGRAM", path));
           Path d = Paths.get(control.getProperty("lejos.default_program"),"");
           if (d.equals(path))
-            child.addDetail(new DetailUnsetDefault(control, path));
+            child.addDetail(new DetailUnsetDefault( path));
           else
-            child.addDetail(new DetailSetDefault(control, path));
+            child.addDetail(new DetailSetDefault( path));
         }
         else if (path.getParent().equals(ItemFiles.TOOLS_DIRECTORY)) {
-          child.addDetail(new DetailFileCommand(control, "Run", "RUN_TOOL", path));
+          child.addDetail(new DetailFileCommand( "Run", "RUN_TOOL", path));
         }
         else if ( path.getParent().equals(ItemFiles.SAMPLES_DIRECTORY)) {
-            child.addDetail(new DetailFileCommand(control, "Run", "RUN_SAMPLE", path));
+            child.addDetail(new DetailManagedCommand( "Run", "RUN_SAMPLE", path));
           }
       }
       else if (isFiletype("{out,err,txt}") ) {
-        child.addDetail(new DetailViewCommand(control, path));
+        child.addDetail(new DetailViewCommand( path));
       }
       if (path.getParent().equals(ItemFiles.PROGRAMS_DIRECTORY)) {
-        child.addDetail(new DetailFileCommand(control, "Delete", "DELETE", path));
+        child.addDetail(new DetailFileCommand( "Delete", "DELETE", path));
       }
       if (!child.hasDetails()) return;
       parent.addChild(child);

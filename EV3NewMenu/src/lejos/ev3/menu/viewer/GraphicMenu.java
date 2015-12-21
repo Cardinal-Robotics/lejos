@@ -1,16 +1,18 @@
 package lejos.ev3.menu.viewer;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import lejos.ev3.menu.control.Control;
-import lejos.ev3.menu.model.MenuDetail;
-import lejos.ev3.menu.model.MenuItem;
+import lejos.ev3.menu.components.Icons;
+import lejos.ev3.menu.components.Notify;
+import lejos.ev3.menu.components.ScrollBar;
+import lejos.ev3.menu.presenter.MenuDetail;
+import lejos.ev3.menu.presenter.MenuItem;
 import lejos.hardware.Button;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.Font;
 import lejos.hardware.lcd.GraphicsLCD;
+import lejos.hardware.lcd.Image;
 import lejos.hardware.lcd.LCD;
 
 /**
@@ -20,6 +22,8 @@ import lejos.hardware.lcd.LCD;
  *
  */
 public class GraphicMenu implements Menu {
+  // TODO: work on suspend
+  
 
   private List<MenuItem>   siblings;
   private int              iNode           = -1;
@@ -34,19 +38,29 @@ public class GraphicMenu implements Menu {
   private MenuItem         top;
   private ScrollBar        bar;
   private int              nDetails;
+  private boolean running = false ;
+  private boolean suspended = false;
 
   /**
    * @param top
    *          The structure of the menu consisting of a single top level menu
    *          item and any number of child items.
    */
-  public GraphicMenu(MenuItem top) {
+  public GraphicMenu() {
+  }
+
+  @Override
+  public void setMenu(MenuItem top) {
     this.top = top;
     siblings = top.getChildren();
     selectNode(0);
   }
 
+  
+  
   public void run() {
+    if (top == null) throw new RuntimeException("No menu specified.");
+    running = true;
     draw();
     while (true) {
       switch (Button.waitForAnyPress()) {
@@ -112,8 +126,10 @@ public class GraphicMenu implements Menu {
       }
       case Button.ID_ESCAPE: {
         selectParent();
-        if (top == null)
+        if (top == null) {
+          running = false;
           return;
+        }
       }
         break;
       }
@@ -226,29 +242,20 @@ public class GraphicMenu implements Menu {
 
   @Override
   public void notifyOn(String message) {
-    Config.NOTIFYSHADE.draw(canvas);
-    Config.NOTIFY.draw(canvas);
-    Config.NOTIFYLINE.label = message;
-    Config.NOTIFYLINE.draw(canvas);
-    
+    Notify.setMessage(message);
+    Notify.run();
   }
 
+  @Override
+  public void notifyOn(Image icon, String[] message) {
+    Notify.setIcon(icon);
+    Notify.setMessage(message);
+    Notify.run();
+  }
+ 
   @Override
   public void notifyOff() {
     draw();
-    
-  }
-
-  @Override
-  public void execute(Control control, String command, Path path) {
-	canvas.clear();
-	if (!command.equals("RUN_TOOL") && !command.equals("DELETE")) {
-		canvas.setAutoRefresh(false);
-		drawLaunchScreen();
-	}
-	control.execute(command, path);
-	canvas.setAutoRefresh(true);
-	draw();
   }
   
   private void drawLaunchScreen() {
@@ -260,5 +267,38 @@ public class GraphicMenu implements Menu {
   	canvas.drawString("second...", x, 70, 0);
   	canvas.refresh();
   }
+
+  @Override
+  public void needRefresh() {
+    draw();
+    
+  }
+
+  @Override
+  public boolean isRunning() {
+    return running;
+  }
+
+  @Override
+  public boolean isSuspended() {
+    return suspended;
+  }
+
+  @Override
+  public void suspend() {
+    suspended = true;
+    canvas.setAutoRefresh(false);
+    // TODO: listen to Button combination to kill a user program 
+  }
+
+  @Override
+  public void resume() {
+    suspended = false;
+    canvas.setAutoRefresh(true);
+    draw();
+  }
+
+
+
 
 }

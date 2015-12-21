@@ -1,4 +1,4 @@
-package lejos.ev3.menu.model;
+package lejos.ev3.menu.presenter;
 
 import lejos.ev3.menu.control.Control;
 import lejos.ev3.menu.viewer.Menu;
@@ -18,12 +18,8 @@ public class DetailLabel extends DetailBase {
    * @param label
    *          The text to display
    */
-  public DetailLabel(String label) {
-    this(null, label);
-  }
-
-  public DetailLabel(Control control, String label) {
-    super(control);
+  public DetailLabel( String label) {
+    super();
     this.label = label;
     isInitialized = true;
   }

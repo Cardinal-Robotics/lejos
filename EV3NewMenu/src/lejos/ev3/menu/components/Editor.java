@@ -1,7 +1,7 @@
-package lejos.ev3.menu.viewer;
+package lejos.ev3.menu.components;
 
-import lejos.ev3.menu.model.DetailNumericValue;
-import lejos.ev3.menu.model.DetailStringValue;
+import lejos.ev3.menu.presenter.DetailNumericValue;
+import lejos.ev3.menu.presenter.DetailStringValue;
 
 /**
  * Defines editors to modify properties or settings of the leJOS VM. Editors

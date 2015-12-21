@@ -1,9 +1,9 @@
-package lejos.ev3.menu.model;
+package lejos.ev3.menu.presenter;
 
 import java.nio.file.Path;
 
+import lejos.ev3.menu.components.Editor;
 import lejos.ev3.menu.control.Control;
-import lejos.ev3.menu.viewer.Editor;
 import lejos.ev3.menu.viewer.Menu;
 
 public class DetailSetDefault extends DetailStringValue {
@@ -13,8 +13,8 @@ public class DetailSetDefault extends DetailStringValue {
    * @param control
    * @param path
    */
-  public DetailSetDefault(Control control, Path path) {
-    super(control, "Set as default", "lejos.default_program", "%s");
+  public DetailSetDefault( Path path) {
+    super( "Set as default", "lejos.default_program", "%s");
     this.value = path.toString();
     isSelectable = true;
     isInitialized = true;

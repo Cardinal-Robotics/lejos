@@ -1,7 +1,7 @@
-package lejos.ev3.menu.model;
+package lejos.ev3.menu.presenter;
 
+import lejos.ev3.menu.components.Editor;
 import lejos.ev3.menu.control.Control;
-import lejos.ev3.menu.viewer.Editor;
 import lejos.ev3.menu.viewer.Menu;
 
 /**
@@ -27,8 +27,8 @@ public class DetailNumericValue extends DetailAbstractValue {
    * @param format
    *          The format to display the label value pair on the screen
    */
-  public DetailNumericValue(Control control, String label, String key, String format) {
-    super(control, label, key, format);
+  public DetailNumericValue( String label, String key, String format) {
+    super(label, key, format);
   }
 
   /**
@@ -44,8 +44,8 @@ public class DetailNumericValue extends DetailAbstractValue {
    *          The class to be used to modify the value of the property or
    *          setting
    */
-  public DetailNumericValue(Control control, String label, String key, String format, Class<? extends Editor> editor) {
-    super(control, label, key, format, editor);
+  public DetailNumericValue(String label, String key, String format, Class<? extends Editor> editor) {
+    super( label, key, format, editor);
   }
 
   /**
@@ -67,9 +67,9 @@ public class DetailNumericValue extends DetailAbstractValue {
    * @param increment
    *          The step size to be used by the editor to raise or lower a value
    */
-  public DetailNumericValue(Control control, String label, String key, String format, Class<? extends Editor> editor, int minValue,
+  public DetailNumericValue( String label, String key, String format, Class<? extends Editor> editor, int minValue,
       int maxValue, int increment) {
-    super(control, label, key, format, editor);
+    super( label, key, format, editor);
     this.minValue = minValue;
     this.maxValue = maxValue;
     this.increment = increment;

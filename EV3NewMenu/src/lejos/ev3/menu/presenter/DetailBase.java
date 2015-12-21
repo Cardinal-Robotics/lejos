@@ -1,6 +1,7 @@
-package lejos.ev3.menu.model;
+package lejos.ev3.menu.presenter;
 
 import lejos.ev3.menu.control.Control;
+import lejos.ev3.menu.viewer.Menu;
 
 /**
  * Basic abstract implementation of a MenuDetail
@@ -11,11 +12,13 @@ import lejos.ev3.menu.control.Control;
 
 public abstract class DetailBase implements MenuDetail {
   protected boolean isInitialized = false;
-  protected Control control;
+  protected static Control control;
+  protected static Menu menu;
+  // protected static Model model;
   protected boolean isSelectable  = false;
 
-  public DetailBase(Control control) {
-    this.control = control;
+  public DetailBase() {
+    if (control == null || menu == null) throw new RuntimeException("Menu Details can only be instantiated after both Menu and Control are set");
   }
 
   @Override
@@ -44,4 +47,13 @@ public abstract class DetailBase implements MenuDetail {
     return null;
   }
 
+  public static void setControl(Control c) {
+    control = c;
+  }
+
+  public static void setMenu(Menu m) {
+    menu = m;
+  }
+
+  
 }

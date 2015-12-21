@@ -1,7 +1,8 @@
-package lejos.ev3.menu.viewer;
+package lejos.ev3.menu.components;
 
-import lejos.ev3.menu.model.DetailNumericValue;
-import lejos.ev3.menu.model.DetailStringValue;
+import lejos.ev3.menu.presenter.DetailNumericValue;
+import lejos.ev3.menu.presenter.DetailStringValue;
+import lejos.ev3.menu.viewer.Config;
 import lejos.hardware.Button;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.GraphicsLCD;

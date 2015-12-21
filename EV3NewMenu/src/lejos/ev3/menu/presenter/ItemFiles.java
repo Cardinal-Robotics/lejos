@@ -1,15 +1,10 @@
-package lejos.ev3.menu.model;
+package lejos.ev3.menu.presenter;
 
-import java.io.File;
-import java.io.FilenameFilter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-import lejos.ev3.menu.control.Control;
-import lejos.ev3.menu.viewer.Icons;
-import lejos.hardware.lcd.GraphicsLCD;
-import lejos.hardware.lcd.Image;
+import lejos.ev3.menu.components.Icons;
 
 /**
  * An implementation of the Menu Item to display the contents of a directory
@@ -26,8 +21,8 @@ public class ItemFiles extends ItemBase {
   protected Path           path;
   protected String           glob = "*";
 
-  public ItemFiles(Control control, Path path) {
-    this(control, path, "*");
+  public ItemFiles(Path path) {
+    this( path, "*");
   }
 
   /**
@@ -39,8 +34,8 @@ public class ItemFiles extends ItemBase {
    *          A filter string to filter files from the directory (use ".jar"
    *          format).
    */
-  public ItemFiles(Control control, Path path, String glob) {
-    super(control, path.getFileName().toString() , Icons.FILES);
+  public ItemFiles( Path path, String glob) {
+    super( path.getFileName().toString() , Icons.FILES);
     this.path = path;
     this.glob = glob;
   }
@@ -63,7 +58,7 @@ public class ItemFiles extends ItemBase {
     List<Path> entries = control.getEntries(path, glob);
     this.removeChildren();
     for (Path entry : entries) {
-      addDetail(new DetailFile(control, entry, this));
+      addDetail(new DetailFile( entry, this));
     }
     initialized = true;
   }

@@ -1,7 +1,6 @@
-package lejos.ev3.menu.model;
+package lejos.ev3.menu.presenter;
 
-import lejos.ev3.menu.control.Control;
-import lejos.ev3.menu.viewer.Editor;
+import lejos.ev3.menu.components.Editor;
 import lejos.ev3.menu.viewer.Menu;
 
 /**
@@ -26,8 +25,8 @@ public class DetailStringValue extends DetailAbstractValue {
    * @param format
    *          The format to display the label value pair on the screen
    */
-  public DetailStringValue(Control control, String label, String key, String format) {
-    super(control, label, key, format);
+  public DetailStringValue( String label, String key, String format) {
+    super( label, key, format);
   }
 
   /**
@@ -43,8 +42,9 @@ public class DetailStringValue extends DetailAbstractValue {
    *          The class to be used to modify the value of the property or
    *          setting
    */
-  public DetailStringValue(Control control, String label, String key, String format, Class<Editor> editor) {
-    super(control, label, key, format, editor);
+  public DetailStringValue( String label, String key, String format, Class<Editor> editor) {
+    this( label, key, format);
+    this.editor = editor;
   }
 
   /**
@@ -62,8 +62,8 @@ public class DetailStringValue extends DetailAbstractValue {
    * @param maxLength
    *          The maximum valid length of the string
    */
-  public DetailStringValue(Control control, String label, String key, String format, Class<Editor> editor, int maxLength) {
-    this(control, label, key, format, editor);
+  public DetailStringValue( String label, String key, String format, Class<Editor> editor, int maxLength) {
+    this( label, key, format, editor);
     this.maxLength = maxLength;
   }
 
@@ -84,8 +84,8 @@ public class DetailStringValue extends DetailAbstractValue {
    * @param validChars
    *          An array of valid characters to be used in the property or setting
    */
-  public DetailStringValue(Control control, String label, String key, String format, Class<Editor> editor, int maxLength, char[] validChars) {
-    this(control, label, key, format, editor, maxLength);
+  public DetailStringValue( String label, String key, String format, Class<Editor> editor, int maxLength, char[] validChars) {
+    this( label, key, format, editor, maxLength);
     this.validChars = validChars;
   }
 
