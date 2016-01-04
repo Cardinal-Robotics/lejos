@@ -30,7 +30,7 @@ public class ScrollBar {
       test.setToprow(t);
       test.canvas.clear();
       test.canvas.drawString(String.format("%s", t), 50, 50, 0);
-      test.draw();
+      test.paint();
       switch (Button.waitForAnyPress()) {
       case Button.ID_DOWN:
         t++;
@@ -68,7 +68,7 @@ public class ScrollBar {
     return toprow;
   }
 
-  public void draw() {
+  public void paint() {
     canvas.setColor(GraphicsLCD.WHITE);
     canvas.fillRect(x, y, W * 2 * 1, height + 1);
     canvas.setColor(GraphicsLCD.BLACK);

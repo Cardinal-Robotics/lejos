@@ -1,9 +1,7 @@
 package lejos.ev3.menu.components;
 
-import java.nio.file.Path;
 import java.util.List;
 
-import lejos.ev3.menu.control.Control;
 import lejos.ev3.menu.viewer.Config;
 import lejos.hardware.Button;
 import lejos.hardware.ev3.LocalEV3;
@@ -20,10 +18,11 @@ public class Viewer {
   private Viewer(){};
   
   
-public static void view(Control control, Path path) {
-    List <String> lines = control.readFile(path);
-    view (lines);
-}
+
+//  public static void view(Model model, String path) {
+//    List <String> lines = model.readFile(path);
+//    view (lines);
+//}
     
 public static void view(List<String> lines) {    
     int top = 0;

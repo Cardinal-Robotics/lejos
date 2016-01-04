@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.jar.JarFile;
 
 import lejos.hardware.Button;
+import lejos.hardware.ev3.LocalEV3;
 import lejos.internal.io.Settings;
 import lejos.internal.io.SystemSettings;
 import lejos.utility.Delay;
@@ -46,60 +47,16 @@ public class EV3Control implements Control {
   
   private Process program;
 
-  @Override
-  public String getProperty(String key) {
-    return getProperty(key, "");
-  }
+
+
 
   @Override
-  public int getNumericProperty(String key) {
-    return getNumericProperty(key, 0);
-  }
-
-  @Override
-  public String getProperty(String key, String defaultValue) {
-    switch (key) {
-    case ("WIFI_WLAN0"): return getIPAddresses("wlan0");
-    case ("WIFI_BR0"): return getIPAddresses("br0");
-    case ("HOSTNAME"): {
-      List<String> f = readFile(Paths.get("/etc/hostname"));
-      if (f == null) return null;
-      return f.get(0);
-    }
-    default: return Settings.getProperty(key, defaultValue);
-    }
-  }
-
-  @Override
-  public void setProperty(String key, String value) {
-    Settings.setProperty(key, value);
-  }
-
-  @Override
-  public int getNumericProperty(String key, int defaultValue) {
-    // TODO Auto-generated method stub
-    String s = Settings.getProperty(key, "");
-    if (s == null)
-      return defaultValue;
-
-    try {
-      return Integer.parseInt(s);
-    } catch (NumberFormatException e) {
-      return defaultValue;
-    }
-  }
-
-  @Override
-  public void setNumericProperty(String key, int value) {
-    Settings.setProperty(key, String.format("%d", value));
-  }
-
-  @Override
-  public void execute(String command, Path path) {
-    switch(command) {
+  public List<String> execute(String command, String path) {
+    File file = new  File(path);
+        switch(command) {
     case "RUN_TOOL": {
       try {
-		JarMain.executeJar(path.toFile());
+		JarMain.executeJar(file);
 	  } catch (Exception e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -111,7 +68,7 @@ public class EV3Control implements Control {
     case "RUN_SAMPLE" :
     {
 	  try {
-	    JarFile jar = new JarFile(path.toFile());
+	    JarFile jar = new JarFile(file);
 	    String prefix = (command.equals("DEBUG_PROGRAM") ? JAVA_DEBUG_CP : JAVA_RUN_CP);
 	    String cmd = prefix + path.toString() + " " + EV3_WRAPPER + "  " + jar.getManifest().getMainAttributes().getValue("Main-class");
 	    jar.close();
@@ -126,6 +83,7 @@ public class EV3Control implements Control {
             
         echoIn.start(); 
         echoErr.start();
+        LocalEV3.get().getGraphicsLCD().clear();
             
         while(true) {
           int b = Button.getButtons(); 
@@ -141,77 +99,28 @@ public class EV3Control implements Control {
         program = null;
 
       } catch (Exception e) {
-			e.printStackTrace();
+        e.printStackTrace();
+        return getStackTrace(e);
 	  }
       break;
     }
     case "DELETE": {
-    	path.toFile().delete();
+    	file.delete();
       break;
     }
     }
-  }
-  
-  private String getIPAddresses(String wifiInterface)
-  {
-      Enumeration<NetworkInterface> interfaces;
-      try
-      {
-          interfaces = NetworkInterface.getNetworkInterfaces();
-          while (interfaces.hasMoreElements()){
-            NetworkInterface current = interfaces.nextElement();
-            try
-            {
-                if (!current.isUp() || current.isLoopback() || current.isVirtual()) continue;
-            } catch (SocketException e)
-            {
-              System.err.println("Failed to get network properties: " + e);
-            }
-            Enumeration<InetAddress> addresses = current.getInetAddresses();
-            while (addresses.hasMoreElements()){
-                InetAddress current_addr = addresses.nextElement();
-                if (current_addr.isLoopbackAddress()) continue;
-                if (current.getName().equals(wifiInterface))
-                    return current_addr.getHostAddress();
-            }
-        }
-      } catch (SocketException e)
-      {
-          System.err.println("Failed to get network interfaces: " + e);
-      }
-      return null;
-
-  } 
-  
-  
-@Override
-  public List<String> readFile(Path path) {
-    try {
-      return   Files.readAllLines(path, Charset.defaultCharset());
-    } catch (IOException e) {
-      System.err.println("Failed to read file: " + path + e);
-    }
     return null;
   }
-
-
-@Override 
-public List<Path> getEntries(Path path, String glob) {
-  List<Path> entries = new ArrayList<Path>();  
-  try (DirectoryStream<Path> stream = Files.newDirectoryStream(path, glob)) {
-     for (Path entry: stream) {
-         entries.add(entry);
-     }
- } catch (IOException e) {
-     System.err.println("Failed to read directory:" + path + e);
- }
-  return entries;
+  
+private List<String> getStackTrace(Exception e) {
+  List<String>target = new ArrayList<String>();
+  StackTraceElement[] source = e.getStackTrace();
+  for(StackTraceElement line : source) {
+    target.add(line.toString());
+  }
+  return target;
   
 }
-
-@Override
-public boolean isDirectory(Path path) {
-  return Files.isDirectory(path);
-}
+  
 
 }

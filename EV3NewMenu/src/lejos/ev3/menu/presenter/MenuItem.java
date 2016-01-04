@@ -54,7 +54,7 @@ public interface MenuItem {
    * @param detail
    * @return this
    */
-  public MenuItem addDetail(MenuDetail detail);
+  public MenuItem addDetail(Detail detail);
   
   /**
    * Removes all Details
@@ -66,7 +66,7 @@ public interface MenuItem {
    * 
    * @return
    */
-  public List<MenuDetail> getDetails();
+  public List<Detail> getDetails();
 
   /**
    * Tests if at least one of the details can be selected. Selectable details
@@ -82,7 +82,7 @@ public interface MenuItem {
    * @param index
    * @return
    */
-  public MenuDetail getDetail(int index);
+  public Detail getDetail(int index);
 
   /**
    * Returns true if this nodehas children (a submenuu)
@@ -104,5 +104,7 @@ public interface MenuItem {
    * @return
    */
   boolean hasDetails();
+
+
 
 }

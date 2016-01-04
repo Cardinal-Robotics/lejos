@@ -5,6 +5,7 @@ import java.util.List;
 
 import lejos.ev3.menu.components.Icons;
 import lejos.ev3.menu.control.Control;
+import lejos.ev3.menu.model.Model;
 import lejos.ev3.menu.viewer.Menu;
 import lejos.hardware.lcd.Image;
 
@@ -20,7 +21,7 @@ public class ItemBase implements MenuItem {
 
   protected List<MenuItem> children = new ArrayList<MenuItem>();
 
-  private List<MenuDetail> details  = new ArrayList<MenuDetail>();
+  private List<Detail> details  = new ArrayList<Detail>();
 
   private String           label;
 
@@ -28,6 +29,14 @@ public class ItemBase implements MenuItem {
   
   protected static Control control;
   protected static Menu menu;
+  protected static Model model;
+  
+  public static void setEnvironment(Control c, Model m, Menu m2) {
+    control = c;
+    model =m;
+    menu =m2;
+  }
+
 
 
   /**
@@ -79,12 +88,12 @@ public class ItemBase implements MenuItem {
   }
 
   @Override
-  public List<MenuDetail> getDetails() {
+  public List<Detail> getDetails() {
     return details;
   }
 
   @Override
-  public MenuItem addDetail(MenuDetail detail) {
+  public MenuItem addDetail(Detail detail) {
     details.add(detail);
     if (detail.isSelectable())
       selectableDetails = true;
@@ -97,7 +106,7 @@ public class ItemBase implements MenuItem {
   }
 
   @Override
-  public MenuDetail getDetail(int index) {
+  public Detail getDetail(int index) {
     if (index >= details.size()) throw new IndexOutOfBoundsException();
     return details.get(index);
   }
