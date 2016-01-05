@@ -1,13 +1,13 @@
 package lejos.ev3.menu.presenter;
 
-import java.util.Formattable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import lejos.ev3.menu.components.Viewer;
 import lejos.ev3.menu.control.Control;
-import lejos.ev3.menu.model.Model;
+import lejos.ev3.menu.model.FilesModel;
+import lejos.ev3.menu.model.SettingsModel;
 import lejos.ev3.menu.viewer.Menu;
 
 public class BaseDetail implements Detail{
@@ -21,12 +21,14 @@ public class BaseDetail implements Detail{
   protected String defaultValue;
   protected static Control control;
   protected static Menu menu;
-  protected static Model model;
+  protected static SettingsModel settingsModel;
+  protected static FilesModel filesModel;
   
-  public static void setEnvironment(Control c, Model m, Menu m2) {
+  public static void setEnvironment(Control c, SettingsModel m, FilesModel m2, Menu m3) {
     control = c;
-    model =m;
-    menu =m2;
+    settingsModel =m;
+    filesModel = m2;
+    menu =m3;
   }
   
   public BaseDetail(String key, String label, String format, String defaultValue, boolean selectable) {
@@ -45,10 +47,9 @@ public class BaseDetail implements Detail{
   }
 
   @Override
-  public int select() {
+  public void select() {
     if (!selectable) throw new RuntimeException("Detail is not selectable") ;
     if (preExecute()) postExecute(execute());
-    return 0;
   }
 
   protected void postExecute(List<String> feedBack) {
@@ -141,6 +142,9 @@ public class BaseDetail implements Detail{
   public Map<String, String> getSpecials() {
     return specials;
   }
+  
+  
+
   
  
 

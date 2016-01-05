@@ -1,6 +1,5 @@
 package lejos.ev3.menu.model;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -8,49 +7,26 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.nio.charset.Charset;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 
-public class EV3Model implements Model {
-  // TODO: A bit in doubt whether to have it all in one model or not
-  static EV3Model          model;
+public class EV3SettingsModel implements SettingsModel {
+  static EV3SettingsModel          model;
   private PropertySettings props;
-  private FilesClass       files;
   private SystemClass      system;
 
-  public static Model getModel() {
+  public static SettingsModel getModel() {
     if (model == null)
-      model = new EV3Model();
+      model = new EV3SettingsModel();
     return model;
   }
 
-  private EV3Model() {
+  private EV3SettingsModel() {
     props = new PropertySettings();
-    files = new FilesClass();
     system = new SystemClass();
   }
 
-  @Override
-  public List<String> readFile(String path) {
-    return files.readFile(path);
-  }
-
-  @Override
-  public List<String> getEntries(String path, String glob) {
-    return files.getEntries(path, glob);
-  }
-
-  @Override
-  public boolean isDirectory(String value) {
-    return files.isDirectory(value);
-  }
 
   @Override
   public String getSetting(String key, String defaultValue) {
@@ -104,42 +80,6 @@ public class EV3Model implements Model {
       return defaultValue;
     }
 
-    public boolean hasProperty(String key) {
-      if (props.containsKey(key))
-        return true;
-      return false;
-    }
-
-  }
-
-  private class FilesClass {
-    public List<String> readFile(String path) {
-      try {
-        return Files.readAllLines(Paths.get(path), Charset.defaultCharset());
-      } catch (IOException e) {
-        System.err.println("Failed to read file: " + path + e);
-      }
-      return null;
-    }
-
-    public List<String> getEntries(String path, String glob) {
-      List<String> entries = new ArrayList<String>();
-      try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(path), glob)) {
-        for (Path entry : stream) {
-          entries.add(entry.toString());
-        }
-      } catch (IOException e) {
-        System.err.println("Failed to read directory:" + path + e);
-      }
-      return entries;
-
-    }
-
-    public boolean isDirectory(String path) {
-      File f = new File(path);
-      return f.isDirectory();
-    }
-
   }
 
   private class SystemClass {
@@ -161,7 +101,7 @@ public class EV3Model implements Model {
     }
 
     public String getHostname() {
-      List<String> f = files.readFile("/etc/hostname");
+      List<String> f = EV3FilesModel.getModel().readFile("/etc/hostname");
       if (f == null)
         return null;
       return f.get(0);

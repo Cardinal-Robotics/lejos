@@ -15,39 +15,41 @@ public class File extends BaseDetail {
   }
 
   @Override
-  public int select() {
+  public void select() {
     parent.removeChildren();
-    if (model.isDirectory(value)) {
+    if (filesModel.isDirectory(value)) {
       parent.addChild(new Files(value));
-    } else {
-      MenuItem child = new ItemBase(label, Icons.EYE);
-      if (isFiletype("jar")) {
-        if (isIn(Files.PROGRAMS_DIRECTORY)) {
-          child.addDetail(new Command("RUN_PROGRAM", "Run", value));
-          child.addDetail(new Command("DEBUG_PROGRAM", "Debug", value));
-          String d = model.getSetting("lejos.default_program", null);
-          if (d == null)
-            child.addDetail(new SetDefault("Set as default", value));
-          else if (d.equals(value))
-            child.addDetail(new SetDefault("Unset as default", ""));
-          else
-            child.addDetail(new SetDefault("Set as default", value));
-        } else if (isIn(Files.TOOLS_DIRECTORY)) {
-          child.addDetail(new Command("RUN_TOOL", "Run", value));
-        } else if (isIn(Files.SAMPLES_DIRECTORY)) {
-          child.addDetail(new Command("RUN_SAMPLE", "Run", value));
-        }
-      } else if (isFiletype("{out,err,txt}")) {
-        child.addDetail(new ViewCommand(value));
-      }
-      if (isIn(Files.PROGRAMS_DIRECTORY)) {
-        child.addDetail(new Command("DELETE", "Delete", value));
-      }
-      if (!child.hasDetails())
-        return 0;
-      parent.addChild(child);
+      menu.selectChild();
+      return;
     }
-    return 1;
+    MenuItem child = new ItemBase(label, Icons.EYE);
+    if (isFiletype("^.*\\.jar")) {
+      if (isIn(Files.PROGRAMS_DIRECTORY)) {
+        child.addDetail(new ControlCommand("RUN_PROGRAM", "Run", value));
+        child.addDetail(new ControlCommand("DEBUG_PROGRAM", "Debug", value));
+        String d = settingsModel.getSetting("lejos.default_program", null);
+        if (d == null)
+          child.addDetail(new SetDefault("Set as default", value));
+        else if (d.equals(value))
+          child.addDetail(new SetDefault("Unset as default", ""));
+        else
+          child.addDetail(new SetDefault("Set as default", value));
+      } else if (isIn(Files.TOOLS_DIRECTORY)) {
+        child.addDetail(new ControlCommand("RUN_TOOL", "Run", value));
+      } else if (isIn(Files.SAMPLES_DIRECTORY)) {
+        child.addDetail(new ControlCommand("RUN_SAMPLE", "Run", value));
+      }
+    } 
+    if (isFiletype("^.*\\.(out|txt|err)$")) {
+      child.addDetail(new FilesCommand("VIEW", "View", value));
+    }
+    if (isIn(Files.PROGRAMS_DIRECTORY) || isIn(Files.LIB_DIRECTORY)) {
+      child.addDetail(new FilesCommand("DELETE", "Delete", value));
+    }
+    if (!child.hasDetails())
+      return;
+    parent.addChild(child);
+    menu.selectChild();
   }
 
   /**
@@ -56,13 +58,13 @@ public class File extends BaseDetail {
    * @return
    */
   protected boolean isFiletype(String glob) {
-    if (value.lastIndexOf(glob) == value.length() - glob.length())
+    if (value.matches(glob))
       return true;
     return false;
   }
 
   protected boolean isIn(String dir) {
-    if (value.indexOf(dir) == 0)
+    if (value.indexOf(dir) > -1)
       return true;
     return false;
   }

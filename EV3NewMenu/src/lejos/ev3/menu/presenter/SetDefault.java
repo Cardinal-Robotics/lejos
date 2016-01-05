@@ -13,9 +13,9 @@ public class SetDefault extends SettingDetail {
   }
   
   @Override
-  public int select() {
+  public void select() {
     setValue(newValue);
-    return -1;
+    menu.selectParent();
   }
 
 }

@@ -25,13 +25,13 @@ public class SettingDetail extends BaseDetail{
 @Override
 public void initialize() {
   super.initialize();
-  value = model.getSetting(key, defaultValue);
+  value = settingsModel.getSetting(key, defaultValue);
 }
 
 @Override
 public void setValue(String value) {
   super.setValue(value);
-  model.setSetting(key, value);
+  settingsModel.setSetting(key, value);
 }
 
 @Override
@@ -39,6 +39,7 @@ protected List<String> execute() {
   try {
     Editor edit = this.editor.newInstance();
     edit.edit(this);
+    menu.repopulate();
   } catch (InstantiationException e) {
     e.printStackTrace();
   } catch (IllegalAccessException e) {

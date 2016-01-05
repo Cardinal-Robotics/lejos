@@ -11,7 +11,6 @@ public class Files extends ItemBase {
   public static final String SAMPLES_DIRECTORY  = "/home/root/lejos/samples";
   public static final String TOOLS_DIRECTORY    = "/home/root/lejos/tools";
   public static final String NOT_SET            = null;
-  protected boolean          initialized        = false;
   protected String           path;
   protected String           glob = "*";
 
@@ -27,27 +26,27 @@ public class Files extends ItemBase {
   
   @Override
   public List<Detail> getDetails() {
-    if (!initialized)
-      initialize();
     return super.getDetails();
   }
 
   @Override
   public Detail getDetail(int index) {
-    if (!initialized)
-      initialize();
     return super.getDetail(index);
   }
   
-  protected void initialize() {
-    List<String> entries = model.getEntries(path, glob);
-    this.removeChildren();
+  @Override
+  protected void populate() {
+    List<String> entries = filesModel.getEntries(path, glob);
+    clearDetails();
     for (String entry : entries) {
       addDetail(new File( entry, this));
     }
-    initialized = true;
+    if (entries.isEmpty()) addDetail(new BaseDetail("", "<Empty>", "%2$s", "", false));
+    populated = true;
   }
   
+
+
   @Override 
   public String getLabel() {
     int i = super.getLabel().lastIndexOf(java.io.File.separator);

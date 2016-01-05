@@ -104,6 +104,18 @@ public interface MenuItem {
    * @return
    */
   boolean hasDetails();
+  
+  public void setScript(String path);
+  
+  public String getScript();
+  
+  public boolean hasScript();
+  
+  public void markScriptForExecution();
+  
+  public void conditionallyExecuteScript();
+  
+  public void repopulate();
 
 
 

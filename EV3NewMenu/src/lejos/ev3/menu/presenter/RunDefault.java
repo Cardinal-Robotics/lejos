@@ -24,15 +24,11 @@ public class RunDefault extends SettingDetail{
     }
   }
   
-  
-  
-  
 @Override
-  public int select() {
-    menu.suspend();
-    int d= super.select();
-    menu.resume();
-    return d;
+  public void select() {
+    menu.suspendMenu();
+    super.select();
+    menu.resumeMenu();
   }
 
 @Override
@@ -45,6 +41,14 @@ protected String shortName() {
   int i = value.lastIndexOf(java.io.File.separator);
   return value.substring(i+1);
 }
+
+@Override
+public String toString() {
+  initialized = false; // This takes possible changes of the default program into account
+  return super.toString();
+}
+
+
 
 
 }

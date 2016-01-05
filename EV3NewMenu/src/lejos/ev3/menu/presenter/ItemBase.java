@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lejos.ev3.menu.components.Icons;
+import lejos.ev3.menu.components.Viewer;
 import lejos.ev3.menu.control.Control;
-import lejos.ev3.menu.model.Model;
+import lejos.ev3.menu.model.FilesModel;
+import lejos.ev3.menu.model.SettingsModel;
 import lejos.ev3.menu.viewer.Menu;
 import lejos.hardware.lcd.Image;
 
@@ -18,26 +20,26 @@ import lejos.hardware.lcd.Image;
 public class ItemBase implements MenuItem {
 
   private Image            icon;
-
-  protected List<MenuItem> children = new ArrayList<MenuItem>();
-
-  private List<Detail> details  = new ArrayList<Detail>();
-
+  protected List<MenuItem> children           = new ArrayList<MenuItem>();
+  private List<Detail>     details            = new ArrayList<Detail>();
   private String           label;
+  protected boolean        selectableDetails  = false;
+  protected boolean        markedForExecution = false;
+  protected String         script;
+  protected boolean          populated        = false;
 
-  protected boolean        selectableDetails = false;
-  
+
   protected static Control control;
-  protected static Menu menu;
-  protected static Model model;
-  
-  public static void setEnvironment(Control c, Model m, Menu m2) {
+  protected static Menu    menu;
+  protected static SettingsModel   settingsModel;
+  protected static FilesModel filesModel;
+
+  public static void setEnvironment(Control c, SettingsModel m, FilesModel m2, Menu m3) {
     control = c;
-    model =m;
-    menu =m2;
+    settingsModel =m;
+    filesModel = m2;
+    menu =m3;
   }
-
-
 
   /**
    * @param control
@@ -48,14 +50,19 @@ public class ItemBase implements MenuItem {
    * @param icon
    *          The icon of this menu item
    */
-  public ItemBase( String label, Image icon) {
-    if (control == null || menu == null) throw new RuntimeException("Menu Items can only be instantiated after both Menu and Control are set");
+  public ItemBase(String label, Image icon) {
+    if (control == null || menu == null)
+      throw new RuntimeException("Menu Items can only be instantiated after both Menu and Control are set");
     this.label = label;
     this.icon = icon;
   }
 
-  public ItemBase( String label) {
-    this( label, Icons.DEFAULT);
+  public ItemBase(String label) {
+    this(label, Icons.DEFAULT);
+  }
+  
+  protected void populate() {
+    populated =true;
   }
 
   @Override
@@ -89,6 +96,7 @@ public class ItemBase implements MenuItem {
 
   @Override
   public List<Detail> getDetails() {
+    if (!populated) populate();
     return details;
   }
 
@@ -102,12 +110,15 @@ public class ItemBase implements MenuItem {
 
   @Override
   public boolean hasSelectableDetails() {
+    if (!populated) populate();
     return selectableDetails;
   }
 
   @Override
   public Detail getDetail(int index) {
-    if (index >= details.size()) throw new IndexOutOfBoundsException();
+    if (!populated) populate();
+    if (index >= details.size())
+      throw new IndexOutOfBoundsException();
     return details.get(index);
   }
 
@@ -123,21 +134,22 @@ public class ItemBase implements MenuItem {
 
   @Override
   public boolean hasDetails() {
+    if (!populated) populate();
     return details.isEmpty() ? false : true;
   }
 
   @Override
   public void removeChildren() {
     children.clear();
-    
+
   }
 
   @Override
   public void removeDetails() {
     details.clear();
-    
+    populated = true;
   }
-  
+
   public static void setControl(Control c) {
     control = c;
   }
@@ -145,4 +157,49 @@ public class ItemBase implements MenuItem {
   public static void setMenu(Menu m) {
     menu = m;
   }
+
+  @Override
+  public void setScript(String path) {
+    this.script = path;
+
+  }
+
+  @Override
+  public String getScript() {
+    return script;
+  }
+
+  @Override
+  public boolean hasScript() {
+    return (script != null);
+
+  }
+
+  @Override
+  public void markScriptForExecution() {
+    markedForExecution = true;
+
+  }
+
+  @Override
+  public void conditionallyExecuteScript() {
+    if (hasScript() && markedForExecution) {
+      menu.suspendMenu();
+      List<String> output = control.runScript(script);
+      if (output != null)
+        Viewer.view(output);
+      markedForExecution = false;
+      menu.resumeMenu();
+    }
+  }
+
+  @Override
+  public void repopulate() {
+    populated = false;
+  }
+
+protected void clearDetails() {
+  details.clear();
+}
+
 }

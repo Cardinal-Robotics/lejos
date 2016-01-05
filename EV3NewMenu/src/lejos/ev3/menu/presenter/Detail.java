@@ -17,7 +17,7 @@ public interface Detail {
    * 
    * @param menu
    */
-  public int select();
+  public void select();
 
   /**
    * To be called if the Detail should be refreshed as the data it displays has

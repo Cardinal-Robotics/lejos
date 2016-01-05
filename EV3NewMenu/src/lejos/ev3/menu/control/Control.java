@@ -1,6 +1,5 @@
 package lejos.ev3.menu.control;
 
-import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -16,10 +15,16 @@ public interface Control {
    * Executes a command on a file
    * 
    * @param command
-   *          {RUN | DEBUG | SET_DEFAULT | DELETE}
+   *          {RUN | DEBUG | DELETE}
    * @param value
    */
   List<String> execute(String command, String value);
+
+  void killProgram();
+
+  void shutdown();
+
+  List<String> runScript(String script);
 
 
 
