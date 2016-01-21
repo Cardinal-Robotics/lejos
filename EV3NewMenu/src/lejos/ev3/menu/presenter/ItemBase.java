@@ -7,6 +7,7 @@ import lejos.ev3.menu.components.Icons;
 import lejos.ev3.menu.components.Viewer;
 import lejos.ev3.menu.control.Control;
 import lejos.ev3.menu.model.FilesModel;
+import lejos.ev3.menu.model.Model;
 import lejos.ev3.menu.model.SettingsModel;
 import lejos.ev3.menu.viewer.Menu;
 import lejos.hardware.lcd.Image;
@@ -31,13 +32,11 @@ public class ItemBase implements MenuItem {
 
   protected static Control control;
   protected static Menu    menu;
-  protected static SettingsModel   settingsModel;
-  protected static FilesModel filesModel;
+  protected static Model   model;
 
-  public static void setEnvironment(Control c, SettingsModel m, FilesModel m2, Menu m3) {
+  public static void setEnvironment(Control c, Model m, Menu m3) {
     control = c;
-    settingsModel =m;
-    filesModel = m2;
+    model =m;
     menu =m3;
   }
 

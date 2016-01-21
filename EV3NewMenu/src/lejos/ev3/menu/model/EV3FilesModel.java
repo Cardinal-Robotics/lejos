@@ -10,11 +10,21 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EV3FilesModel implements FilesModel {
+public class EV3FilesModel {
+  private List<FilesChanged> listeners = new ArrayList<FilesChanged>();
+
   
-  private static EV3FilesModel model;
   
-  private EV3FilesModel(){};
+  EV3FilesModel(){};
+  
+  public void attach(FilesChanged listener) {
+    listeners.add(listener);
+  }
+  
+  public void detach(FilesChanged listener) {
+    listeners.remove(listener);
+  }
+
 
   public List<String> readFile(String path) {
     try {
@@ -43,17 +53,11 @@ public class EV3FilesModel implements FilesModel {
     return f.isDirectory();
   }
 
-  @Override
   public void delete(String path) {
     File file = new  File(path);
     file.delete();
   }
 
-  public static FilesModel getModel() {
-    if (model == null)
-      model = new EV3FilesModel();
-    return model;  
-    }
 
 private List<String> deleteFile(String path) {
 
@@ -62,6 +66,7 @@ private List<String> deleteFile(String path) {
   } catch (IOException e) {
     return getStackTrace(e);
   }
+  for (FilesChanged listener : listeners) listener.filesChanged(path); 
   return null;
 }
 
@@ -75,7 +80,6 @@ private List<String> getStackTrace(Exception e) {
 }
 
 
-  @Override
   public List<String> execute(String command, String path) {
 
     if (command.equals("VIEW")) return readFile(path);

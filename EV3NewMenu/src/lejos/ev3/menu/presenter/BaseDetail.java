@@ -7,7 +7,9 @@ import java.util.Map;
 import lejos.ev3.menu.components.Viewer;
 import lejos.ev3.menu.control.Control;
 import lejos.ev3.menu.model.FilesModel;
+import lejos.ev3.menu.model.Model;
 import lejos.ev3.menu.model.SettingsModel;
+import lejos.ev3.menu.viewer.Editor;
 import lejos.ev3.menu.viewer.Menu;
 
 public class BaseDetail implements Detail{
@@ -21,19 +23,29 @@ public class BaseDetail implements Detail{
   protected String defaultValue;
   protected static Control control;
   protected static Menu menu;
-  protected static SettingsModel settingsModel;
-  protected static FilesModel filesModel;
+  protected static Model model;
+  protected Class<? extends Editor> editor     = null;
+
   
-  public static void setEnvironment(Control c, SettingsModel m, FilesModel m2, Menu m3) {
+  public static void setEnvironment(Control c, Model m,  Menu m3) {
     control = c;
-    settingsModel =m;
-    filesModel = m2;
+    model =m;
     menu =m3;
   }
   
+  
+  public BaseDetail(String key, String label, String format, String defaultValue, Class<? extends Editor> editor) {
+    this(key, label, format, defaultValue, true);
+    this.editor = editor;
+    if (editor == null) selectable = false;
+  }
+
+  public BaseDetail(String key, String label, String format, String defaultValue) {
+    this(key, label, format, defaultValue, null);
+  }
+
+  
   public BaseDetail(String key, String label, String format, String defaultValue, boolean selectable) {
-    // As we need to have a way to find out the type of T when writing to the properties file a default value must always be given
-    //if (defaultValue == null) throw new RuntimeException("null is an invalid default value");
     this.key = key;
     this.label = label;
     this.format = format;

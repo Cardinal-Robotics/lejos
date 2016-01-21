@@ -12,7 +12,7 @@ public class FilesCommand extends BaseDetail {
   
 @Override
   protected List<String> execute() {
-    return filesModel.execute(key, value);
+    return model.getFilesModel().execute(key, value);
   }
 
 @Override

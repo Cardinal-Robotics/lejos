@@ -12,6 +12,7 @@ import lejos.hardware.Button;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.GraphicsLCD;
 import lejos.hardware.lcd.Image;
+import lejos.utility.Delay;
 
 /**
  * A menu implementation for leJOS EV3.
@@ -119,6 +120,7 @@ public class GraphicMenu implements Menu {
         }
         case Button.ID_ENTER: {
           activate();
+          while(Button.getButtons() != 0) Delay.msDelay(20);
           break;
         }
         }
@@ -308,6 +310,8 @@ public class GraphicMenu implements Menu {
   @Override
   public void notifyOn(Image icon, String message) {
     CompoundPanel p = new CompoundPanel(icon, message);
+    p.setBorders(15);
+    p.setShadow(true);
     p.paint();
   }
 
@@ -345,6 +349,20 @@ public class GraphicMenu implements Menu {
   public void repopulate() {
     currentNode.repopulate();
     selectNode(iNode);
+  }
+
+  @Override
+  public void insertAndRun(List<MenuItem> subMenu) {
+    if (!currentNode.hasChildren()) {
+      navigationStack.add(top);
+      navigationIndex.add(iNode);
+      top = currentNode;
+      siblings = subMenu;
+      selectNode(0);
+    } 
+    else 
+      throw new RuntimeException("Menu item already has children");
+    
   }
   
 

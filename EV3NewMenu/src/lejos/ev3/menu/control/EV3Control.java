@@ -10,13 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.JarFile;
 
+import lejos.ev3.menu.model.FilesChanged;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.utility.Delay;
 
 public class EV3Control implements Control {
 
-  private static final String PROGRAMS_DIRECTORY = "/home/lejos/programs";
-  private static final String SAMPLES_DIRECTORY  = "/home/root/lejos/samples";
   
   private static final String JAVA_RUN_CP = "jrun -cp ";
   private static final String JAVA_DEBUG_CP = "jrun -Xdebug -Xrunjdwp:transport=dt_socket,server=y,address=8000,suspend=y -cp ";
@@ -25,8 +24,16 @@ public class EV3Control implements Control {
   
   private Process program;
   private boolean forceDestruction = false;
+  private List<FilesChanged> listeners = new ArrayList<FilesChanged>();
 
 
+  public void attach(FilesChanged listener) {
+    listeners.add(listener);
+  }
+  
+  public void detach(FilesChanged listener) {
+    listeners.remove(listener);
+  }
 
 
   @Override
@@ -52,8 +59,7 @@ public class EV3Control implements Control {
 	    String prefix = (command.equals("DEBUG_PROGRAM") ? JAVA_DEBUG_CP : JAVA_RUN_CP);
 	    String cmd = prefix + path.toString() + " " + EV3_WRAPPER + "  " + jar.getManifest().getMainAttributes().getValue("Main-class");
 	    jar.close();
-	    String directory = (command.equals("RUN_SAMPLE") ? SAMPLES_DIRECTORY : PROGRAMS_DIRECTORY);
-	    directory = path.substring(0, path.lastIndexOf(java.io.File.separator)+1);
+	    String directory = path.substring(0, path.lastIndexOf(java.io.File.separator)+1);
 	    program = new ProcessBuilder(cmd.split(" ")).directory(new File(directory)).start();
 	    	
         BufferedReader input = new BufferedReader(new InputStreamReader(program.getInputStream()));
@@ -77,6 +83,8 @@ public class EV3Control implements Control {
             
         program.waitFor();
         program = null;
+        for (FilesChanged listener : listeners) listener.filesChanged(directory); // This might be a bit indiscriminate 
+
 
       } catch (Exception e) {
         e.printStackTrace();

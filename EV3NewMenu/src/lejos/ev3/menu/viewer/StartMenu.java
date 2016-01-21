@@ -3,10 +3,7 @@ package lejos.ev3.menu.viewer;
 import lejos.ev3.menu.components.Icons;
 import lejos.ev3.menu.control.EV3Control;
 import lejos.ev3.menu.control.Control;
-import lejos.ev3.menu.model.EV3FilesModel;
-import lejos.ev3.menu.model.EV3SettingsModel;
-import lejos.ev3.menu.model.FilesModel;
-import lejos.ev3.menu.model.SettingsModel;
+import lejos.ev3.menu.model.Model;
 import lejos.ev3.menu.presenter.*;
 
 /**
@@ -20,10 +17,9 @@ public class StartMenu {
   public static void main(String[] args) {
     Control control = new EV3Control();
     Menu menu = new GraphicMenu();
-    SettingsModel settingsModel = EV3SettingsModel.getModel();
-    FilesModel filesModel = EV3FilesModel.getModel();
-    BaseDetail.setEnvironment(control, settingsModel, filesModel, menu);
-    ItemBase.setEnvironment(control, settingsModel, filesModel, menu);
+    Model model = Model.getModel();
+    BaseDetail.setEnvironment(control, model, menu);
+    ItemBase.setEnvironment(control, model, menu);
 
     MenuItem top = new ItemBase( "Top", Icons.EV3)
         .addChild(
@@ -33,6 +29,19 @@ public class StartMenu {
                 .addDetail(new SettingDetail( "system.lejos.version", "Version",  "%2$s: %3$s", ""))
                 .addDetail(new SettingDetail( "system.wifi.wlan0", "LAN",  "%2$s: %3$s", ""))
                 .addDetail(new SettingDetail( "system.wifi.br0", "PAN",  "%2$s: %3$s", "")))
+        .addChild(
+            new ItemBase("BlueTooth", Icons.BLUETOOTH)
+                .addChild(new ItemBase("Configure BT", Icons.BLUETOOTH)
+                          .addDetail(new BtDetail( "system.bluetooth.visibility","Visibility", "%2$s: %3$5s", "false", EditorBoolean.class))
+                          .addDetail(new SettingDetail( "lejos.bluetooth.pin","PIN:", "%2$s %3$s","1234", EditorBtKey.class)))
+                .addChild(new BtPairedDevices("Devices", Icons.BLUETOOTH))
+                .addChild(new BtDevices("Pair", Icons.BLUETOOTH))
+                          
+                .addDetail(new BtDetail( "system.bluetooth.visibility","Visibility", "%2$s: %3$5s", "false"))
+                .addDetail(new BtDetail( "system.bluetooth.address","Address", "%3$s", "?"))
+                .addDetail(new BtDetail( "system.bluetooth.name","Name", "%3$s", "?"))
+                .addDetail(new SettingDetail( "lejos.bluetooth.pin","PIN:", "%2$s %3$s","1234")) 
+        )        
         .addChild(new Files( Files.PROGRAMS_DIRECTORY))
         .addChild(new Files( Files.SAMPLES_DIRECTORY ))
         .addChild(new Files( Files.TOOLS_DIRECTORY))

@@ -1,7 +1,7 @@
 package lejos.ev3.menu.viewer;
 
 import lejos.ev3.menu.components.TextPanel;
-import lejos.ev3.menu.presenter.SettingDetail;
+import lejos.ev3.menu.presenter.Detail;
 import lejos.hardware.Button;
 import lejos.utility.Delay;
 
@@ -21,7 +21,7 @@ public class EditorNumeric implements Editor {
   }
 
   @Override
-  public void edit(SettingDetail presenter) {
+  public void edit(Detail presenter) {
     String key = presenter.getKey();
     String format = presenter.getFormat();
     String label = presenter.getLabel();
@@ -38,9 +38,6 @@ public class EditorNumeric implements Editor {
     p.setMessage(String.format(format, key, label, value));
     p.paint();
 
-    
-    p.setMessage(String.format(format, key, label, value));
-    p.paint();
     
     while (true) {
 

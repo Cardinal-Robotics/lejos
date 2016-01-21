@@ -1,12 +1,15 @@
 package lejos.ev3.menu.presenter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import lejos.ev3.menu.components.Icons;
 
 public class File extends BaseDetail {
 
-  private MenuItem parent;
+  private Files parent;
 
-  public File(String file, MenuItem parent) {
+  public File(String file, Files parent) {
     super("FILE", file, "%2$s", null, true);
     this.value = file;
     this.label = shortName();
@@ -17,17 +20,20 @@ public class File extends BaseDetail {
   @Override
   public void select() {
     parent.removeChildren();
-    if (filesModel.isDirectory(value)) {
-      parent.addChild(new Files(value));
-      menu.selectChild();
+    if (model.getFilesModel().isDirectory(value)) {
+      Files files = new Files(value);
+      List<MenuItem> submenu = new ArrayList<MenuItem>();
+      submenu.add(files);
+      menu.insertAndRun(submenu);
+      files.detach();
       return;
     }
-    MenuItem child = new ItemBase(label, Icons.EYE);
+    MenuItem child = new ItemFile(value,label, Icons.EYE);
     if (isFiletype("^.*\\.jar")) {
       if (isIn(Files.PROGRAMS_DIRECTORY)) {
         child.addDetail(new ControlCommand("RUN_PROGRAM", "Run", value));
         child.addDetail(new ControlCommand("DEBUG_PROGRAM", "Debug", value));
-        String d = settingsModel.getSetting("lejos.default_program", null);
+        String d = model.getSettingsModel().getSetting("lejos.default_program", null);
         if (d == null)
           child.addDetail(new SetDefault("Set as default", value));
         else if (d.equals(value))

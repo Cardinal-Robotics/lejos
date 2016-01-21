@@ -3,8 +3,9 @@ package lejos.ev3.menu.presenter;
 import java.util.List;
 
 import lejos.ev3.menu.components.Icons;
+import lejos.ev3.menu.model.FilesChanged;
 
-public class Files extends ItemBase {
+public class Files extends ItemBase implements FilesChanged{
  
   public static final String PROGRAMS_DIRECTORY = "/home/lejos/programs";
   public static final String LIB_DIRECTORY      = "/home/lejos/lib";
@@ -22,6 +23,7 @@ public class Files extends ItemBase {
     super( path , Icons.FILES);
     this.path = path;
     this.glob = glob;
+    model.getFilesModel().attach(this);
   }
   
   @Override
@@ -36,7 +38,7 @@ public class Files extends ItemBase {
   
   @Override
   protected void populate() {
-    List<String> entries = filesModel.getEntries(path, glob);
+    List<String> entries = model.getFilesModel().getEntries(path, glob);
     clearDetails();
     for (String entry : entries) {
       addDetail(new File( entry, this));
@@ -51,6 +53,18 @@ public class Files extends ItemBase {
   public String getLabel() {
     int i = super.getLabel().lastIndexOf(java.io.File.separator);
     return super.getLabel().substring(i+1);
+  }
+
+  @Override
+  public void filesChanged(String path) {
+    if (this.path.equals(path)) {
+      populated = false;
+    }
+  }
+
+  @Override
+  public void detach() {
+    model.getFilesModel().detach(this);
   }
 
   

@@ -1,5 +1,7 @@
 package lejos.ev3.menu.viewer;
 
+import java.util.List;
+
 import lejos.ev3.menu.presenter.MenuItem;
 import lejos.hardware.lcd.Image;
 
@@ -80,5 +82,7 @@ public interface Menu {
   void repopulateParent();
   
   void repopulate();
+
+  public void insertAndRun(List<MenuItem> children);
 
 }

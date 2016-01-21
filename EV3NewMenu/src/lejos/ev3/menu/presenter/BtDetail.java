@@ -6,27 +6,32 @@ import lejos.ev3.menu.model.KeyChanged;
 import lejos.ev3.menu.viewer.Editor;
 
 
-public class SettingDetail extends BaseDetail implements KeyChanged{
-  
-  public SettingDetail(String key, String label, String format, String defaultValue, Class<? extends Editor> editor) {
+public class BtDetail extends BaseDetail implements KeyChanged {
+
+  public BtDetail(String key, String label, String format, String defaultValue, Class<? extends Editor> editor) {
     super(key, label, format, defaultValue, editor);
-    model.getSettingsModel().attach(this);
+    if (key.split("\\.")[2].equals("visibility")) {
+      addSpecialValue("true", "visible");
+      addSpecialValue("false", "invisible");
+    }
+    else
+      selectable = false;
+    model.getBTModel().attach(this);
   }
 
-public SettingDetail(String key, String label, String format, String defaultValue) {
+public BtDetail(String key, String label, String format, String defaultValue) {
     this(key, label, format, defaultValue, null);
   }
 
 @Override
 public void initialize() {
   super.initialize();
-  value = model.getSettingsModel().getSetting(key, defaultValue);
+  value=model.getBTModel().getSetting(key, defaultValue);
 }
 
 @Override
 public void setValue(String value) {
-  super.setValue(value);
-  model.getSettingsModel().setSetting(key, value);
+  model.getBTModel().setSetting(key, value);
 }
 
 @Override
@@ -45,9 +50,7 @@ protected List<String> execute() {
 
 @Override
 public void keyChanged(String key, String newValue) {
-  if(this.key.equals(key)) initialized = false;
+  initialized = false;
 }
-
-
 
 }
