@@ -9,6 +9,7 @@ public class RunDefault extends SettingDetail{
     super("lejos.default_program", "", "Run %2$s", null);
     initialize();
     this.addSpecialValue("", "No default set");
+    model.attach(key, this);
   }
 
   @Override

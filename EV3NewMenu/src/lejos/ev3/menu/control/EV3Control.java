@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.JarFile;
 
-import lejos.ev3.menu.model.FilesChanged;
+import lejos.ev3.menu.model.ModelListener;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.utility.Delay;
 
@@ -24,14 +24,14 @@ public class EV3Control implements Control {
   
   private Process program;
   private boolean forceDestruction = false;
-  private List<FilesChanged> listeners = new ArrayList<FilesChanged>();
+  private List<ModelListener> listeners = new ArrayList<ModelListener>();
 
 
-  public void attach(FilesChanged listener) {
+  public void attach(ModelListener listener) {
     listeners.add(listener);
   }
   
-  public void detach(FilesChanged listener) {
+  public void detach(ModelListener listener) {
     listeners.remove(listener);
   }
 
@@ -83,7 +83,7 @@ public class EV3Control implements Control {
             
         program.waitFor();
         program = null;
-        for (FilesChanged listener : listeners) listener.filesChanged(directory); // This might be a bit indiscriminate 
+        for (ModelListener listener : listeners) listener.listChanged("GET_FILES", directory);  
 
 
       } catch (Exception e) {

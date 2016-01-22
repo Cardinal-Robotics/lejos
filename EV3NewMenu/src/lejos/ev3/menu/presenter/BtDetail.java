@@ -2,21 +2,20 @@ package lejos.ev3.menu.presenter;
 
 import java.util.List;
 
-import lejos.ev3.menu.model.KeyChanged;
 import lejos.ev3.menu.viewer.Editor;
 
 
-public class BtDetail extends BaseDetail implements KeyChanged {
+public class BtDetail extends BaseDetail  {
 
   public BtDetail(String key, String label, String format, String defaultValue, Class<? extends Editor> editor) {
     super(key, label, format, defaultValue, editor);
-    if (key.split("\\.")[2].equals("visibility")) {
+    if (key.equals("bluetooth.visibility")) {
       addSpecialValue("true", "visible");
       addSpecialValue("false", "invisible");
     }
     else
       selectable = false;
-    model.getBTModel().attach(this);
+    model.attach(key, this);
   }
 
 public BtDetail(String key, String label, String format, String defaultValue) {
@@ -26,12 +25,12 @@ public BtDetail(String key, String label, String format, String defaultValue) {
 @Override
 public void initialize() {
   super.initialize();
-  value=model.getBTModel().getSetting(key, defaultValue);
+  value=model.getSetting(key, defaultValue);
 }
 
 @Override
 public void setValue(String value) {
-  model.getBTModel().setSetting(key, value);
+  model.setSetting(key, value);
 }
 
 @Override

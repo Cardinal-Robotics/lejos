@@ -12,13 +12,12 @@ public class FilesCommand extends BaseDetail {
   
 @Override
   protected List<String> execute() {
-    return model.getFilesModel().execute(key, value);
+    return model.execute(key, value);
   }
 
 @Override
 public void select() {
   super.select();
-  menu.repopulateParent();
   menu.selectParent();
 }
 }

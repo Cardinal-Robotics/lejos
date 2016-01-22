@@ -5,7 +5,7 @@ import java.util.List;
 
 import lejos.ev3.menu.components.*;
 import lejos.ev3.menu.control.Control;
-import lejos.ev3.menu.model.SettingsModel;
+import lejos.ev3.menu.model.Model;
 import lejos.ev3.menu.presenter.Detail;
 import lejos.ev3.menu.presenter.MenuItem;
 import lejos.hardware.Button;
@@ -26,7 +26,7 @@ public class GraphicMenu implements Menu {
   // TODO: work on system exit
 
   private static Control control;
-  private static SettingsModel   model;
+  private static Model   model;
   private List<MenuItem> siblings;
   private int            iNode           = -1;
   private MenuItem       currentNode;
@@ -51,7 +51,7 @@ public class GraphicMenu implements Menu {
   private Detail         currentDetail;
   private Panel          nodePanel;
 
-  public static void setEnvironment(Control c, SettingsModel m) {
+  public static void setEnvironment(Control c, Model m) {
     control = c;
     model = m;
   }

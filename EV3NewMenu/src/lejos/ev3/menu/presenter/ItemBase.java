@@ -6,9 +6,8 @@ import java.util.List;
 import lejos.ev3.menu.components.Icons;
 import lejos.ev3.menu.components.Viewer;
 import lejos.ev3.menu.control.Control;
-import lejos.ev3.menu.model.FilesModel;
 import lejos.ev3.menu.model.Model;
-import lejos.ev3.menu.model.SettingsModel;
+import lejos.ev3.menu.model.ModelListener;
 import lejos.ev3.menu.viewer.Menu;
 import lejos.hardware.lcd.Image;
 
@@ -18,7 +17,7 @@ import lejos.hardware.lcd.Image;
  * @author Aswin Bouwmeester
  *
  */
-public class ItemBase implements MenuItem {
+public class ItemBase implements MenuItem, ModelListener {
 
   private Image            icon;
   protected List<MenuItem> children           = new ArrayList<MenuItem>();
@@ -28,6 +27,7 @@ public class ItemBase implements MenuItem {
   protected boolean        markedForExecution = false;
   protected String         script;
   protected boolean          populated        = false;
+  protected String key;
 
 
   protected static Control control;
@@ -199,6 +199,16 @@ public class ItemBase implements MenuItem {
 
 protected void clearDetails() {
   details.clear();
+}
+
+@Override
+public void keyChanged(String key, String value) {
+}
+
+@Override
+public void listChanged(String list, String parameter) {
+  if (list.equals(key)) 
+      this.populated=false; 
 }
 
 }

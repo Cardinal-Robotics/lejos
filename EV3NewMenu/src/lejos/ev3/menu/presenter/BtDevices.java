@@ -1,9 +1,8 @@
 package lejos.ev3.menu.presenter;
 
-import java.util.Collection;
+import java.util.List;
 
 import lejos.ev3.menu.components.Icons;
-import lejos.hardware.RemoteBTDevice;
 import lejos.hardware.lcd.Image;
 
 public class BtDevices extends ItemBase {
@@ -11,19 +10,24 @@ public class BtDevices extends ItemBase {
   
   public BtDevices(String label, Image icon ) {
     super( label , icon);
+    this.key = "REMOTE_DEVICES";
+    model.attach(key, this);
   }
   
  
   @Override
   protected void populate() {
     menu.notifyOn(Icons.BLUETOOTH, "Searching...");
-    Collection<RemoteBTDevice> entries = model.getBTModel().getRemoteDevices(false);
+    List<String> entries = model.getList(key, null);
     clearDetails();
     addDetail(new BtRepopulate());
-    for (RemoteBTDevice entry: entries) {
-      addDetail(new BtCommand( "PAIR","Pair", entry));
+    if (entries == null || entries.isEmpty() ) {
+      addDetail(new BaseDetail("", "<No devices found>", "%2$s", "", false));
     }
-    if (entries.isEmpty()) addDetail(new BaseDetail("", "<No devices found>", "%2$s", "", false));
+    else
+      for (String entry: entries) {
+        addDetail(new BtCommand( "PAIR","Pair", entry));
+      }
     populated = true;
     menu.notifyOff();
   }

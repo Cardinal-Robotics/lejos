@@ -20,12 +20,12 @@ public class File extends BaseDetail {
   @Override
   public void select() {
     parent.removeChildren();
-    if (model.getFilesModel().isDirectory(value)) {
+    if (value.endsWith(" ")) {
+      // This is a directory
       Files files = new Files(value);
       List<MenuItem> submenu = new ArrayList<MenuItem>();
       submenu.add(files);
       menu.insertAndRun(submenu);
-      files.detach();
       return;
     }
     MenuItem child = new ItemFile(value,label, Icons.EYE);
@@ -33,7 +33,7 @@ public class File extends BaseDetail {
       if (isIn(Files.PROGRAMS_DIRECTORY)) {
         child.addDetail(new ControlCommand("RUN_PROGRAM", "Run", value));
         child.addDetail(new ControlCommand("DEBUG_PROGRAM", "Debug", value));
-        String d = model.getSettingsModel().getSetting("lejos.default_program", null);
+        String d = model.getSetting("lejos.default_program", null);
         if (d == null)
           child.addDetail(new SetDefault("Set as default", value));
         else if (d.equals(value))

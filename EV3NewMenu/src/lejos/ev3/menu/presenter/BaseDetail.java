@@ -6,13 +6,12 @@ import java.util.Map;
 
 import lejos.ev3.menu.components.Viewer;
 import lejos.ev3.menu.control.Control;
-import lejos.ev3.menu.model.FilesModel;
 import lejos.ev3.menu.model.Model;
-import lejos.ev3.menu.model.SettingsModel;
+import lejos.ev3.menu.model.ModelListener;
 import lejos.ev3.menu.viewer.Editor;
 import lejos.ev3.menu.viewer.Menu;
 
-public class BaseDetail implements Detail{
+public class BaseDetail implements Detail, ModelListener{
   protected String key;
   protected String label;
   protected String format;
@@ -153,6 +152,18 @@ public class BaseDetail implements Detail{
   @Override
   public Map<String, String> getSpecials() {
     return specials;
+  }
+
+
+  @Override
+  public void keyChanged(String key, String value) {
+    if (key.equals(this.key)) initialized = false;
+  }
+
+
+  @Override
+  public void listChanged(String list, String parameter) {
+    // Empty method, details never contain lists
   }
   
   

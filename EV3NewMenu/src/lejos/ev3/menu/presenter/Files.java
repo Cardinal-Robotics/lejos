@@ -3,9 +3,8 @@ package lejos.ev3.menu.presenter;
 import java.util.List;
 
 import lejos.ev3.menu.components.Icons;
-import lejos.ev3.menu.model.FilesChanged;
 
-public class Files extends ItemBase implements FilesChanged{
+public class Files extends ItemBase {
  
   public static final String PROGRAMS_DIRECTORY = "/home/lejos/programs";
   public static final String LIB_DIRECTORY      = "/home/lejos/lib";
@@ -13,32 +12,18 @@ public class Files extends ItemBase implements FilesChanged{
   public static final String TOOLS_DIRECTORY    = "/home/root/lejos/tools";
   public static final String NOT_SET            = null;
   protected String           path;
-  protected String           glob = "*";
+  protected String key;
 
-  public Files(String path) {
-    this( path, "*");
-  }
-  
-  public Files( String path, String glob) {
+  public Files( String path) {
     super( path , Icons.FILES);
     this.path = path;
-    this.glob = glob;
-    model.getFilesModel().attach(this);
-  }
-  
-  @Override
-  public List<Detail> getDetails() {
-    return super.getDetails();
-  }
-
-  @Override
-  public Detail getDetail(int index) {
-    return super.getDetail(index);
+    this.key = "GET_FILES";
+    model.attach(key, this);
   }
   
   @Override
   protected void populate() {
-    List<String> entries = model.getFilesModel().getEntries(path, glob);
+    List<String> entries = model.getList(key, path);
     clearDetails();
     for (String entry : entries) {
       addDetail(new File( entry, this));
@@ -47,8 +32,6 @@ public class Files extends ItemBase implements FilesChanged{
     populated = true;
   }
   
-
-
   @Override 
   public String getLabel() {
     int i = super.getLabel().lastIndexOf(java.io.File.separator);
@@ -56,15 +39,9 @@ public class Files extends ItemBase implements FilesChanged{
   }
 
   @Override
-  public void filesChanged(String path) {
-    if (this.path.equals(path)) {
+  public void listChanged(String list, String parameter) {
+    if (list.equals(key) && parameter.equals(path)) 
       populated = false;
-    }
-  }
-
-  @Override
-  public void detach() {
-    model.getFilesModel().detach(this);
   }
 
   
