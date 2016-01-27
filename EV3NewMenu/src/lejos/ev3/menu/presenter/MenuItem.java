@@ -1,4 +1,4 @@
-package lejos.ev3.menu.model;
+package lejos.ev3.menu.presenter;
 
 import java.util.List;
 
@@ -21,6 +21,11 @@ public interface MenuItem {
    * @return this
    */
   public MenuItem addChild(MenuItem child);
+  
+  /**
+   * Removes all child items
+   */
+  public void removeChildren();
 
   /**
    * Returns a list of all the child nodes (sub menu items)
@@ -49,14 +54,19 @@ public interface MenuItem {
    * @param detail
    * @return this
    */
-  public MenuItem addDetail(MenuDetail detail);
+  public MenuItem addDetail(Detail detail);
+  
+  /**
+   * Removes all Details
+   */
+  public void removeDetails();
 
   /**
    * Returns a list of all the details of this node
    * 
    * @return
    */
-  public List<MenuDetail> getDetails();
+  public List<Detail> getDetails();
 
   /**
    * Tests if at least one of the details can be selected. Selectable details
@@ -72,7 +82,7 @@ public interface MenuItem {
    * @param index
    * @return
    */
-  public MenuDetail getDetail(int index);
+  public Detail getDetail(int index);
 
   /**
    * Returns true if this nodehas children (a submenuu)
@@ -94,5 +104,19 @@ public interface MenuItem {
    * @return
    */
   boolean hasDetails();
+  
+  public void setScript(String path);
+  
+  public String getScript();
+  
+  public boolean hasScript();
+  
+  public void markScriptForExecution();
+  
+  public void conditionallyExecuteScript();
+  
+  public void repopulate();
+
+
 
 }

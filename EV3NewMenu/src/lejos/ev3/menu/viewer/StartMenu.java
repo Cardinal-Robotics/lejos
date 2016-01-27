@@ -1,8 +1,11 @@
 package lejos.ev3.menu.viewer;
 
+import lejos.ev3.menu.components.Icons;
 import lejos.ev3.menu.control.EV3Control;
 import lejos.ev3.menu.control.Control;
-import lejos.ev3.menu.model.*;
+import lejos.ev3.menu.model.Model;
+import lejos.ev3.menu.model.ModelContainer;
+import lejos.ev3.menu.presenter.*;
 
 /**
  * Defines the menu structure of the leJOS menu and starts the menu
@@ -14,26 +17,44 @@ public class StartMenu {
 
   public static void main(String[] args) {
     Control control = new EV3Control();
-    MenuItem top;
+    Menu menu = new GraphicMenu();
+    Model model = ModelContainer.getModel();
+    BaseDetail.setEnvironment(control, model, menu);
+    ItemBase.setEnvironment(control, model, menu);
 
-    top = new ItemBase(control, "Top", Icons.EV3)
+    MenuItem top = new ItemBase( "Top", Icons.EV3)
         .addChild(
-            new ItemBase(control, "System", Icons.EYE).addDetail(new DetailStringValue(control, "Name", "BRICKNAME", "%s: %s"))
-                .addDetail(new DetailStringValue(control, "Version", "VERSION", "%s: %s")).addDetail(new DetailLabel("0:0:0:0"))
-                .addDetail(new DetailLabel("0:0:0:0")))
-        .addChild(new ItemFiles(control, ItemFiles.PROGRAMS_DIRECTORY, ".jar"))
-        .addChild(new ItemFiles(control, ItemFiles.SAMPLES_DIRECTORY, ".jar"))
-        .addChild(new ItemFiles(control, ItemFiles.TOOLS_DIRECTORY, ".jar"))
+            new ItemBase( "leJOS EV3", Icons.EYE)
+                .addDetail(new RunDefault())
+                .addDetail(new SettingDetail( "system.hostname", "Name", "%2$s: %3$s", ""))
+                .addDetail(new SettingDetail( "lejos.version", "Version",  "%2$s: %3$s", ""))
+                .addDetail(new SettingDetail( "wlan0", "LAN",  "%2$s: %3$s", ""))
+                .addDetail(new SettingDetail( "br0", "PAN",  "%2$s: %3$s", "")))
         .addChild(
-            new ItemBase(control, "Sound", Icons.EYE)
-                .addDetail(new DetailNumericValue(control, "Volume", "VOLUME", "%s : %4d", EditorNumeric.class))
-                .addDetail(new DetailNumericValue(control, "Key Vol", "keyVolume", "%s : %4d", EditorNumeric.class))
-                .addDetail(new DetailNumericValue(control, "Key length", "keyLength", "%s : %4d", EditorNumeric.class))
-                .addDetail(new DetailNumericValue(control, "Key freq", "keyFreq", "%s : %4d", EditorNumeric.class)))
-
+            new ItemBase("BlueTooth", Icons.BLUETOOTH)
+                .addChild(new ItemBase("Configure BT", Icons.BLUETOOTH)
+                          .addDetail(new BtDetail( "bluetooth.visibility","Visibility", "%2$s: %3$5s", "false", EditorBoolean.class))
+                          .addDetail(new SettingDetail( "bluetooth.pin","PIN:", "%2$s %3$s","1234", EditorBtKey.class)))
+                .addChild(new BtPairedDevices("Devices", Icons.BLUETOOTH))
+                .addChild(new BtDevices("Pair", Icons.BLUETOOTH))
+                          
+                .addDetail(new BtDetail( "bluetooth.visibility","Visibility", "%2$s: %3$5s", "false"))
+                .addDetail(new BtDetail( "bluetooth.address","Address", "%3$s", "?"))
+                .addDetail(new BtDetail( "bluetooth.name","Name", "%3$s", "?"))
+                .addDetail(new SettingDetail( "bluetooth.pin","PIN:", "%2$s %3$s","1234")) 
+        )        
+        .addChild(new Files( Files.PROGRAMS_DIRECTORY))
+        .addChild(new Files( Files.SAMPLES_DIRECTORY ))
+        .addChild(new Files( Files.TOOLS_DIRECTORY))
+        .addChild(new Files( Files.LIB_DIRECTORY))
+        .addChild(
+            new ItemBase( "Sound", Icons.EYE)
+                .addDetail(new SettingDetail( "audio.volume","Volume", "%2$s : %3$4s", "30", EditorNumeric.class))
+                .addDetail(new SettingDetail( "lejos.keyclick_volume","Key vol", "%2$s : %3$4s", "30", EditorNumeric.class))
+                .addDetail(new SettingDetail( "lejos.keyclick_length","Key length", "%2$s : %3$4s", "30", EditorNumeric.class))
+                .addDetail(new SettingDetail( "lejos.keyclick_frequency","Key freq", "%2$s : %3$4s", "800" , EditorNumeric.class)))
     ;
-
-    GraphicMenu menu = new GraphicMenu(top);
+    menu.setMenu(top);
     menu.run();
 
   }
