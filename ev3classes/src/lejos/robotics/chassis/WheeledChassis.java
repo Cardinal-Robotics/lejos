@@ -691,7 +691,7 @@ public class WheeledChassis implements Chassis {
       xPose += cos * x - sin * y;
       yPose += sin * x + cos * y;
       aPose += delta.get(2, 0);
-      while (aPose < 180)
+      while (aPose < -180)
         aPose += 360;
       while (aPose > 180)
         aPose -= 360;
