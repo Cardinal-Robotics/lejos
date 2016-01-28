@@ -1,5 +1,6 @@
 package lejos.ev3.menu.viewer;
 
+import lejos.ev3.menu.components.UI;
 import lejos.ev3.menu.presenter.Detail;
 import lejos.ev3.startup.Utils;
 import lejos.hardware.Button;
@@ -110,7 +111,7 @@ public class EditorString /* implements Editor<String> */ {
         }
       }
       lcd.refresh();
-      switch (Button.waitForAnyPress()) {
+      switch (UI.getUI()) {
       case Button.ID_RIGHT:
         if (sy == 3 && sx == 8)
           sx++;

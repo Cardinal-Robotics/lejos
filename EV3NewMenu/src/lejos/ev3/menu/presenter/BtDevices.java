@@ -26,7 +26,7 @@ public class BtDevices extends ItemBase {
     }
     else
       for (String entry: entries) {
-        addDetail(new BtCommand( "PAIR","Pair", entry));
+        addDetail(new BtPairCommand( entry));
       }
     populated = true;
     menu.notifyOff();

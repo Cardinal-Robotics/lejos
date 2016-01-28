@@ -49,12 +49,24 @@ public class BtModel extends AbstractModel {
   public List<String> getList(String list, String parameter) {
     switch(list) {
     case "PAIRED_DEVICES": {
+      try {
       cachedPaired = bt.getPairedDevices();
       return toNameList(cachedPaired);
+      }
+      catch(BluetoothException e) {
+        System.err.println("Search exeception " + e);
+      return null;
+    }
     }
     case "REMOTE_DEVICES": {
+      try {
       cachedRemote =  bt.search();
       return toNameList(cachedRemote);
+      }
+      catch(BluetoothException e) {
+        System.err.println("Search exeception " + e);
+      return null;
+    }
     }
     }
     return null;
@@ -67,11 +79,11 @@ public class BtModel extends AbstractModel {
     return a;
   }
 
-  public List<String> execute(String command, String name) {
+  public List<String> execute(String command, String name, String... arguments) {
     switch (command) {
     case ("PAIR"): { 
       try {
-        bt.authenticate(toAddress(this.cachedRemote, name), ModelContainer.getModel().getSetting("lejos.bluetooth.pin", "1234"));
+        bt.authenticate(toAddress(this.cachedRemote, name), arguments[0]);
         broadcast("REMOTE_DEVICES","");
         broadcast("PAIRED_DEVICES","");
         } catch (BluetoothException e) {

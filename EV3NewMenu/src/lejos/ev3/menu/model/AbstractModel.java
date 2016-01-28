@@ -64,7 +64,7 @@ public abstract class AbstractModel implements Model{
   }
 
   @Override
-  public List<String> execute(String command, String target) {
+  public List<String> execute(String command, String target, String... arguments) {
     return null;
   }
 

@@ -31,6 +31,9 @@ public class StartMenu {
                 .addDetail(new SettingDetail( "wlan0", "LAN",  "%2$s: %3$s", ""))
                 .addDetail(new SettingDetail( "br0", "PAN",  "%2$s: %3$s", "")))
         .addChild(
+            new ItemBase( "Wifi", Icons.WIFI)
+                .addDetail(new SettingDetail( "wlan0", "LAN",  "%2$s: %3$s", "")))
+        .addChild(
             new ItemBase("BlueTooth", Icons.BLUETOOTH)
                 .addChild(new ItemBase("Configure BT", Icons.BLUETOOTH)
                           .addDetail(new BtDetail( "bluetooth.visibility","Visibility", "%2$s: %3$5s", "false", EditorBoolean.class))

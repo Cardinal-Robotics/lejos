@@ -23,7 +23,7 @@ public class FilesModel extends AbstractModel {
   };
 
   @Override
-  public List<String> execute(String command, String path) {
+  public List<String> execute(String command, String path, String... arguments) {
     if (command.equals("VIEW"))
       return readFile(path);
     if (command.equals("DELETE"))

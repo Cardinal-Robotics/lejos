@@ -22,7 +22,7 @@ public class BtPairedDevices extends ItemBase {
     }
     else
       for (String entry: entries) {
-        addDetail(new BtCommand( "FORGET","Forget", entry));
+        addDetail(new BtForgetCommand( entry));
       }
     populated = true;
   }

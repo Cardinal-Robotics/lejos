@@ -120,7 +120,6 @@ public class GraphicMenu implements Menu {
         }
         case Button.ID_ENTER: {
           activate();
-          while(Button.getButtons() != 0) Delay.msDelay(20);
           break;
         }
         }
@@ -261,8 +260,10 @@ public class GraphicMenu implements Menu {
   }
 
   private void activate() {
-    if (currentNode.hasSelectableDetails())
+    if (currentNode.hasSelectableDetails()) {
       activateDetail();
+      paintAll();
+    }
     else
       selectChild();
   }
@@ -318,6 +319,11 @@ public class GraphicMenu implements Menu {
   @Override
   public void notifyOff() {
     paintAll();
+  }
+  
+  @Override
+  public boolean dialog(String text, int buttons) {
+    return Dialog.display(text, buttons);
   }
 
   @Override

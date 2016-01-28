@@ -50,7 +50,7 @@ public interface Model {
    * @param target
    * @return The stack trace if the command fails. null if the command succeeds.
    */
-  public List<String> execute(String command, String target);
+  public List<String> execute(String command, String target, String... arguments);
   
   /** Returns a list of values 
    * @param list

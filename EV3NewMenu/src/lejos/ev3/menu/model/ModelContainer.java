@@ -82,10 +82,10 @@ public class ModelContainer implements Model{
   }
 
   @Override
-  public List<String> execute(String command, String target) {
+  public List<String> execute(String command, String target, String... arguments) {
     Model targetModel;
     targetModel = this.getResponsibleForCommand(command);
-    if (targetModel != null) return targetModel.execute(command, target );
+    if (targetModel != null) return targetModel.execute(command, target, arguments );
     else
       throw new RuntimeException("Command " + command + " is not supported by the model");
   }

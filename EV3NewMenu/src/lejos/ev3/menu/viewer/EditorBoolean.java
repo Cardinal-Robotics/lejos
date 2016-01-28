@@ -1,6 +1,7 @@
 package lejos.ev3.menu.viewer;
 
 import lejos.ev3.menu.components.TextPanel;
+import lejos.ev3.menu.components.UI;
 import lejos.ev3.menu.presenter.Detail;
 import lejos.hardware.Button;
 
@@ -28,7 +29,7 @@ public class EditorBoolean implements Editor{
     
     
     while (true) {
-      switch (Button.waitForAnyPress()) {
+      switch (UI.getUI()) {
       case (Button.ID_DOWN): {} 
       case (Button.ID_UP): {
         value = !value;

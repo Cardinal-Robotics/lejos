@@ -1,6 +1,7 @@
 package lejos.ev3.menu.viewer;
 
 import lejos.ev3.menu.components.TextPanel;
+import lejos.ev3.menu.components.UI;
 import lejos.ev3.menu.presenter.Detail;
 import lejos.hardware.Button;
 import lejos.utility.Delay;
@@ -34,25 +35,18 @@ public class EditorNumeric implements Editor {
     p.setMargin(5);
 
     int old = value;
-    int delay = 500;
     p.setMessage(String.format(format, key, label, value));
     p.paint();
 
     
     while (true) {
 
-      switch (Button.getButtons()) {
-      case (0): {
-        delay = 500;
-        break;
-      }
+      switch (UI.getUI()) {
       case (Button.ID_UP): {
         if (value + increment <= upperLimit)
           value += increment;
         p.setMessage(String.format(format, key, label, value));
         p.paint();
-        Delay.msDelay(delay);
-        delay = 200;
         break;
       }
       case (Button.ID_DOWN): {
@@ -60,22 +54,16 @@ public class EditorNumeric implements Editor {
           value -= increment;
         p.setMessage(String.format(format, key, label, value));
         p.paint();
-        Delay.msDelay(delay);
-        delay = 200;
         break;
       }
       case (Button.ID_ENTER): {
         if (value != old) {
           v = Integer.toString(value);
           presenter.setValue(v);
-          while (Button.getButtons() != 0)
-            Delay.msDelay(20);
         }
         return;
       }
       case (Button.ID_ESCAPE): {
-        while (Button.getButtons() != 0)
-          Delay.msDelay(20);
         return;
       }
       }

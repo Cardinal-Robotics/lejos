@@ -84,5 +84,7 @@ public interface Menu {
   void repopulate();
 
   public void insertAndRun(List<MenuItem> children);
+  
+  public boolean dialog(String text, int buttons);
 
 }

@@ -593,7 +593,7 @@ public class WheeledChassis implements Chassis {
      * Defines the offset off the wheel
      * 
      * @param val
-     *          The distance between the robots yPose-axis and the center of the
+     *          The distance between the robots center and the center of the
      *          wheel
      * @return the modeler
      */
