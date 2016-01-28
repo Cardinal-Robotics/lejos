@@ -1,8 +1,8 @@
 package lejos.ev3.menu.presenter;
 
-public class BtRepopulate extends BaseDetail {
+public class RepopulateCommand extends BaseDetail {
 
-  public BtRepopulate() {
+  public RepopulateCommand() {
     super("" , "<Scan>", "%2$s", " ", true);
   }
 

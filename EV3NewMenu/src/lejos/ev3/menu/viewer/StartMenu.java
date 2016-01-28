@@ -32,6 +32,7 @@ public class StartMenu {
                 .addDetail(new SettingDetail( "br0", "PAN",  "%2$s: %3$s", "")))
         .addChild(
             new ItemBase( "Wifi", Icons.WIFI)
+                .addDetail(new SsidDetail("ssid","WLAN","%2$s: %3$s"))
                 .addDetail(new SettingDetail( "wlan0", "LAN",  "%2$s: %3$s", "")))
         .addChild(
             new ItemBase("BlueTooth", Icons.BLUETOOTH)

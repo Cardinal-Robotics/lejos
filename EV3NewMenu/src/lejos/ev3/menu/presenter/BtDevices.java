@@ -20,7 +20,7 @@ public class BtDevices extends ItemBase {
     menu.notifyOn(Icons.BLUETOOTH, "Searching...");
     List<String> entries = model.getList(key, null);
     clearDetails();
-    addDetail(new BtRepopulate());
+    addDetail(new RepopulateCommand());
     if (entries == null || entries.isEmpty() ) {
       addDetail(new BaseDetail("", "<No devices found>", "%2$s", "", false));
     }
