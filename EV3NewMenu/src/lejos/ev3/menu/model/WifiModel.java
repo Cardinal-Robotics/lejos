@@ -20,8 +20,11 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
+import com.sun.jna.Memory;
+
 import lejos.hardware.LocalWifiDevice;
 import lejos.hardware.Wifi;
+import lejos.internal.io.NativeWifi;
 import lejos.utility.Delay;
 
 public class WifiModel extends AbstractModel{
@@ -30,6 +33,10 @@ public class WifiModel extends AbstractModel{
   private static final String START_WLAN = "/home/root/lejos/bin/startwlan";
   private static final String START_PAN = "/home/root/lejos/bin/startpan";
   private static final String PAN_CONFIG = "/home/root/lejos/config/pan.config";
+  private NativeWifi wifi = new NativeWifi();
+  NativeWifi.WReqPoint reqP = new NativeWifi.WReqPoint();
+  NativeWifi.WReqSocket reqS = new NativeWifi.WReqSocket();
+
 
 
   LocalWifiDevice wlan = Wifi.getLocalDevice("wlan0");
@@ -45,14 +52,40 @@ public class WifiModel extends AbstractModel{
     switch (key) {
     case "wlan0":
     case "br0": {return getInetAddress(key, null);}
-    case "ssid": return getSsid();
+    case "ssid": return getAccessPointName("wlan0");
     }
     return null;
   }
 
-  private String getSsid() {
-    // TODO: Find ssid
-    return "FreeWifi";
+
+  /**
+   * Return the current access point name
+   * @return access point name
+   */
+  public String getAccessPointName(String ifName) {
+      // Create buffer for the results
+      
+      reqP.point.flags = 0;
+      reqP.point.length = 256;
+      reqP.point.p = new Memory(reqP.point.length);
+      // Copy the name to the request structure
+      System.arraycopy(ifName.getBytes(), 0, reqP.ifname, 0, ifName.length());
+      int ret = wifi.ioctl(NativeWifi.SIOCGIWESSID, reqP);
+      //System.out.println("error " + ret);
+      if (ret >= 0 ) {
+  
+          StringBuilder sb = new StringBuilder();
+          int len = reqP.point.length;
+          //System.out.println("length is " + len);
+          for(int j=0;j<len;j++) {
+              sb.append((char)reqP.point.p.getByte(j));
+          }
+          
+          //System.out.println("Access Point Name:" + sb.toString());
+          
+          return sb.toString();
+      }
+      return "";
   }
   
   private String getInetAddress(String wifiInterface, String defaultValue) {

@@ -10,6 +10,7 @@ public class SsidDetail extends SettingDetail{
   public SsidDetail(String key, String label, String format) {
     super(key, label, format, "");
     this.selectable = true;
+    this.addSpecialValue("", "Connect");
   }
 
   @Override

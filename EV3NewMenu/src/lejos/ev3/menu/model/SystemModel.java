@@ -4,14 +4,20 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
+import lejos.hardware.ev3.LocalEV3;
+
 public class SystemModel extends AbstractModel{
+  SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+  
+  
   
   protected SystemModel() {
-    myKeys = Arrays.asList("system.hostname", "lejos.version");
+    myKeys = Arrays.asList("system.hostname", "lejos.version","system.time","system.volt","system.current");
 
   }
   
@@ -44,6 +50,9 @@ public class SystemModel extends AbstractModel{
     switch(key) {
     case "system.hostname" : return getHostname();
     case "lejos.version" : return getVersion();
+    case "system.time" : return format.format(Calendar.getInstance().getTime());
+    case "system.volt" : return String.format("%.2f",LocalEV3.get().getPower().getVoltage());
+    case "system.current" : return String.format("%.2f",LocalEV3.get().getPower().getBatteryCurrent());
     }
     return null;
   }

@@ -80,6 +80,7 @@ public class BaseDetail implements Detail, ModelListener{
   @Override
   public void needRefresh() {
     initialized = false;
+    menu.refreshDetail(this);
     
   }
 

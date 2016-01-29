@@ -370,6 +370,18 @@ public class GraphicMenu implements Menu {
       throw new RuntimeException("Menu item already has children");
     
   }
+
+  @Override
+  public void refreshDetail(Detail detail) {
+    for (Detail d : this.details) {
+      if (d==detail) {
+        this.paintDetails();
+        return;
+      }
+      
+    }
+    
+  }
   
 
 }
