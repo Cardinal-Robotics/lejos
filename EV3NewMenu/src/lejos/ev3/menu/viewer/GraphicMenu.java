@@ -9,6 +9,7 @@ import lejos.ev3.menu.model.Model;
 import lejos.ev3.menu.presenter.Detail;
 import lejos.ev3.menu.presenter.MenuItem;
 import lejos.hardware.Button;
+import lejos.hardware.Keys;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.GraphicsLCD;
 import lejos.hardware.lcd.Image;
@@ -34,13 +35,13 @@ public class GraphicMenu implements Menu {
   private List<Detail>   details;
   private int            toprow          = 0;
   private int            iDetail         = -1;
-  private int            visibleDetails  ;
+  private int            lastDetail =0;
   private List<MenuItem> navigationStack = new ArrayList<MenuItem>(0);
   private List<Integer>  navigationIndex = new ArrayList<Integer>(0);
   private MenuItem       top;
   private ScrollBar      bar;
-  private int            nDetails;
   private boolean        suspended       = false;
+  private boolean        idle            = false;
 
   private TextPanel      statusBar;
   private CompoundPanel  title;
@@ -50,6 +51,10 @@ public class GraphicMenu implements Menu {
   private CompoundPanel  messagePanel;
   private Detail         currentDetail;
   private Panel          nodePanel;
+  
+  private Refresh        refresh;
+  private int            refreshInterval = 3000;
+
 
   public static void setEnvironment(Control c, Model m) {
     control = c;
@@ -65,8 +70,10 @@ public class GraphicMenu implements Menu {
     nodePanel = new Panel(0,statusBar.getBottom() + 1, canvas.getWidth(), canvas.getHeight() -  statusBar.getBottom() - 1);
 
     title = new CompoundPanel(Icons.EYE, "Title", 0, statusBar.getBottom() + 1);
+    title = new CompoundPanel(Icons.EYE, "Title", 0, 0);
     title.setWidth(canvas.getWidth());
     title.setHeight(24);
+    title.setHeight(33);
     title.setFont(Fonts.Courier17);
     title.setBorders(Panel.BOTTOMBORDER);
     title.setTextAlign(GraphicsLCD.HCENTER + GraphicsLCD.VCENTER);
@@ -81,23 +88,25 @@ public class GraphicMenu implements Menu {
     detailLine.setWidth(canvas.getWidth() - selector.getRight() - 2);
     detailLine.setFont(Fonts.Courier13);
     detailLine.setTextAlign(GraphicsLCD.LEFT + GraphicsLCD.TOP);
-    visibleDetails = detailPanel.getHeight() / detailLine.getHeight();
 
     messagePanel = new CompoundPanel(Icons.HOUR_GLASS, "Wait\na\nsecond...");
     messagePanel.setBorders(15);
     messagePanel.setShadow(true);
+    
+    refresh = new Refresh();
+    refresh.setDaemon(true);
+    refresh.start();
   }
 
   public void run() {
     if (top == null)
       throw new RuntimeException("No menu structure specified");
     int current = 0;
-    int last = 0;
     while (true) {
-      current = Button.getButtons();
-      if (current == 0 && last != 0 && !suspended) {
-        // Process regular key handling for menu navigation
-        switch (last) {
+      idle = true;
+      current = UI.getUI(Keys.ID_DOWN + Keys.ID_UP, 1000, 1000);
+      idle = false;
+      switch (current) {
         case Button.ID_LEFT: {
           selectPreviousSibling();
           break;
@@ -124,18 +133,18 @@ public class GraphicMenu implements Menu {
         }
         }
       }
-      if (suspended && current != 0 && current != last) {
-        // handle special key combinations while menu is suspended
-        switch (current) {
-        case (Button.ID_ENTER + Button.ID_DOWN): {
-          control.killProgram();
-          resumeMenu();
-          break;
-        }
-        }
-      }
-      last = current;
-    }
+//      if (suspended && current != 0 && current != last) {
+//        // handle special key combinations while menu is suspended
+//        switch (current) {
+//        case (Button.ID_ENTER + Button.ID_DOWN): {
+//          control.killProgram();
+//          resumeMenu();
+//          break;
+//        }
+//        }
+//      }
+//      last = current;
+//    }
   }
 
   @Override
@@ -196,13 +205,8 @@ public class GraphicMenu implements Menu {
     toprow = 0;
     bar = null;
     details = currentNode.getDetails();
-    nDetails = details.size();
-    if (nDetails > visibleDetails) {
-//      bar = new ScrollBar(canvas, Config.DETAILS.right - 12, Config.DETAILS.y + 3, Config.DETAILS.height - 3, nDetails, visibleDetails,
-//          iDetail);
-    }
-    paintDetails();
     selectFirstDetail();
+    paintDetails();
   }
 
   @Override
@@ -250,13 +254,11 @@ public class GraphicMenu implements Menu {
     currentDetail = details.get(iDetail);
     if (iDetail < toprow) {
       toprow = iDetail;
-      paintDetails();
     }
-    if (iDetail > toprow + visibleDetails) {
-      toprow = iDetail - visibleDetails;
-      paintDetails();
+    if (iDetail > lastDetail) {
+      toprow ++;
     }
-    paintSelector();
+    paintDetails();
   }
 
   private void activate() {
@@ -273,15 +275,45 @@ public class GraphicMenu implements Menu {
   }
 
   private void paintDetails() {
+    selector.clear();
     detailPanel.paint();
-    for (int i = 0; i <= visibleDetails; i++) {
-      if (i + toprow < details.size()) {
+    int y = detailPanel.getY();
+    int i = 0;
+    while(y + detailLine.getFont().getHeight() < detailPanel.getBottom() && i + toprow < details.size()) {
         Detail d = details.get(i + toprow);
-        detailLine.setMessage(d.toString());
-        detailLine.setY(detailPanel.getY() + detailLine.getHeight() * i);
+        detailLine.setMessage(split(d.toString()));
+        detailLine.setY(y);
         detailLine.paint();
-      }
+        y += detailLine.getHeight();
+        if (d==currentDetail) {
+          selector.setY(detailLine.getVCenter()-selector.getHeight()/2);
+          selector.paint();
+        }
+        lastDetail = i + toprow;
+        i++;
     }
+  }
+  
+  private String[] split(String text) {
+    int max = detailLine.getWidth() / detailLine.getFont().width;
+    if (text.length() <= max) {
+      return new String[]{text}; 
+    }
+    else {
+      max=max-1;
+      int lines = (int) Math.ceil((double)text.length() / (double)(max));
+      String[] ret = new String[lines];
+      for (int i =0;i<lines;i++) {
+        if (i==0)
+          ret[i]=text.substring(0, max+1);
+        else if (i<lines-1)
+          ret[i]=" "+ text.substring(i*max+1, (i+1) * max+1);
+        else 
+          ret[i]=" "+ text.substring(i*max+1);
+      }
+      return ret;
+    }
+    
   }
 
   private void paintSelector() {
@@ -294,10 +326,10 @@ public class GraphicMenu implements Menu {
 
   private void paintAll() {
     canvas.clear();
-    statusBar.paint();
+//    statusBar.paint();
     title.paint();
     paintDetails();
-    paintSelector();
+    //paintSelector();
     if (bar != null)
       bar.paint();
   }
@@ -373,15 +405,36 @@ public class GraphicMenu implements Menu {
 
   @Override
   public void refreshDetail(Detail detail) {
+    if (suspended || !idle) return;
     for (Detail d : this.details) {
       if (d==detail) {
-        this.paintDetails();
+        paintDetails();
+        paintSelector();
         return;
+      }
+    }
+  }
+  
+  class Refresh extends Thread {
+    long lastTime = System.currentTimeMillis();
+           
+    @Override
+    public void run(){  
+      // TODO: Make thread safe
+      while (true) {
+        Delay.msDelay(refreshInterval);
+        if (idle && !suspended) {
+          for (Detail detail : details)
+            if (detail.isAutoFefresh() || !detail.isInitialized()) {
+              paintDetails();
+              paintSelector();
+              break;
+            }
+        }
       }
       
     }
-    
-  }
-  
+}
 
+  
 }

@@ -3,6 +3,7 @@ package lejos.ev3.menu.presenter;
 import java.util.List;
 
 import lejos.ev3.menu.components.Icons;
+import lejos.hardware.lcd.Image;
 
 public class Files extends ItemBase {
  
@@ -15,11 +16,16 @@ public class Files extends ItemBase {
   protected String key;
 
   public Files( String path) {
-    super( path , Icons.FILES);
+    this( path , Icons.FILES);
+  }
+
+  public Files( String path, Image icon) {
+    super( path , icon);
     this.path = path;
     this.key = "GET_FILES";
     model.attach(key, this);
   }
+
   
   @Override
   protected void populate() {

@@ -46,7 +46,7 @@ public class File extends BaseDetail {
         child.addDetail(new ControlCommand("RUN_SAMPLE", "Run", value));
       }
     } 
-    if (isFiletype("^.*\\.(out|txt|err)$")) {
+    if (isFiletype("^.*\\.(out|txt|err|config|conf)$")) {
       child.addDetail(new FilesCommand("VIEW", "View", value));
     }
     if (isIn(Files.PROGRAMS_DIRECTORY) || isIn(Files.LIB_DIRECTORY)) {

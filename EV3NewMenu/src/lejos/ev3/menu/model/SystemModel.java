@@ -1,6 +1,9 @@
 package lejos.ev3.menu.model;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -55,5 +58,23 @@ public class SystemModel extends AbstractModel{
     case "system.current" : return String.format("%.2f",LocalEV3.get().getPower().getBatteryCurrent());
     }
     return null;
+  }
+
+  @Override
+  public void setSetting(String key, String value) {
+    switch(key) {
+    case "system.hostname" : {setHostname(value); break;}
+  }
+}
+
+  private void setHostname(String name) {
+    try {
+      PrintStream out = new PrintStream(new FileOutputStream("/etc/hostname"));
+      out.println(name);
+      out.close();
+      broadcast("system.hostname", name);
+    } catch (FileNotFoundException e) {
+      System.err.println("Failed to write to /etc/hostname: " + e);
+    }
   }
 }

@@ -12,6 +12,7 @@ public class UI {
   private static long startTime =0;
   private static long lastTime = 0; 
   private static long delay = 10; 
+  private static int navButtons = Keys.ID_DOWN + Keys.ID_UP + Keys.ID_LEFT + Keys.ID_RIGHT;
   
   /** Gets user input
    * Enter and Escape are returned upon button release
@@ -19,38 +20,43 @@ public class UI {
    * @return
    */
   public static int getUI() {
+    return getUI(navButtons, firstTimeOut,subsequentTimeOuts );
+  }
+  
+  
+  public static int getUI(int navButtons, int firstTimeOut, int subsequentTimeOuts) {
     while (true) {
       int button = keys.getButtons();
       long now = System.currentTimeMillis();
       
       // if an enter or escape key is released return the most recently pressed key
-      if (button == 0 && (lastButton == Keys.ID_ENTER || lastButton == Keys.ID_ESCAPE)) {
+      if (button == 0 && isIn(lastButton, Keys.ID_ALL -navButtons) /*  (lastButton == Keys.ID_ENTER || lastButton == Keys.ID_ESCAPE)*/) {
         int previous = lastButton;
         lastButton = 0;
         return previous;
       }
       
       // if a navigation key has just been pressed start the timers used for repeat function and return the pressed key immediately
-      if (lastButton ==0 && forNavigation(button)) {
+      if (lastButton ==0 && isIn(button, navButtons)) {
         startTime = now;
         lastButton = button;
         return button;
       }
       
       // if a navigation key is pressed for the duration of the initial timeout return the pressed key;
-      if (forNavigation(button) && button ==lastButton && lastTime ==0 && now > startTime + firstTimeOut) {
+      if (isIn(button, navButtons) && button ==lastButton && lastTime ==0 && now > startTime + firstTimeOut) {
         lastTime = now;
         return button;
       }
       
       // if a navigation key is pressed, the initial time out has expied an a subsequent timeout has expired return the pressed key;
-      if (forNavigation(button) && button ==lastButton && lastTime !=0 && now > startTime + subsequentTimeOuts) {
+      if (isIn(button, navButtons) && button ==lastButton && lastTime !=0 && now > startTime + subsequentTimeOuts) {
         lastTime = now;
         return button;
       }
       
       // if no navigation button is pressed clear all the timers;
-      if (!forNavigation(button)) {
+      if (!isIn(button, navButtons)) {
         startTime =0;
         lastTime = 0;
       }
@@ -74,12 +80,16 @@ public class UI {
       if ((button & buttons) != 0 ) last = button;
       Delay.msDelay(delay);
     }
-    
-    
-    
-    
-    
   }
+    
+
+  private static boolean isIn(int button, int buttons) {
+      if ((button & buttons) !=0) return true;
+      return false;
+    }
+    
+    
+    
 
   private static boolean forNavigation(int button) {
     switch (button) {

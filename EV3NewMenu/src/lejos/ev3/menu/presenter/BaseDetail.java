@@ -24,6 +24,7 @@ public class BaseDetail implements Detail, ModelListener{
   protected static Menu menu;
   protected static Model model;
   protected Class<? extends Editor> editor     = null;
+  protected boolean autoRefresh =false;
 
   
   public static void setEnvironment(Control c, Model m,  Menu m3) {
@@ -130,7 +131,7 @@ public class BaseDetail implements Detail, ModelListener{
   
   @Override 
   public String toString() {
-    if (!initialized) initialize();
+    if (!initialized || autoRefresh) initialize();
     if (specials.containsKey(value)) 
       return specials.get(value).toString();
     return String.format(format, key, label, value == null ? "" : value);
@@ -165,6 +166,12 @@ public class BaseDetail implements Detail, ModelListener{
   @Override
   public void listChanged(String list, String parameter) {
     // Empty method, details never contain lists
+  }
+
+
+  @Override
+  public boolean isAutoFefresh() {
+    return autoRefresh;
   }
   
   

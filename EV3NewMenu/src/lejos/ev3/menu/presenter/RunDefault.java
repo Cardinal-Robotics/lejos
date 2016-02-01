@@ -39,7 +39,9 @@ public List<String> execute() {
 
 
 protected String shortName() {
+  if (value == null) return "";
   int i = value.lastIndexOf(java.io.File.separator);
+  if (i == -1) return value;
   return value.substring(i+1);
 }
 

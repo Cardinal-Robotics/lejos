@@ -56,6 +56,8 @@ public interface Detail {
   public void addSpecialValue(String value, String label);
 
   public Map<String, String> getSpecials();
+  
+  public boolean isAutoFefresh();
 
 
 }

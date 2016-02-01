@@ -14,6 +14,7 @@ public class ModelContainer implements Model{
     subModels.add(new PropertyModel());
     subModels.add(new SystemModel());
     subModels.add( new WifiModel());
+    subModels.add( new PanModel());
   };
   
   public static ModelContainer getModel() {

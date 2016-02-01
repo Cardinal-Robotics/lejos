@@ -16,8 +16,8 @@ public class Viewer {
   private static Panel viewer; 
   private static TextPanel viewLine;
   static {
-    viewer = new Panel(0,14,canvas.getWidth(), canvas.getHeight()-14);
-    viewLine = new TextPanel("", 0,14);
+    viewer = new Panel(0,0,canvas.getWidth(), canvas.getHeight());
+    viewLine = new TextPanel("", 0,0);
     viewLine.setWidth(canvas.getWidth());
     viewLine.setFont(Fonts.Courier12);
   }

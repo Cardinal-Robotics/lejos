@@ -9,7 +9,7 @@ import lejos.hardware.lcd.Font;
 import lejos.hardware.lcd.GraphicsLCD;
 import lejos.hardware.lcd.Image;
 
-public class EditorString /* implements Editor<String> */ {
+public class EditorString  implements Editor  {
 
   private static Image       ICOK      = new Image(
                                            12,
