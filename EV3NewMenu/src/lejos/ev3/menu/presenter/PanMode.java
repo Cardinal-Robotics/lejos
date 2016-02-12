@@ -1,17 +1,20 @@
 package lejos.ev3.menu.presenter;
 
-public class PanMode extends BaseDetail{
-  
-  public PanMode(String value) {
-  super("Pan.mode", "Mode", "%3$s", "NONE");
-  this.value = value;
-  initialized = true;
-  this.selectable = true;
-  this.addSpecialValue("NONE", "Disable");
-  this.addSpecialValue("AP", "Access Pt");
-  this.addSpecialValue("AP+", "Access Pt+");
-  this.addSpecialValue("BT", "BT Client");
-  this.addSpecialValue("USB", "USB Client");
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+public class PanMode extends ListDetail {
+  static Map<String,String> panModes =  new LinkedHashMap<String, String>();
+  static { 
+  panModes.put("NONE", "Disable");
+  panModes.put("AP", "Access Pt");
+  panModes.put("AP+", "Access Pt+");
+  panModes.put("BT", "BT Client");
+  panModes.put("USB", "USB Client");
+  }
+
+  public PanMode() {
+    super("Pan.mode", "Mode", "%3$s", "NONE",panModes);
   }
 
 }

@@ -14,7 +14,6 @@ public class PanSetting extends SettingDetail {
   
   @Override
   public void select() {
-    menu.selectChild();
   }
 
 }

@@ -8,14 +8,13 @@ public class SetDefault extends SettingDetail {
   public SetDefault(String label , String newValue) {
     super("lejos.default_program", label, "%2$s", newValue);
     this.newValue = newValue;
-    initialized = true;
+    isFresh = true;
     selectable = true;
   }
   
   @Override
   public void select() {
     setValue(newValue);
-    menu.selectParent();
   }
 
 }

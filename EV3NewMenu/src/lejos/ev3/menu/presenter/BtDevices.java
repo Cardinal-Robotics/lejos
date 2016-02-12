@@ -5,7 +5,7 @@ import java.util.List;
 import lejos.ev3.menu.components.Icons;
 import lejos.hardware.lcd.Image;
 
-public class BtDevices extends ItemBase {
+public class BtDevices extends BaseNode {
  
   
   public BtDevices(String label, Image icon ) {
@@ -16,11 +16,11 @@ public class BtDevices extends ItemBase {
   
  
   @Override
-  protected void populate() {
+  protected void refresh() {
+    super.refresh();
     menu.notifyOn(Icons.BLUETOOTH, "Searching...");
     List<String> entries = model.getList(key, null);
     clearDetails();
-    addDetail(new RepopulateCommand());
     if (entries == null || entries.isEmpty() ) {
       addDetail(new BaseDetail("", "<No devices found>", "%2$s", "", false));
     }
@@ -28,7 +28,8 @@ public class BtDevices extends ItemBase {
       for (String entry: entries) {
         addDetail(new BtPairCommand( entry));
       }
-    populated = true;
+    this.selectNextDetail();
+    isFresh = true;
     menu.notifyOff();
   }
   

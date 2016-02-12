@@ -14,6 +14,10 @@ import java.util.List;
 
 import lejos.hardware.ev3.LocalEV3;
 
+/** Model to maintain Linux and hardware related settings and functions
+ * @author Aswin Bouwmeester
+ *
+ */
 public class SystemModel extends AbstractModel{
   SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
   

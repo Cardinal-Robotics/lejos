@@ -1,6 +1,6 @@
 package lejos.ev3.menu.model;
 
-/** Interface for objects that want to register by a model as a listener to listen to changes in the model
+/** Interface for objects that want to register with a model as a listener to listen to changes in the model
  * @author Aswin Bouwmeester
  *
  */

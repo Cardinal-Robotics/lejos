@@ -24,6 +24,7 @@ public class EditorBoolean implements Editor{
 
     boolean old = value;
     p.setMessage(String.format(format, key, label, value));
+    p.saveScreen();
     p.paint();
 
     
@@ -41,9 +42,11 @@ public class EditorBoolean implements Editor{
       case (Button.ID_ENTER): {
           v = Boolean.toString(value);
           presenter.setValue(v);
+          p.restoreScreen();
         return;
       }
       case (Button.ID_ESCAPE): {
+        p.restoreScreen();
         return;
       }
       }

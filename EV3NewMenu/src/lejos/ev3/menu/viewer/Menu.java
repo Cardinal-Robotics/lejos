@@ -3,7 +3,7 @@ package lejos.ev3.menu.viewer;
 import java.util.List;
 
 import lejos.ev3.menu.presenter.Detail;
-import lejos.ev3.menu.presenter.MenuItem;
+import lejos.ev3.menu.presenter.Node;
 import lejos.hardware.lcd.Image;
 
 /**
@@ -13,15 +13,10 @@ import lejos.hardware.lcd.Image;
  *
  */
 public interface Menu {
-  /**
-   * Selects the first child of the current menu.
-   */
-  public void selectChild();
-
-  /**
-   * Selects the parent menu item of the current menu
-   */
-  public void selectParent();
+  
+  public void runMenu(Node menu);
+  
+  public void runMenu(List<Node> menu);
 
   /**
    * Displays the default message window
@@ -45,10 +40,6 @@ public interface Menu {
    */
   public void notifyOff();
 
-  /**
-   * Sets the menu Sctructure
-   */
-  public void setMenu(MenuItem top);
 
   /**
    * Returns true is the select method on a detail is being executed and ths
@@ -70,24 +61,11 @@ public interface Menu {
    */
   public void resumeMenu();
 
-  public void run();
 
-  void selectNextSibling();
-
-  void selectPreviousSibling();
-
-  void selectNextDetail();
-
-  void selectPreviousDetail();
-  
-  void repopulateParent();
-  
-  void repopulate();
-
-  public void insertAndRun(List<MenuItem> children);
-  
   public boolean dialog(String text, int buttons);
 
-  public void refreshDetail(Detail detail);
+  public Detail selectFromList(Node list );
+  
+  public void progress(String text);
 
 }

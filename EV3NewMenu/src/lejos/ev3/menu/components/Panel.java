@@ -2,6 +2,7 @@ package lejos.ev3.menu.components;
 
 import lejos.hardware.Button;
 import lejos.hardware.ev3.LocalEV3;
+import lejos.hardware.lcd.CommonLCD;
 import lejos.hardware.lcd.GraphicsLCD;
 
 public class Panel {
@@ -22,6 +23,7 @@ public class Panel {
   protected boolean shadow = false;
   protected int shadowOffset = 3;
   protected int margin = 0;
+  private byte[] saveScreen;
   
   
 
@@ -241,6 +243,18 @@ public class Panel {
     if (value <lowerBound) return lowerBound;
     if (value>upperBound) return upperBound;
     return value;
+  }
+  
+  public void saveScreen() {
+    canvas.refresh();
+    saveScreen = canvas.getHWDisplay();
+  }
+  
+  public void restoreScreen() {
+    if (saveScreen != null)
+      canvas.bitBlt(saveScreen, canvas.getWidth(), canvas.getHeight(), 0, 0, 0, 0, canvas.getWidth(), canvas.getHeight(), CommonLCD.ROP_COPY);
+    saveScreen = null;
+    canvas.refresh();
   }
 
   

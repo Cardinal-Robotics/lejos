@@ -3,6 +3,10 @@ package lejos.ev3.menu.model;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Skeleton implementation of a menu Model
+ * @author Aswin Bouwmeester
+ *
+ */
 public abstract class AbstractModel implements Model{
   
   private List<ModelListener> listeners = new ArrayList<ModelListener>();

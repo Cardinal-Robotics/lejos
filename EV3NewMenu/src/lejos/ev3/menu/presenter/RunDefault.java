@@ -6,16 +6,16 @@ import java.util.List;
 public class RunDefault extends SettingDetail{
   
   public RunDefault() {
-    super("lejos.default_program", "", "Run %2$s", null);
-    initialize();
+    super("lejos.default_program", "", "Run: %2$s", null);
+    refresh();
     this.addSpecialValue("", "No default set");
     model.attach(key, this);
   }
 
   @Override
-  public void initialize() {
-    super.initialize();
-    if (value=="") {
+  public void refresh() {
+    super.refresh();
+    if (value==null) {
       selectable =false;
       label = "";
     }

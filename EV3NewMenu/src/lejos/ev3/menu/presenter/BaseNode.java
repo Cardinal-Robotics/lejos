@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lejos.ev3.menu.components.Icons;
-import lejos.ev3.menu.components.Viewer;
 import lejos.ev3.menu.control.Control;
 import lejos.ev3.menu.model.Model;
 import lejos.ev3.menu.model.ModelListener;
 import lejos.ev3.menu.viewer.Menu;
+import lejos.ev3.menu.viewer.Viewer;
 import lejos.hardware.lcd.Image;
 
 /**
@@ -17,17 +17,17 @@ import lejos.hardware.lcd.Image;
  * @author Aswin Bouwmeester
  *
  */
-public class ItemBase implements MenuItem, ModelListener {
+public class BaseNode implements Node, ModelListener {
 
   private Image            icon;
-  protected List<MenuItem> children           = new ArrayList<MenuItem>();
   private List<Detail>     details            = new ArrayList<Detail>();
   private String           label;
   protected boolean        selectableDetails  = false;
   protected boolean        markedForExecution = false;
   protected String         script;
-  protected boolean          populated        = false;
+  protected boolean        isFresh        = false;
   protected String key;
+  protected int selectedDetail =0;
 
 
   protected static Control control;
@@ -49,31 +49,17 @@ public class ItemBase implements MenuItem, ModelListener {
    * @param icon
    *          The icon of this menu item
    */
-  public ItemBase(String label, Image icon) {
+  public BaseNode(String label, Image icon) {
     if (control == null || menu == null)
       throw new RuntimeException("Menu Items can only be instantiated after both Menu and Control are set");
     this.label = label;
     this.icon = icon;
   }
 
-  public ItemBase(String label) {
+  public BaseNode(String label) {
     this(label, Icons.DEFAULT);
   }
-  
-  protected void populate() {
-    populated =true;
-  }
 
-  @Override
-  public MenuItem addChild(MenuItem child) {
-    children.add(child);
-    return this;
-  }
-
-  @Override
-  public List<MenuItem> getChildren() {
-    return children;
-  }
 
   protected void setIcon(Image icon) {
     this.icon = icon;
@@ -95,30 +81,17 @@ public class ItemBase implements MenuItem, ModelListener {
 
   @Override
   public List<Detail> getDetails() {
-    if (!populated) populate();
+    if (!isFresh) refresh();
     return details;
   }
 
   @Override
-  public MenuItem addDetail(Detail detail) {
+  public Node addDetail(Detail detail) {
     details.add(detail);
     if (detail.isSelectable())
       selectableDetails = true;
+    detail.setParent(this);
     return this;
-  }
-
-  @Override
-  public boolean hasSelectableDetails() {
-    if (!populated) populate();
-    return selectableDetails;
-  }
-
-  @Override
-  public Detail getDetail(int index) {
-    if (!populated) populate();
-    if (index >= details.size())
-      throw new IndexOutOfBoundsException();
-    return details.get(index);
   }
 
   @Override
@@ -127,26 +100,9 @@ public class ItemBase implements MenuItem, ModelListener {
   }
 
   @Override
-  public boolean hasChildren() {
-    return children.isEmpty() ? false : true;
-  }
-
-  @Override
-  public boolean hasDetails() {
-    if (!populated) populate();
-    return details.isEmpty() ? false : true;
-  }
-
-  @Override
-  public void removeChildren() {
-    children.clear();
-
-  }
-
-  @Override
   public void removeDetails() {
     details.clear();
-    populated = true;
+    isFresh = true;
   }
 
   public static void setControl(Control c) {
@@ -157,44 +113,12 @@ public class ItemBase implements MenuItem, ModelListener {
     menu = m;
   }
 
-  @Override
-  public void setScript(String path) {
-    this.script = path;
 
-  }
 
-  @Override
-  public String getScript() {
-    return script;
-  }
-
-  @Override
-  public boolean hasScript() {
-    return (script != null);
-
-  }
-
-  @Override
-  public void markScriptForExecution() {
-    markedForExecution = true;
-
-  }
-
-  @Override
-  public void conditionallyExecuteScript() {
-    if (hasScript() && markedForExecution) {
-      menu.suspendMenu();
-      List<String> output = control.runScript(script);
-      if (output != null)
-        Viewer.view(output);
-      markedForExecution = false;
-      menu.resumeMenu();
-    }
-  }
-
-  @Override
-  public void repopulate() {
-    populated = false;
+  protected void refresh() {
+    isFresh = true;
+    if (details.size() <= selectedDetail || !details.get(selectedDetail).isSelectable())
+      selectedDetail = -1;
   }
 
 protected void clearDetails() {
@@ -208,7 +132,63 @@ public void keyChanged(String key, String value) {
 @Override
 public void listChanged(String list, String parameter) {
   if (list.equals(key)) 
-      this.populated=false; 
+      this.isFresh=false; 
 }
+
+@Override
+public Detail getSelected() {
+  if (!isFresh) refresh();
+  if (selectedDetail == -1 ) return null;
+  return details.get(selectedDetail);
+}
+
+@Override
+public void setSelected(int index) {
+  selectedDetail = index;
+}
+
+@Override
+public void selectNextDetail() {
+  for (int i =selectedDetail+1; i < details.size();i++) {
+    if (details.get(i).isSelectable()) { 
+      selectedDetail =i; 
+      return;
+    }
+  }
+}
+
+@Override
+public void selectPreviousDetail() {
+  for (int i =selectedDetail-1; i >= 0 ;i--) {
+    if (details.get(i).isSelectable()) { 
+      selectedDetail =i; 
+      return;
+    }
+  }
+}
+
+@Override
+public boolean hasDetails() {
+  if (details == null) return false;
+  if (details.size()==0) return false;
+  return true;
+}
+
+@Override
+public int getSelectedIndex() {
+  return selectedDetail;
+}
+
+@Override
+public void needRefresh() {
+  isFresh = false;
+}
+
+@Override
+public boolean isFresh() {
+  return this.isFresh;
+}
+
+
 
 }

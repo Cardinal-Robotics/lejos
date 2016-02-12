@@ -14,21 +14,12 @@ public class File extends BaseDetail {
     this.value = file;
     this.label = shortName();
     this.parent = parent;
-    initialized = true;
+    isFresh = true;
   }
 
   @Override
   public void select() {
-    parent.removeChildren();
-    if (value.endsWith(" ")) {
-      // This is a directory
-      Files files = new Files(value);
-      List<MenuItem> submenu = new ArrayList<MenuItem>();
-      submenu.add(files);
-      menu.insertAndRun(submenu);
-      return;
-    }
-    MenuItem child = new ItemFile(value,label, Icons.EYE);
+    Node child = new FileNode(value,label, Icons.EYE);
     if (isFiletype("^.*\\.jar")) {
       if (isIn(Files.PROGRAMS_DIRECTORY)) {
         child.addDetail(new ControlCommand("RUN_PROGRAM", "Run", value));
@@ -52,10 +43,9 @@ public class File extends BaseDetail {
     if (isIn(Files.PROGRAMS_DIRECTORY) || isIn(Files.LIB_DIRECTORY)) {
       child.addDetail(new FilesCommand("DELETE", "Delete", value));
     }
-    if (!child.hasDetails())
-      return;
-    parent.addChild(child);
-    menu.selectChild();
+    if (child.hasDetails()) {
+      menu.selectFromList(child);
+    }
   }
 
   /**

@@ -12,7 +12,7 @@ public class LanConnect extends BaseDetail{
   public LanConnect(String entry) {
     super("CONNECT", "Connect", "%3$s", "", true);
     this.value = entry;
-    initialized = true;
+    isFresh = true;
   }
   
   
@@ -32,13 +32,10 @@ public class LanConnect extends BaseDetail{
   menu.notifyOn(Icons.WIFI, "Connecting to:\n" + value);
     List<String> r = model.execute(key, value, remoteKey);
     menu.notifyOff();
-    if (r == null) {
-      menu.selectParent();
-    }
-    else {
+    if (r != null) {
       menu.dialog("Pairing failed",2);
     }
-    return null;
+    return r;
   }
 
   

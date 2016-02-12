@@ -12,11 +12,6 @@ import lejos.ev3.menu.presenter.Detail;
  */
 public interface Editor {
 
-
-  //public void edit(Detail<?> model);
-
-
-
   public void  edit(Detail detail);
 
 

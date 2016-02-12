@@ -1,11 +1,14 @@
-package lejos.ev3.menu.components;
+package lejos.ev3.menu.viewer;
 
 import java.util.List;
 
+import lejos.ev3.menu.components.Fonts;
+import lejos.ev3.menu.components.Panel;
+import lejos.ev3.menu.components.TextPanel;
+import lejos.ev3.menu.components.UI;
 import lejos.hardware.Button;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.GraphicsLCD;
-import lejos.utility.Delay;
 
 /** Simple file viewer for text files
  * @author Aswin Bouwmeester
@@ -32,6 +35,7 @@ public static void view(List<String> lines) {
     int oldtop =-1;
     int n = viewer.getHeight() / viewLine.getHeight();
     int l = viewLine.getWidth() / viewLine.getFont().width;
+    viewer.saveScreen();
     while (true) {
       if (oldstart != start | oldtop != top) {
         viewer.clear();
@@ -51,15 +55,13 @@ public static void view(List<String> lines) {
       oldstart = start ;
       oldtop = top;
       }
-      Delay.msDelay(200);
-      int but = Button.getButtons();
+      int but = UI.getUI();
       if ((but & Button.ID_LEFT) > 0) {if (start > 0) start --;}
       if ((but & Button.ID_RIGHT) > 0) {if (start < longest-l) start ++;}
       if ((but & Button.ID_UP) > 0) {if (top > 0) top --;}
       if ((but & Button.ID_DOWN) > 0) {if (top < lines.size()-n) top ++;}
       if ((but & Button.ID_ESCAPE) > 0) { 
-        viewer.clear();
-        while (Button.ESCAPE.isDown()) Delay.msDelay(10);
+        viewer.restoreScreen();
         return;
        }
       

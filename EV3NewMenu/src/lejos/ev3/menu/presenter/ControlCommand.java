@@ -7,7 +7,7 @@ public class ControlCommand extends BaseDetail {
   public ControlCommand(String command, String label, String value) {
     super(command, label, "%2$s", value, true);
     this.value = value;
-    initialized = true;
+    isFresh = true;
   }
   
 @Override
@@ -19,8 +19,6 @@ public class ControlCommand extends BaseDetail {
 public void select() {
   menu.suspendMenu();
   super.select();
-  menu.repopulateParent();
-  menu.selectParent();
   menu.resumeMenu();
 }
 

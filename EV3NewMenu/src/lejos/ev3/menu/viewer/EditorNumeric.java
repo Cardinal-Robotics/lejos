@@ -36,6 +36,7 @@ public class EditorNumeric implements Editor {
 
     int old = value;
     p.setMessage(String.format(format, key, label, value));
+    p.saveScreen();
     p.paint();
 
     
@@ -61,9 +62,11 @@ public class EditorNumeric implements Editor {
           v = Integer.toString(value);
           presenter.setValue(v);
         }
+        p.restoreScreen();
         return;
       }
       case (Button.ID_ESCAPE): {
+        p.restoreScreen();
         return;
       }
       }

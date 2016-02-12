@@ -2,6 +2,15 @@ package lejos.ev3.menu.model;
 
 import java.util.List;
 
+/** A Model manages a related group of system settings and related system functions.
+ *<br>
+ *Models have three basic functions:
+ *<li> managing system settings with the getSetting and setSetting methods.</li>
+ *<li> executing system related functions with the execute function.</li>
+ *<li> listing system items (like files, BT devices etc) with the list function.</li>
+ * @author Aswin Bouwmeester
+ *
+ */
 public interface Model {
   
   /** Subscribes an object as a listener to the model

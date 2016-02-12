@@ -35,6 +35,7 @@ public class EditorBtKey implements Editor{
         n[i].setMargin(4);
         xOffset += 20;
     }
+    p.saveScreen();
     p.paint();
     int last =0;
     int x=0;
@@ -51,10 +52,10 @@ public class EditorBtKey implements Editor{
         n[i].paint();
       }
       switch (UI.getUI()) {
-      case Button.ID_ESCAPE: {return "";}
-      case Button.ID_ENTER: {return String.copyValueOf(pin);}
-      case Button.ID_LEFT: { if (selected > 0) selected--; break;}
-      case Button.ID_RIGHT: { if (selected < len) selected++; break;}
+      case Button.ID_ESCAPE: {p.restoreScreen(); return "";}
+      case Button.ID_ENTER: {p.restoreScreen(); return String.copyValueOf(pin);}
+      case Button.ID_LEFT: { if (selected > 0) selected--; else selected = len; break;}
+      case Button.ID_RIGHT: { if (selected < len) selected++; else selected =0; break;}
       case Button.ID_UP: { pin[selected]++; if (pin[selected] > '9') pin[selected]='0' ; break;}
       case Button.ID_DOWN: { pin[selected]--; if (pin[selected] < '0') pin[selected]='9' ; break;}
       }

@@ -2,13 +2,16 @@ package lejos.ev3.menu.model;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
@@ -29,7 +32,7 @@ import lejos.utility.Delay;
 
 public class WifiModel extends AbstractModel{
   private static final String WIFI_CONFIG="/home/root/lejos/config/wpa_supplicant.conf";
-  private static final String WIFI_BASE="wpa_supplicant.txt";
+  private static final String WIFI_BASE="/home/root/lejos/config/wpa_supplicant.txt";
   private static final String START_WLAN = "/home/root/lejos/bin/startwlan";
   private static final String START_PAN = "/home/root/lejos/bin/startpan";
   private static final String PAN_CONFIG = "/home/root/lejos/config/pan.config";
@@ -148,8 +151,7 @@ public class WifiModel extends AbstractModel{
   }
   
   
-    public static void writeConfiguration(String in, String out, String ssid, String pwd) {
-      try {
+    public void writeConfiguration(String in, String out, String ssid, String pwd) throws  Exception  {
         BufferedReader br = new BufferedReader(new FileReader(new File(in)));
         FileWriter fw = new FileWriter(new File(out));
         String line;
@@ -166,9 +168,6 @@ public class WifiModel extends AbstractModel{
         }
         br.close();
         fw.close();
-      } catch (Exception e) {
-        System.err.println("Failed to write wpa supplication configuration: " + e);
-      }
     }
     
     protected static final char[] hexChars = "0123456789abcdef".toCharArray();
@@ -197,8 +196,7 @@ public class WifiModel extends AbstractModel{
        return bytesToHex(k);
      }
 
-     private void startNetwork(String startup, boolean startServices) {
-       try {
+     private void startNetwork(String startup, boolean startServices) throws Exception {
            Process p = Runtime.getRuntime().exec(startup);
              BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
 //             String statusMsg;
@@ -216,11 +214,6 @@ public class WifiModel extends AbstractModel{
                  startNetworkServices();
                  Delay.msDelay(2000);
        }
-       } catch (Exception e) {
-       System.err.println("Failed to execute: " + startup + " : " + e);
-       e.printStackTrace();
-     
-     }
    }     
  
      private void startNetworkServices()

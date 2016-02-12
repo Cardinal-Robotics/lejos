@@ -4,7 +4,7 @@ import java.util.List;
 
 import lejos.hardware.lcd.Image;
 
-public class BtPairedDevices extends ItemBase {
+public class BtPairedDevices extends BaseNode {
  
   public BtPairedDevices(String label, Image icon ) {
     super( label , icon);
@@ -14,7 +14,8 @@ public class BtPairedDevices extends ItemBase {
   
  
   @Override
-  protected void populate() {
+  protected void refresh() {
+    super.refresh();
     List<String> entries = model.getList("PAIRED_DEVICES", null);
     clearDetails();
     if (entries == null || entries.isEmpty()) {
@@ -24,7 +25,8 @@ public class BtPairedDevices extends ItemBase {
       for (String entry: entries) {
         addDetail(new BtForgetCommand( entry));
       }
-    populated = true;
+    this.selectNextDetail();
+    isFresh = true;
   }
   
 

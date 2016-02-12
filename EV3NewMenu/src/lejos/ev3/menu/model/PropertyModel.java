@@ -10,6 +10,10 @@ import java.util.Properties;
 import lejos.hardware.BrickFinder;
 import lejos.hardware.Button;
 
+/** Model to maintain al settings that must be stored in a property file
+ * @author Aswin Bouwmeester
+ *
+ */
 public class PropertyModel extends AbstractModel{
   private Properties   props      = new Properties();
   private final String PROPS_FILE = "/home/root/lejos/settings.properties";
@@ -35,12 +39,11 @@ public class PropertyModel extends AbstractModel{
       System.err.println("Failed to store properties");
     }
     broadcast(key, value);
-      int nValue = Integer.parseInt(value);
       switch(key) {
-      case "volume": {BrickFinder.getLocal().getAudio().setVolume(nValue); break;}
-      case "lejos.keyclick_volume": {Button.setKeyClickVolume(nValue);break;}
-      case "lejos.keyclick_length": {Button.setKeyClickLength(nValue); break;}
-      case "lejos.keyclick_frequency": {Button.setKeyClickTone(Button.ID_ENTER, nValue);break;}
+      case "volume": {BrickFinder.getLocal().getAudio().setVolume(Integer.parseInt(value)); break;}
+      case "lejos.keyclick_volume": {Button.setKeyClickVolume(Integer.parseInt(value));break;}
+      case "lejos.keyclick_length": {Button.setKeyClickLength(Integer.parseInt(value)); break;}
+      case "lejos.keyclick_frequency": {Button.setKeyClickTone(Button.ID_ENTER, Integer.parseInt(value));break;}
       }
     }
  

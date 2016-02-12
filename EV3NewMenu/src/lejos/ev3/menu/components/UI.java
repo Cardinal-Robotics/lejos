@@ -4,6 +4,14 @@ import lejos.hardware.BrickFinder;
 import lejos.hardware.Keys;
 import lejos.utility.Delay;
 
+/** Class to capture the hardware buttons using the getUI method. The class treats buttons in two different ways depending on the button. 
+ * The getUI method returns the button ID after a press and release of a button. 
+ * In addition to this behavior the getUI method also returns the button ID after a "navigation" button has been pressed for a certain amount of time. 
+ * This behavior is limited to navigation buttons, by default these are the Up, DOWN, LEFT and RIGHT buttons. The default can be overruled by a parameter to the getUI method. 
+ * This behavior makes it possible to react to a prolonged key press. 
+ * @author Aswin Bouwmeester
+ *
+ */
 public class UI {
   private static Keys keys = BrickFinder.getDefault().getKeys();
   private static int firstTimeOut = 500;

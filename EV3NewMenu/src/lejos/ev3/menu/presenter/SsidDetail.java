@@ -15,10 +15,8 @@ public class SsidDetail extends SettingDetail{
 
   @Override
   public void select() {
-    List<MenuItem> submenu = new ArrayList<MenuItem>();
-    submenu.add(new ItemLan("Access points", Icons.WIFI));
-    menu.insertAndRun(submenu);
-    return;  
+    List<Node> submenu = new ArrayList<Node>();
+    menu.selectFromList(new LanNode("Access points", Icons.WIFI));
     }
   
   

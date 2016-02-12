@@ -5,7 +5,7 @@ import java.util.List;
 import lejos.ev3.menu.viewer.Editor;
 
 
-public class BtDetail extends BaseDetail  {
+public class BtDetail extends SettingDetail  {
 
   public BtDetail(String key, String label, String format, String defaultValue, Class<? extends Editor> editor) {
     super(key, label, format, defaultValue, editor);
@@ -23,8 +23,8 @@ public BtDetail(String key, String label, String format, String defaultValue) {
   }
 
 @Override
-public void initialize() {
-  super.initialize();
+public void refresh() {
+  super.refresh();
   value=model.getSetting(key, defaultValue);
 }
 
@@ -38,7 +38,6 @@ protected List<String> execute() {
   try {
     Editor edit = this.editor.newInstance();
     edit.edit(this);
-    menu.repopulate();
   } catch (InstantiationException e) {
     e.printStackTrace();
   } catch (IllegalAccessException e) {
@@ -49,7 +48,7 @@ protected List<String> execute() {
 
 @Override
 public void keyChanged(String key, String newValue) {
-  initialized = false;
+  isFresh = false;
 }
 
 }

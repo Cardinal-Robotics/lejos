@@ -4,6 +4,10 @@ package lejos.ev3.menu.model;
 import java.util.ArrayList;
 import java.util.List;
 
+/** The ModelContainer class acts as a wrapper that bundles more specific models and hides these for the users. 
+ * @author Aswin Bouwmeester
+ *
+ */
 public class ModelContainer implements Model{
   private static ModelContainer model;
   private List<Model> subModels = new ArrayList<Model>(); 

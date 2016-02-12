@@ -5,7 +5,7 @@ import java.util.List;
 import lejos.ev3.menu.components.Icons;
 import lejos.hardware.lcd.Image;
 
-public class Files extends ItemBase {
+public class Files extends BaseNode {
  
   public static final String PROGRAMS_DIRECTORY = "/home/lejos/programs";
   public static final String LIB_DIRECTORY      = "/home/lejos/lib";
@@ -24,18 +24,20 @@ public class Files extends ItemBase {
     this.path = path;
     this.key = "GET_FILES";
     model.attach(key, this);
+    isFresh = false;
   }
 
   
   @Override
-  protected void populate() {
-    List<String> entries = model.getList(key, path);
+  protected void refresh() {
+    super.refresh();
     clearDetails();
+    List<String> entries = model.getList(key, path);
     for (String entry : entries) {
       addDetail(new File( entry, this));
     }
     if (entries.isEmpty()) addDetail(new BaseDetail("", "<Empty>", "%2$s", "", false));
-    populated = true;
+    this.selectNextDetail();
   }
   
   @Override 
@@ -47,7 +49,7 @@ public class Files extends ItemBase {
   @Override
   public void listChanged(String list, String parameter) {
     if (list.equals(key) && parameter.equals(path)) 
-      populated = false;
+      isFresh = false;
   }
 
   

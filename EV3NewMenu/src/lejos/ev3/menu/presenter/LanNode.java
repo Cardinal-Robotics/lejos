@@ -5,25 +5,24 @@ import java.util.List;
 import lejos.ev3.menu.components.Icons;
 import lejos.hardware.lcd.Image;
 
-public class ItemLan extends ItemBase{
+public class LanNode extends BaseNode{
 
-  public ItemLan(String label, Image icon) {
+  public LanNode(String label, Image icon) {
     super(label, icon);
     this.key = "ACCESSPOINTS";
   }
 
   @Override
-  protected void populate() {
-    super.populate();
-    this.clearDetails();
+  public void refresh() {
+    super.refresh();
     menu.notifyOn(Icons.WIFI,"Scanning for\n access points");
     List<String> accesspoints = model.getList(key, " ");
     menu.notifyOff();
-    addDetail(new RepopulateCommand());
+    //addDetail(new RepopulateCommand(this));
     for (String ap : accesspoints) {
       this.addDetail(new LanConnect(ap));
     }
-    
+    this.selectNextDetail();
   }
   
   
