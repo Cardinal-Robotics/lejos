@@ -4,14 +4,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import lejos.ev3.menu.control.Control;
 import lejos.ev3.menu.model.Model;
-import lejos.ev3.menu.model.ModelListener;
-import lejos.ev3.menu.viewer.Editor;
 import lejos.ev3.menu.viewer.Menu;
 import lejos.ev3.menu.viewer.Viewer;
 
-public class BaseDetail implements Detail, ModelListener{
+/** Basic implementation of a menu Detail. <br>
+ * @author Aswin Bouwmeester
+ *
+ */
+public class BaseDetail implements Detail{
   protected String key;
   protected String label;
   protected String format;
@@ -20,15 +21,13 @@ public class BaseDetail implements Detail, ModelListener{
   protected boolean isFresh = false;
   protected Map<String, String> specials = new HashMap<String, String>();
   protected String defaultValue;
-  protected static Control control;
   protected static Menu menu;
   protected static Model model;
   protected boolean autoRefresh =false;
   protected Node parent;
 
   
-  public static void setEnvironment(Control c, Model m,  Menu m3) {
-    control = c;
+  public static void setEnvironment( Model m,  Menu m3) {
     model =m;
     menu =m3;
   }
@@ -145,7 +144,7 @@ public class BaseDetail implements Detail, ModelListener{
 
 
   @Override
-  public void keyChanged(String key, String value) {
+  public void keyChanged(String key) {
     if (key.equals(this.key)) {
       isFresh = false;
       parent.needRefresh();

@@ -50,9 +50,9 @@ public class PanModel extends AbstractModel{
 
     protected PanModel()
     {
-      myKeys = Arrays.asList("Pan.mode","Pan.address","Pan.netmask", "Pan.broadcast","Pan.gateway", "Pan.dns", "Pan.persist", "Pan.service");
-      myLists = Arrays.asList("Pan.modes");
-//      myCommands = Arrays.asList("CONNECT");
+      myKeys = Arrays.asList("Pan.mode","Pan.address","Pan.netmask", "Pan.broadcast","Pan.gateway", "Pan.dns", "Pan.persist", "Pan.service", "Pan.apname", "Pan.apaddress");
+      myCommands = Arrays.asList("PAN_APPLY");
+
         loadConfig();
     }
     
@@ -67,6 +67,8 @@ public class PanModel extends AbstractModel{
       case "Pan.dns": return IPAddresses[4];
       case "Pan.persist": return persist;
       case "Pan.service": return BTService;
+      case "Pan.apname": return this.BTAPName;
+      case "Pan.apaddress": return this.BTAPAddress;
       default: return null;
       }
     }
@@ -106,11 +108,30 @@ public class PanModel extends AbstractModel{
         BTService = value;
         break;
       }
+      case "Pan.apname": {
+        this.BTAPName = value;
+        this.BTAPAddress = ModelContainer.getModel().getSetting("bluetooth.remote_address", value);
+        broadcast("Pan.apaddress", BTAPAddress);
+        break;
+      }
       default: return;
       }
       broadcast(key, value);
     }
+    
+    
+    
  
+@Override
+    public List<String> execute(String command, String target, String... arguments) {
+      switch(command) {
+      case "PAN_APPLY": {
+        runScript();
+      }
+      }
+      return null;
+    }
+
 private int getCurMode(String id) {
   for (int i = 0; i< modeIDS.length; i++) {
     if (id.equals(modeIDS[i])) return i;
@@ -118,34 +139,37 @@ private int getCurMode(String id) {
   return MODE_NONE;
 }
     
+private void runScript() {
+if (changed)
+{
+    //waitScreen.begin("Restart\nPAN\nServices");
+    //waitScreen.status("Save configuration");
+    saveConfig();
+    this.Run(START_PAN);
+    //waitScreen.status("Restart name server");
+    BrickFinder.stopDiscoveryServer();
+    BrickFinder.startDiscoveryServer(curMode == MODE_APP);
+    //waitScreen.end();
+}
+}
 
-
-    
-@Override
-    public List<String> getList(String list, String parameter) {
-      switch(list) {
-      case "Pan.modes" : return Arrays.asList(modeIDS);
-      default: return null;
-      }
+ private void saveConfig()
+    {
+        System.out.println("Save PAN config");
+        try {
+            PrintWriter out = new PrintWriter(PAN_CONFIG);
+            out.print(modeIDS[curMode] + " " + BTAPName.replace(" ", "\\ ") + " " + BTAPAddress);
+            for(String ip : IPAddresses)
+                out.print(" " + ip);
+            out.print(" " + BTService + " " + persist);
+            out.println();
+            out.close();
+            changed = false;
+        } catch (IOException e) {
+            System.out.println("Failed to write PAN config to " + PAN_CONFIG + ": " + e);
+        }            
     }
-
-    //    public void saveConfig()
-//    {
-//        System.out.println("Save PAN config");
-//        try {
-//            PrintWriter out = new PrintWriter(PAN_CONFIG);
-//            out.print(modeIDS[curMode] + " " + BTAPName.replace(" ", "\\ ") + " " + BTAPAddress);
-//            for(String ip : IPAddresses)
-//                out.print(" " + ip);
-//            out.print(" " + BTService + " " + persist);
-//            out.println();
-//            out.close();
-//            changed = false;
-//        } catch (IOException e) {
-//            System.out.println("Failed to write PAN config to " + PAN_CONFIG + ": " + e);
-//        }            
-//    }
-//    
+    
     private String getConfigString(String[] vals, int offset, String def)
     {
         if (vals == null || offset >= vals.length || vals[offset] == null || vals[offset].length() == 0)
@@ -563,6 +587,11 @@ private int getCurMode(String id) {
 //            BrickFinder.startDiscoveryServer(curMode == MODE_APP);
 //            waitScreen.end();
 //        }
+
+    @Override
+    public List<String> getList(String list, String parameter) {
+      return null;
+    }
     }
 
  

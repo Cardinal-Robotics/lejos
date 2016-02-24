@@ -47,7 +47,7 @@ protected List<String> execute() {
 }
 
 @Override
-public void keyChanged(String key, String newValue) {
+public void keyChanged(String key) {
   isFresh = false;
 }
 

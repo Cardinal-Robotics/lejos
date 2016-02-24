@@ -27,8 +27,13 @@ public class EditorNumeric implements Editor {
     String format = presenter.getFormat();
     String label = presenter.getLabel();
     String v = presenter.getValue();
-    int value = Integer.parseInt(v);
-
+    int value;
+    try {
+      value = Integer.parseInt(v);
+    }
+    catch(Exception e) {
+      value=0;
+    }
     TextPanel p = new TextPanel(String.format(format, key, label, value));
     p.setBorders(15);
     p.setShadow(true);

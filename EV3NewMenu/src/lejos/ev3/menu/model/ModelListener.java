@@ -10,7 +10,7 @@ public interface ModelListener {
    * @param key The ID of the setting
    * @param value The new value of the setting
    */
-  public void keyChanged(String key, String value);
+  public void keyChanged(String key);
   
   /** Model calls this method on all listeners of the model whenever a list is changed
    * @param list The ID indicating the type of the list

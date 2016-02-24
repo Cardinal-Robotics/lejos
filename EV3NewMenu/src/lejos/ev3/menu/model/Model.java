@@ -2,6 +2,8 @@ package lejos.ev3.menu.model;
 
 import java.util.List;
 
+import lejos.ev3.menu.viewer.WaitScreen;
+
 /** A Model manages a related group of system settings and related system functions.
  *<br>
  *Models have three basic functions:
@@ -67,5 +69,13 @@ public interface Model {
    * @return
    */
   public List<String> getList(String list, String parameter);
+
+  void attach(WaitScreen listener);
+
+  void detach(WaitScreen listener);
+  
+  void initialize();
+  
+  void terminate();
 
 }

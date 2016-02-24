@@ -34,7 +34,6 @@ public class SystemModel extends AbstractModel{
       f = Files.readAllLines(Paths.get("/etc/hostname"), Charset.defaultCharset());
       return f.get(0);
     } catch (IOException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     return null;
@@ -46,7 +45,6 @@ public class SystemModel extends AbstractModel{
       f = Files.readAllLines(Paths.get("/home/root/lejos/version"), Charset.defaultCharset());
       return f.get(0);
     } catch (IOException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     return null;
@@ -80,5 +78,15 @@ public class SystemModel extends AbstractModel{
     } catch (FileNotFoundException e) {
       System.err.println("Failed to write to /etc/hostname: " + e);
     }
+  }
+
+  @Override
+  public List<String> execute(String command, String target, String... arguments) {
+    return null;
+  }
+
+  @Override
+  public List<String> getList(String list, String parameter) {
+    return null;
   }
 }

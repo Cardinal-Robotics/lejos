@@ -14,24 +14,41 @@ import lejos.hardware.RemoteBTDevice;
  *
  */
 public class BtModel extends AbstractModel {
-  static LocalBTDevice bt = new LocalBTDevice();
+  LocalBTDevice bt;
   private Collection<RemoteBTDevice> cachedPaired;
   private Collection<RemoteBTDevice> cachedRemote;
   
 
   
   protected BtModel(){
-    myKeys = Arrays.asList("bluetooth.visibility", "bluetooth.address", "bluetooth.name" );
+    myKeys = Arrays.asList("bluetooth.visibility", "bluetooth.address", "bluetooth.name", "bluetooth.remote_address", "bluetooth.pin" );
     myCommands = Arrays.asList("PAIR", "FORGET" );
     myLists = Arrays.asList("PAIRED_DEVICES", "REMOTE_DEVICES" );
   }
   
   
+  
+  
+  @Override
+  public void initialize() {
+    // TODO Auto-generated method stub
+    super.initialize();
+    openDisplay();
+    display("Start/nBluetooth");
+    bt = new LocalBTDevice();
+    closeDisplay();
+  }
+
+
+
+
   public String getSetting(String key, String defaultValue) {
     switch(key.split("\\.")[1]) {
+    case "pin" : return getProperty(key, defaultValue);
     case "address" :  return bt.getBluetoothAddress();
     case "visibility" : return Boolean.toString(bt.getVisibility());
     case "name" : return bt.getFriendlyName(); 
+    case "remote_address": return toAddress(defaultValue);
     }
   return null;
   }
@@ -39,6 +56,7 @@ public class BtModel extends AbstractModel {
   public void setSetting(String key, String value) {
     switch(key.split("\\.")[1]) {
     case "visibility" : { bt.setVisibility(Boolean.parseBoolean(value)); break;}
+    case "pin" : { setProperty(key, value); break;}
     default: return;
     }
     broadcast(key, value); 
@@ -113,6 +131,13 @@ private String toAddress(Collection<RemoteBTDevice> collection, String name) {
     if(device.getName().equals(name)) return device.getAddress();
   return null;
 }
+
+private String toAddress( String name) {
+  String address = toAddress(cachedPaired, name);
+  if (address != null) return address;
+  return toAddress(cachedRemote, name);
+}
+
 
 
 }

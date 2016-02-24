@@ -25,7 +25,6 @@ public class BtPairedDevices extends BaseNode {
       for (String entry: entries) {
         addDetail(new BtForgetCommand( entry));
       }
-    this.selectNextDetail();
     isFresh = true;
   }
   

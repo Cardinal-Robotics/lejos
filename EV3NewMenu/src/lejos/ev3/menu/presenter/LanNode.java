@@ -15,14 +15,12 @@ public class LanNode extends BaseNode{
   @Override
   public void refresh() {
     super.refresh();
-    menu.notifyOn(Icons.WIFI,"Scanning for\n access points");
+    menu.notifyOn(Icons.WIFI,"Scanning/nfor/naccess/npoints");
     List<String> accesspoints = model.getList(key, " ");
     menu.notifyOff();
-    //addDetail(new RepopulateCommand(this));
     for (String ap : accesspoints) {
       this.addDetail(new LanConnect(ap));
     }
-    this.selectNextDetail();
   }
   
   

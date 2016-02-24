@@ -1,7 +1,5 @@
 package lejos.ev3.menu.presenter;
 
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class SubmenuDetail extends BaseDetail {

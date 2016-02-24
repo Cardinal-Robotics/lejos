@@ -2,13 +2,15 @@ package lejos.ev3.menu.presenter;
 
 import java.util.Map;
 
+import lejos.ev3.menu.model.ModelListener;
+
 
 /** The Detail is a menu component. A dDetail normally is displayed as a single line in a menu Node. A detail corresponds to a system setting. 
  * The setting is identified by the key field of a Detail.
  * @author Aswin Bouwmeester
  *
  */
-public interface Detail {
+public interface Detail extends  ModelListener{
   /**
    * Returns true it the detail can be selected by the user
    * 

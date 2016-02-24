@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lejos.ev3.menu.components.Icons;
-import lejos.ev3.menu.control.Control;
 import lejos.ev3.menu.model.Model;
 import lejos.ev3.menu.model.ModelListener;
 import lejos.ev3.menu.viewer.Menu;
-import lejos.ev3.menu.viewer.Viewer;
 import lejos.hardware.lcd.Image;
 
 /**
@@ -30,12 +28,10 @@ public class BaseNode implements Node, ModelListener {
   protected int selectedDetail =0;
 
 
-  protected static Control control;
   protected static Menu    menu;
   protected static Model   model;
 
-  public static void setEnvironment(Control c, Model m, Menu m3) {
-    control = c;
+  public static void setEnvironment(Model m, Menu m3) {
     model =m;
     menu =m3;
   }
@@ -50,8 +46,8 @@ public class BaseNode implements Node, ModelListener {
    *          The icon of this menu item
    */
   public BaseNode(String label, Image icon) {
-    if (control == null || menu == null)
-      throw new RuntimeException("Menu Items can only be instantiated after both Menu and Control are set");
+    if (menu == null)
+      throw new RuntimeException("Menu nodes can only be instantiated after the environment is set");
     this.label = label;
     this.icon = icon;
   }
@@ -88,8 +84,13 @@ public class BaseNode implements Node, ModelListener {
   @Override
   public Node addDetail(Detail detail) {
     details.add(detail);
-    if (detail.isSelectable())
+    if (detail.isSelectable()) {
       selectableDetails = true;
+      if (selectedDetail ==-1) {
+        selectedDetail = details.size()-1;
+      }
+        
+    }
     detail.setParent(this);
     return this;
   }
@@ -103,30 +104,24 @@ public class BaseNode implements Node, ModelListener {
   public void removeDetails() {
     details.clear();
     isFresh = true;
+    selectedDetail = -1;
   }
-
-  public static void setControl(Control c) {
-    control = c;
-  }
-
-  public static void setMenu(Menu m) {
-    menu = m;
-  }
-
-
 
   protected void refresh() {
     isFresh = true;
-    if (details.size() <= selectedDetail || !details.get(selectedDetail).isSelectable())
-      selectedDetail = -1;
+    // TODO: Replace line below to a child classes that know when to set it
+//    selectedDetail = -1;
   }
 
 protected void clearDetails() {
+  for (Detail detail : details)
+    model.detach(detail.getKey(), detail);
   details.clear();
+  selectedDetail = -1;
 }
 
 @Override
-public void keyChanged(String key, String value) {
+public void keyChanged(String key) {
 }
 
 @Override

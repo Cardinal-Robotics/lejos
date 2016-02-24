@@ -37,7 +37,6 @@ public class Files extends BaseNode {
       addDetail(new File( entry, this));
     }
     if (entries.isEmpty()) addDetail(new BaseDetail("", "<Empty>", "%2$s", "", false));
-    this.selectNextDetail();
   }
   
   @Override 

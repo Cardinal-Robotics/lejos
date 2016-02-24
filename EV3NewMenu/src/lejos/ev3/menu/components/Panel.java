@@ -23,7 +23,7 @@ public class Panel {
   protected boolean shadow = false;
   protected int shadowOffset = 3;
   protected int margin = 0;
-  private byte[] saveScreen;
+  private byte[] saveScreen ;
   
   
 
@@ -246,15 +246,15 @@ public class Panel {
   }
   
   public void saveScreen() {
-    canvas.refresh();
-    saveScreen = canvas.getHWDisplay();
+    byte[] disp = canvas.getDisplay();
+    saveScreen = new byte[canvas.getDisplay().length];
+    System.arraycopy(disp, 0, saveScreen, 0, disp.length);
   }
   
   public void restoreScreen() {
     if (saveScreen != null)
       canvas.bitBlt(saveScreen, canvas.getWidth(), canvas.getHeight(), 0, 0, 0, 0, canvas.getWidth(), canvas.getHeight(), CommonLCD.ROP_COPY);
     saveScreen = null;
-    canvas.refresh();
   }
 
   

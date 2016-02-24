@@ -164,8 +164,10 @@ public class EditorString  implements Editor  {
          // Character Key Pressed
          str += keyboards[keyboard][sy].substring(sx, sx + 1);
        break;
-     case Button.ID_ESCAPE:
+     case Button.ID_ESCAPE: {
+       p.restoreScreen();
        return "";
+     }
      }
      p.restoreScreen();
      lcd.refresh();

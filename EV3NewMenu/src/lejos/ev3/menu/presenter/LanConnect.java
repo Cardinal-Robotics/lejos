@@ -29,13 +29,13 @@ public class LanConnect extends BaseDetail{
 
 @Override
   protected List<String> execute() {
-  menu.notifyOn(Icons.WIFI, "Connecting to:\n" + value);
+  menu.notifyOn(Icons.WIFI, "Connecting to:/n" + value);
     List<String> r = model.execute(key, value, remoteKey);
     menu.notifyOff();
     if (r != null) {
       menu.dialog("Pairing failed",2);
     }
-    return r;
+    return null;
   }
 
   

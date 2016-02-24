@@ -1,13 +1,7 @@
 package lejos.ev3.menu.viewer;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import lejos.ev3.menu.components.Icons;
-import lejos.ev3.menu.control.EV3Control;
-import lejos.ev3.menu.control.Control;
 import lejos.ev3.menu.model.Model;
 import lejos.ev3.menu.model.ModelContainer;
 import lejos.ev3.menu.presenter.*;
@@ -21,36 +15,40 @@ import lejos.ev3.menu.presenter.*;
 public class StartMenu {
 
   public static void main(String[] args) {
-    long start;
 
-    Menu menu = GrMenu.getMenu();
 
-    Control control = new EV3Control();
 
     Model model = ModelContainer.getModel();
+    Menu menu = GrMenu.getMenu();
 
-    BaseDetail.setEnvironment(control, model, menu);
-    BaseNode.setEnvironment(control, model, menu);
-    Map<String, String> panModes = new LinkedHashMap<String, String>();
-    panModes.put("NONE", "Disable");
-    panModes.put("AP", "Access Pt");
-    panModes.put("AP+", "Access Pt+");
-    panModes.put("BT", "BT Client");
-    panModes.put("USB", "USB Client");
+    BaseDetail.setEnvironment( model, menu);
+    BaseNode.setEnvironment( model, menu);
+    menu.setEnvironment(model);
+    model.initialize();
+
     ArrayList<Node> top = new ArrayList<Node>();
     top.add(new BaseNode("leJOS EV3", Icons.LEJOS).addDetail(new RunDefault())
         .addDetail(new SettingDetail("wlan0", "LAN", "%2$s: %3$s", null).addSpecialValue(null, "No Wifi"))
         .addDetail(new SettingDetail("br0", "PAN", "%2$s: %3$s", null).addSpecialValue(null, "No PAN")));
-    top.add(new BaseNode("System", Icons.EV3).addDetail(new SettingDetail("system.hostname", "Name", "%2$s: %3$s", "", EditorString.class))
+    top.add(new BaseNode("System", Icons.EV3)
+        .addDetail(new SettingDetail("system.hostname", "Name", "%2$s: %3$s", "", EditorString.class))
+        .addDetail(new SettingDetail("lejos.sleeptime", "Sleep time", "%2$s: %3$s", "", EditorNumeric.class))
+        .addDetail(new Command("CLOSE_PORTS","Reset ports",""))
+        .addDetail(new Command("SUSPEND_MENU","Suspend Menu",""))
+        .addDetail(new SettingDetail("lejos.ntp", "NTP", "%2$4s: %3$s", "1.uk.pool.ntp.org", EditorString.class))
+        );
+    
+    top.add(new BaseNode("Info", Icons.INFO)
         .addDetail(new SettingDetail("lejos.version", "Ver", "%2$s: %3$s", ""))
         .addDetail(new DynamicDetail("system.time", "Time", "%2$s: %3$s", ""))
         .addDetail(new DynamicDetail("system.volt", "Battery", "%2$s: %3$s", ""))
         .addDetail(new DynamicDetail("system.current", "Current", "%2$s: %3$s", "")));
     top.add(new BaseNode("Wifi", Icons.WIFI)
-        .addDetail(new SettingDetail("ssid", "SSID", "%2$s: %3$s", "", new LanNode("Access points", Icons.WIFI)))
-        .addDetail(new SettingDetail("wlan0", "IP", "%2$s: %3$s", "")));
+        .addDetail(new SettingDetail("ssid", "SSID", "%2$4s: %3$s", "", new LanNode("Access points", Icons.WIFI)))
+        .addDetail(new SettingDetail("wlan0", "IP", "%2$4s: %3$s", ""))
+        );
      top.add(new BaseNode("BlueTooth", Icons.BLUETOOTH)
-        .addDetail(new SubmenuDetail("Pair", new BtDevices("Pair", Icons.SEARCH)))
+        .addDetail(new SubmenuDetail("Pair", new BtDevices("Pair", Icons.SEARCH))) 
         .addDetail(new SubmenuDetail("Devices", new BtPairedDevices("Devices", Icons.BLUETOOTH)))
         .addDetail(new BtDetail( "bluetooth.visibility","Visibility", "%3$s", "false", EditorBoolean.class))
         .addDetail(new SettingDetail( "bluetooth.pin","PIN:", "%2$s %3$s","1234", EditorBtKey.class))
@@ -66,21 +64,7 @@ public class StartMenu {
         .addDetail(new SettingDetail("lejos.keyclick_volume", "Key vol", "%2$s : %3$4s", "30", EditorNumeric.class))
         .addDetail(new SettingDetail("lejos.keyclick_length", "Key length", "%2$s : %3$4s", "30", EditorNumeric.class))
         .addDetail(new SettingDetail("lejos.keyclick_frequency", "Key freq", "%2$s : %3$4s", "800", EditorNumeric.class)));
-    // top.add(new ItemBase("PAN",Icons.ACCESSPOINT)
-    // .addChild(new ItemBase("Pan Config",Icons.PAN)
-    // .addDetail(new IpDetailAddress())
-    // .addDetail(new IpDetail("Pan.netmask", "Netmask"))
-    // .addDetail(new IpDetail("Pan.broadcast", "Brdcast"))
-    // .addDetail(new IpDetail("Pan.gateway", "Gateway"))
-    // .addDetail(new IpDetail("Pan.dns", "DNS"))
-    // .addDetail(new SettingDetail("Pan.persist", "Persist", "%2$s: %3$4s",
-    // "N"))
-    // .addDetail(new SettingDetail("Pan.service", "Service", "%2$s: %3$4s",
-    // "NAP"))
-    // )
-    // .addDetail(new PanMode())
-    // .addDetail(new PanIP())
-    // );
+    top.add(new PanNode("PAN",Icons.ACCESSPOINT));
 
     ;
     menu.runMenu(top);
@@ -88,24 +72,5 @@ public class StartMenu {
 
 }
 
-/*
- * .addChild(new ItemBase("PAN",Icons.ACCESSPOINT) .addDetail(new
- * SettingBySubmenu("Pan.mode", "mode", "%3$s", "NONE") .addChild(new
- * ItemBase("PAN mode",Icons.PAN) .addDetail(new
- * PanMode("NONE").addSpecialValue("NONE", "Disable")) .addDetail(new
- * PanMode("AP").addSpecialValue("AP", "Access Pt")) .addDetail(new
- * PanMode("AP+").addSpecialValue("AP+", "Access Pt+")) .addDetail(new
- * PanMode("BT").addSpecialValue("BT", "BT Client")) .addDetail(new
- * PanMode("USB").addSpecialValue("USB", "USB Client")) )
- * .addSpecialValue("NONE", "Disable") .addSpecialValue("AP", "Access Pt")
- * .addSpecialValue("AP+", "Access Pt+") .addSpecialValue("BT", "BT Client")
- * .addSpecialValue("USB", "USB Client") ) .addDetail(new
- * SettingBySubmenu("br0", "IP", "%2$s: %3$s", "") .addChild(new
- * ItemBase("Pan Config",Icons.PAN) .addDetail(new IpDetail("Pan.address",
- * "Address")) .addDetail(new IpDetail("Pan.netmask", "Netmask")) .addDetail(new
- * IpDetail("Pan.broadcast", "Brdcast")) .addDetail(new IpDetail("Pan.gateway",
- * "Gateway")) .addDetail(new IpDetail("Pan.dns", "DNS")) .addDetail(new
- * SettingDetail("Pan.persist", "Persist", "%2$s : %3$4s", "N")) .addDetail(new
- * SettingDetail("Pan.service", "Service", "%2$s : %3$4s", "NAP"))) ) )
- */
+
 

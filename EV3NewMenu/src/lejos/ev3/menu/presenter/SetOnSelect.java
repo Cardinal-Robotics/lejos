@@ -1,12 +1,12 @@
 package lejos.ev3.menu.presenter;
 
 
-public class SetDefault extends SettingDetail {
+public class SetOnSelect extends SettingDetail {
 
   private String newValue;
 
-  public SetDefault(String label , String newValue) {
-    super("lejos.default_program", label, "%2$s", newValue);
+  public SetOnSelect(String key, String label , String newValue) {
+    super(key, label, "%2$s", newValue);
     this.newValue = newValue;
     isFresh = true;
     selectable = true;

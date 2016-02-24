@@ -34,7 +34,7 @@ public class RunDefault extends SettingDetail{
 
 @Override
 public List<String> execute() {
-  return control.execute("RUN_PROGRAM", value);
+  return model.execute("RUN_PROGRAM", value);
 }
 
 

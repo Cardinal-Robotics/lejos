@@ -19,8 +19,8 @@ public class PanIP extends IpDetail{
   }
 
   @Override
-  public void keyChanged(String key, String value) {
-    super.keyChanged(key, value);
+  public void keyChanged(String key) {
+    super.keyChanged(key);
     if (key.equals("Pan.mode")) {
       if (value.equals("NONE")) selectable = false;
       else selectable = true;

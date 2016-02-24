@@ -82,4 +82,15 @@ public class FilesModel extends AbstractModel {
     return null;
   }
 
+  @Override
+  public String getSetting(String key, String defaultValue) {
+    // Files model has no settings
+    return null;
+  }
+
+  @Override
+  public void setSetting(String key, String value) {
+    // Files model has no settings
+  }
+
 }

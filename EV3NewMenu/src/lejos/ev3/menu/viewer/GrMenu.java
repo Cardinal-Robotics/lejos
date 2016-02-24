@@ -11,6 +11,7 @@ import lejos.ev3.menu.components.ImagePanel;
 import lejos.ev3.menu.components.Panel;
 import lejos.ev3.menu.components.TextPanel;
 import lejos.ev3.menu.components.UI;
+import lejos.ev3.menu.model.Model;
 import lejos.ev3.menu.presenter.Detail;
 import lejos.ev3.menu.presenter.Node;
 import lejos.hardware.Button;
@@ -20,9 +21,8 @@ import lejos.hardware.lcd.GraphicsLCD;
 import lejos.hardware.lcd.Image;
 import lejos.utility.Delay;
 
-public class GrMenu implements Menu {
+public class GrMenu implements Menu, WaitScreen {
   // TODO: work on suspend
-  // TODO: work on scrollbar
   // TODO: work on system exit
 
   private List<Node> siblings;
@@ -45,6 +45,7 @@ public class GrMenu implements Menu {
   
   private Refresh        refresh;
   private int            refreshInterval = 3000;
+  private Model model;
   private static Menu menu;
 
 
@@ -91,7 +92,9 @@ public class GrMenu implements Menu {
     messagePanel = new CompoundPanel(Icons.HOUR_GLASS, "Wait\na\nsecond...");
     messagePanel.setBorders(15);
     messagePanel.setShadow(true);
-    
+    messagePanel.setWidth(168);
+    messagePanel.setTextAlign(GraphicsLCD.HCENTER + GraphicsLCD.VCENTER);
+    messagePanel.setShadow(true);
     }
     
   protected void initializeRefreshThread(){
@@ -135,7 +138,7 @@ public class GrMenu implements Menu {
   }
   
 
-  public void run() {
+  protected void run() {
     int currentKey = 0;
     paintNode();
     while (true) {
@@ -205,7 +208,7 @@ public class GrMenu implements Menu {
         case Button.ID_ENTER: {
           if (currentNode.getSelected() != null) {
             currentNode.getSelected().select();
-            Detail selected = currentDetail;
+            Detail selected = currentNode.getSelected();
             getPreviousMenuFromStack();
             paintNode();
             return selected;
@@ -305,12 +308,11 @@ public class GrMenu implements Menu {
     messagePanel.setBorders(15);
     messagePanel.setShadow(true);
     messagePanel.paint();
-    messagePanel.restoreScreen();
   }
 
   @Override
   public void notifyOff() {
-    paintNode();
+    messagePanel.restoreScreen();
   }
   
   @Override
@@ -364,6 +366,38 @@ public class GrMenu implements Menu {
       
     }
 }
+
+
+  @Override
+  public void openMsgBox() {
+    messagePanel.saveScreen();
+    messagePanel.paint();
+  }
+
+  @Override
+  public void closeMsgBox() {
+    messagePanel.restoreScreen();
+  }
+
+  @Override
+  public void msgBoxSetText(String text) {
+    messagePanel.setMessage(text);
+    messagePanel.paint();
+    canvas.refresh();
+  }
+
+  @Override
+  public void setEnvironment(Model model) {
+    if (this.model != null) 
+      this.model.detach(this);
+    this.model = model;
+    this.model.attach(this);
+  }
+
+  @Override
+  public void msgBoxSetIcon(Image icon) {
+    messagePanel.setIcon(icon);
+  }
 
   
 }

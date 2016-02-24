@@ -2,6 +2,7 @@ package lejos.ev3.menu.viewer;
 
 import java.util.List;
 
+import lejos.ev3.menu.model.Model;
 import lejos.ev3.menu.presenter.Detail;
 import lejos.ev3.menu.presenter.Node;
 import lejos.hardware.lcd.Image;
@@ -67,5 +68,7 @@ public interface Menu {
   public Detail selectFromList(Node list );
   
   public void progress(String text);
+
+  public void setEnvironment(Model model);
 
 }

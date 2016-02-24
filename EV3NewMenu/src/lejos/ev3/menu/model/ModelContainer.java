@@ -4,6 +4,8 @@ package lejos.ev3.menu.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import lejos.ev3.menu.viewer.WaitScreen;
+
 /** The ModelContainer class acts as a wrapper that bundles more specific models and hides these for the users. 
  * @author Aswin Bouwmeester
  *
@@ -13,12 +15,12 @@ public class ModelContainer implements Model{
   private List<Model> subModels = new ArrayList<Model>(); 
 
   private ModelContainer(){
+    subModels.add( new LejosModel());
     subModels.add(new FilesModel());
     subModels.add(new BtModel());
-    subModels.add(new PropertyModel());
+    subModels.add(new AudioModel());
     subModels.add(new SystemModel());
-    subModels.add( new WifiModel());
-    subModels.add( new PanModel());
+    subModels.add( new NetworkModel());
   };
   
   public static ModelContainer getModel() {
@@ -43,6 +45,19 @@ public class ModelContainer implements Model{
     for (Model subModel : subModels) 
       subModel.detach(key, listener);
   }
+  
+  @Override
+  public void attach(WaitScreen listener) {
+    for (Model subModel : subModels) 
+      subModel.attach(listener);
+  }
+
+  @Override
+  public void detach(WaitScreen listener) {
+    for (Model subModel : subModels) 
+      subModel.detach(listener);
+  }
+
 
   @Override
   public boolean hasSetting(String key) {
@@ -121,6 +136,20 @@ public class ModelContainer implements Model{
       if (subModel.canList(list)) return subModel;
     return null;
   }
+
+  @Override
+  public void initialize() {
+    for (Model subModel : subModels) 
+      subModel.initialize();
+    
+  }
+
+  @Override
+  public void terminate() {
+    for (Model subModel : subModels) 
+      subModel.terminate();
+  }
+
 
  
   

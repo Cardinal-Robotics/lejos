@@ -13,7 +13,7 @@ import lejos.utility.Delay;
  *
  */
 public class UI {
-  private static Keys keys = BrickFinder.getDefault().getKeys();
+  private static Keys keys = BrickFinder.getLocal().getKeys();
   private static int firstTimeOut = 500;
   private static int subsequentTimeOuts = 200;
   private static int lastButton =0;
@@ -95,22 +95,5 @@ public class UI {
       if ((button & buttons) !=0) return true;
       return false;
     }
-    
-    
-    
-
-  private static boolean forNavigation(int button) {
-    switch (button) {
-    case Keys.ID_DOWN:
-    case Keys.ID_UP:
-    case Keys.ID_LEFT:
-    case Keys.ID_RIGHT: return true;
-    default: return false;
-    }
-    
-  }
-  
-  
-  
 
 }

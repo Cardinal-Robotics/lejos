@@ -36,18 +36,27 @@ public class WifiModel extends AbstractModel{
   private static final String START_WLAN = "/home/root/lejos/bin/startwlan";
   private static final String START_PAN = "/home/root/lejos/bin/startpan";
   private static final String PAN_CONFIG = "/home/root/lejos/config/pan.config";
-  private NativeWifi wifi = new NativeWifi();
-  NativeWifi.WReqPoint reqP = new NativeWifi.WReqPoint();
-  NativeWifi.WReqSocket reqS = new NativeWifi.WReqSocket();
-
-
-
-  LocalWifiDevice wlan = Wifi.getLocalDevice("wlan0");
+  private NativeWifi wifi ;
+  NativeWifi.WReqPoint reqP ;
+  NativeWifi.WReqSocket reqS ;
+  LocalWifiDevice wlan ;
   
   protected WifiModel() {
     myKeys = Arrays.asList("wlan0", "br0","ssid" );
     myLists = Arrays.asList("ACCESSPOINTS");
     myCommands = Arrays.asList("CONNECT");
+  }
+  
+  
+  @Override
+  public void initialize() {
+    openDisplay();
+    display("Start/nwifi");
+    wifi = new NativeWifi();
+    reqP = new NativeWifi.WReqPoint();
+    reqS = new NativeWifi.WReqSocket();
+    wlan = Wifi.getLocalDevice("wlan0");
+    closeDisplay();
   }
 
   @Override
@@ -55,11 +64,11 @@ public class WifiModel extends AbstractModel{
     switch (key) {
     case "wlan0":
     case "br0": {return getInetAddress(key, null);}
-    case "ssid": return getAccessPointName("wlan0");
+    case "ssid": {return getAccessPointName("wlan0");}
     }
     return null;
   }
-
+  
 
   /**
    * Return the current access point name
@@ -252,7 +261,13 @@ public class WifiModel extends AbstractModel{
                System.err.println("Failed to get time from ntp: " + e);
            }
      */  
-     }   
+     }
+
+    @Override
+    public void setSetting(String key, String value) {
+      // TODO Auto-generated method stub
+      
+    }   
 
 }
   

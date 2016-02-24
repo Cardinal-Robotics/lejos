@@ -21,14 +21,14 @@ public class BtDevices extends BaseNode {
     menu.notifyOn(Icons.BLUETOOTH, "Searching...");
     List<String> entries = model.getList(key, null);
     clearDetails();
+    addDetail(new RepopulateCommand());
     if (entries == null || entries.isEmpty() ) {
-      addDetail(new BaseDetail("", "<No devices found>", "%2$s", "", false));
+      menu.dialog("No devices found", 1);
     }
     else
       for (String entry: entries) {
         addDetail(new BtPairCommand( entry));
       }
-    this.selectNextDetail();
     isFresh = true;
     menu.notifyOff();
   }
