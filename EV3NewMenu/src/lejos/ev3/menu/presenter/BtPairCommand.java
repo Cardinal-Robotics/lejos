@@ -30,9 +30,7 @@ public class BtPairCommand extends BaseDetail {
 
 @Override
   protected List<String> execute() {
-  menu.notifyOn(Icons.BLUETOOTHCLIENT, "Pairing with: " + value);
     List<String> r = model.execute(key, value, remoteKey);
-    menu.notifyOff();
     if (r == null) {
       menu.dialog("Pairing succeeded",1);
     }

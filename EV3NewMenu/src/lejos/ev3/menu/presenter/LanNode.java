@@ -15,9 +15,8 @@ public class LanNode extends BaseNode{
   @Override
   public void refresh() {
     super.refresh();
-    menu.notifyOn(Icons.WIFI,"Scanning/nfor/naccess/npoints");
+    clearDetails();
     List<String> accesspoints = model.getList(key, " ");
-    menu.notifyOff();
     for (String ap : accesspoints) {
       this.addDetail(new LanConnect(ap));
     }

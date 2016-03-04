@@ -104,6 +104,7 @@ public class ModelContainer implements Model{
   @Override
   public List<String> execute(String command, String target, String... arguments) {
     Model targetModel;
+    if (command.equals("SHUTDOWN")) terminate();
     targetModel = this.getResponsibleForCommand(command);
     if (targetModel != null) return targetModel.execute(command, target, arguments );
     else
@@ -149,7 +150,6 @@ public class ModelContainer implements Model{
     for (Model subModel : subModels) 
       subModel.terminate();
   }
-
 
  
   

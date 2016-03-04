@@ -146,7 +146,7 @@ public abstract class AbstractModel implements Model{
   }
 
   
-  protected List<String> Run(String script) {
+  protected List<String> run(String script) {
     openDisplay();
     try {
         Process p = Runtime.getRuntime().exec(script);

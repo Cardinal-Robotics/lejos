@@ -169,7 +169,6 @@ public class EditorString  implements Editor  {
        return "";
      }
      }
-     p.restoreScreen();
      lcd.refresh();
 
    } while (true);

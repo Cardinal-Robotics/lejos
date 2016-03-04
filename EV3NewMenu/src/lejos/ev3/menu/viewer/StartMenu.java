@@ -37,23 +37,23 @@ public class StartMenu {
         .addDetail(new Command("SUSPEND_MENU","Suspend Menu",""))
         .addDetail(new SettingDetail("lejos.ntp", "NTP", "%2$4s: %3$s", "1.uk.pool.ntp.org", EditorString.class))
         );
-    
     top.add(new BaseNode("Info", Icons.INFO)
         .addDetail(new SettingDetail("lejos.version", "Ver", "%2$s: %3$s", ""))
         .addDetail(new DynamicDetail("system.time", "Time", "%2$s: %3$s", ""))
         .addDetail(new DynamicDetail("system.volt", "Battery", "%2$s: %3$s", ""))
         .addDetail(new DynamicDetail("system.current", "Current", "%2$s: %3$s", "")));
     top.add(new BaseNode("Wifi", Icons.WIFI)
-        .addDetail(new SettingDetail("ssid", "SSID", "%2$4s: %3$s", "", new LanNode("Access points", Icons.WIFI)))
-        .addDetail(new SettingDetail("wlan0", "IP", "%2$4s: %3$s", ""))
+        .addDetail(new SettingDetail("ssid", "SSID", "%2$4s: %3$s", "", new LanNode("Access points", Icons.WIFI)).addSpecialValue("", "No Wifi"))
+        .addDetail(new SettingDetail("wlan0", "IP", "%2$4s: %3$s", "").addSpecialValue("", "No connection"))
         );
-     top.add(new BaseNode("BlueTooth", Icons.BLUETOOTH)
+    top.add(new BaseNode("BlueTooth", Icons.BLUETOOTH)
         .addDetail(new SubmenuDetail("Pair", new BtDevices("Pair", Icons.SEARCH))) 
         .addDetail(new SubmenuDetail("Devices", new BtPairedDevices("Devices", Icons.BLUETOOTH)))
-        .addDetail(new BtDetail( "bluetooth.visibility","Visibility", "%3$s", "false", EditorBoolean.class))
-        .addDetail(new SettingDetail( "bluetooth.pin","PIN:", "%2$s %3$s","1234", EditorBtKey.class))
-        .addDetail(new BtDetail( "bluetooth.address","Address", "%3$s", "?"))
-        .addDetail(new BtDetail( "bluetooth.name","Name", "%3$s", "?")));
+        .addDetail(new SettingDetail( "bluetooth.visibility","Visibility", "%2$s: %3$s", "false", EditorBoolean.class).addSpecialValue("true", "on").addSpecialValue("false", "off"))
+        .addDetail(new SettingDetail( "bluetooth.pin","PIN", "%2$s: %3$s","1234", EditorBtKey.class))
+        .addDetail(new SettingDetail( "bluetooth.name","Name", "%2$s: %3$s", "?"))
+       .addDetail(new SettingDetail( "bluetooth.address","Address", "%3$s", "?"))
+    );
     top.add(new Files(Files.PROGRAMS_DIRECTORY, Icons.PROGRAM));
     top.add(new Files(Files.SAMPLES_DIRECTORY, Icons.SAMPLES));
     top.add(new Files(Files.TOOLS_DIRECTORY, Icons.TOOLS));

@@ -145,7 +145,7 @@ if (changed)
     //waitScreen.begin("Restart\nPAN\nServices");
     //waitScreen.status("Save configuration");
     saveConfig();
-    this.Run(START_PAN);
+    this.run(START_PAN);
     //waitScreen.status("Restart name server");
     BrickFinder.stopDiscoveryServer();
     BrickFinder.startDiscoveryServer(curMode == MODE_APP);

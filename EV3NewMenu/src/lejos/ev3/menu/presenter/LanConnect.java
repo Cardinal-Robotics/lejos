@@ -2,9 +2,13 @@ package lejos.ev3.menu.presenter;
 
 import java.util.List;
 
-import lejos.ev3.menu.components.Icons;
 import lejos.ev3.menu.viewer.EditorString;
 
+/** Menu detail for the displayand selection of wifi access points. 
+ * When selected this detail will present a password entry screen and request the model to connect to the SSID that this object represents.
+ * @author Aswin Bouwmeester
+ *
+ */
 public class LanConnect extends BaseDetail{
   String remoteKey=" ";
 
@@ -29,11 +33,9 @@ public class LanConnect extends BaseDetail{
 
 @Override
   protected List<String> execute() {
-  menu.notifyOn(Icons.WIFI, "Connecting to:/n" + value);
     List<String> r = model.execute(key, value, remoteKey);
-    menu.notifyOff();
     if (r != null) {
-      menu.dialog("Pairing failed",2);
+      menu.dialog("Connecting failed",2);
     }
     return null;
   }

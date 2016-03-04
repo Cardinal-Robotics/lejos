@@ -46,6 +46,7 @@ public class GrMenu implements Menu, WaitScreen {
   private Refresh        refresh;
   private int            refreshInterval = 3000;
   private Model model;
+  private boolean messageVisible;
   private static Menu menu;
 
 
@@ -295,25 +296,6 @@ public class GrMenu implements Menu, WaitScreen {
     
   }
 
-  @Override
-  public void notifyOn() {
-    notifyOn(Icons.HOUR_GLASS, "Wait/na/nsecond...");
-  }
-
-  @Override
-  public void notifyOn(Image icon, String message) {
-    messagePanel.saveScreen();
-    messagePanel.setIcon(icon);
-    messagePanel.setMessage(message);
-    messagePanel.setBorders(15);
-    messagePanel.setShadow(true);
-    messagePanel.paint();
-  }
-
-  @Override
-  public void notifyOff() {
-    messagePanel.restoreScreen();
-  }
   
   @Override
   public boolean dialog(String text, int buttons) {
@@ -370,6 +352,7 @@ public class GrMenu implements Menu, WaitScreen {
 
   @Override
   public void openMsgBox() {
+    messageVisible = true;
     messagePanel.saveScreen();
     messagePanel.paint();
   }
@@ -377,13 +360,16 @@ public class GrMenu implements Menu, WaitScreen {
   @Override
   public void closeMsgBox() {
     messagePanel.restoreScreen();
+    messageVisible = false;
   }
 
   @Override
   public void msgBoxSetText(String text) {
     messagePanel.setMessage(text);
+    if (messageVisible) {
     messagePanel.paint();
     canvas.refresh();
+    }
   }
 
   @Override
@@ -397,6 +383,10 @@ public class GrMenu implements Menu, WaitScreen {
   @Override
   public void msgBoxSetIcon(Image icon) {
     messagePanel.setIcon(icon);
+    if (messageVisible) {
+    messagePanel.paint();
+    canvas.refresh();
+    }
   }
 
   

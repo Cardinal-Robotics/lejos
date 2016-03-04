@@ -19,6 +19,7 @@ import lejos.utility.Delay;
 
 
 public class LejosModel extends AbstractModel{
+  // TODO: move "lejos.version" to this model
   private static final String JAVA_RUN_CP = "jrun -cp ";
   private static final String JAVA_DEBUG_CP = "jrun -Xdebug -Xrunjdwp:transport=dt_socket,server=y,address=8000,suspend=y -cp ";
   

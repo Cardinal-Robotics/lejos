@@ -5,7 +5,6 @@ import java.util.List;
 import lejos.ev3.menu.model.Model;
 import lejos.ev3.menu.presenter.Detail;
 import lejos.ev3.menu.presenter.Node;
-import lejos.hardware.lcd.Image;
 
 /**
  * Represents a menu for leJOS
@@ -18,28 +17,6 @@ public interface Menu {
   public void runMenu(Node menu);
   
   public void runMenu(List<Node> menu);
-
-  /**
-   * Displays the default message window
-   */
-  public void notifyOn();
-
-  /**
-   * Displays a customized message window
-   * 
-   * @param icon
-   *          The image to display
-   * @param message
-   *          The text to display. Get multiple lines using a the line separator
-   *          /n.
-   */
-  public void notifyOn(Image icon, String message);
-
-  /**
-   * Removes the displayed message window
-   * 
-   */
-  public void notifyOff();
 
 
   /**

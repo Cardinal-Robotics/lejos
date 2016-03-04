@@ -18,7 +18,6 @@ public class BtDevices extends BaseNode {
   @Override
   protected void refresh() {
     super.refresh();
-    menu.notifyOn(Icons.BLUETOOTH, "Searching...");
     List<String> entries = model.getList(key, null);
     clearDetails();
     addDetail(new RepopulateCommand());
@@ -30,7 +29,6 @@ public class BtDevices extends BaseNode {
         addDetail(new BtPairCommand( entry));
       }
     isFresh = true;
-    menu.notifyOff();
   }
   
 

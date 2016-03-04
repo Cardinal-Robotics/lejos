@@ -102,9 +102,8 @@ public class BaseNode implements Node, ModelListener {
 
   @Override
   public void removeDetails() {
-    details.clear();
+    clearDetails();
     isFresh = true;
-    selectedDetail = -1;
   }
 
   protected void refresh() {
