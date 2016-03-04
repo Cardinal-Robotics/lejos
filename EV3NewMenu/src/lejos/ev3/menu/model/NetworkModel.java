@@ -71,7 +71,8 @@ public class NetworkModel extends AbstractModel {
     loadPanConfig();
     // if (curMode != MODE_NONE) startNetwork(START_PAN);
     startRMIServer();
-    startDiscoveryServer();
+    BrickFinder.startDiscoveryServer(false);
+    //BrickFinder.startDiscoveryServer(curMode == MODE_APP);
     setTime();
     closeDisplay();
   }

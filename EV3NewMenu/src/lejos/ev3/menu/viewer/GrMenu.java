@@ -115,9 +115,14 @@ public class GrMenu implements Menu, WaitScreen {
     addCurrentMenuToStack();
     currentNode = menuItems.get(0);
     siblings = menuItems;
+    {
     run();
-    getPreviousMenuFromStack();
-    if (currentNode != null) paintNode();
+    if (!nodeStack.isEmpty()) {
+      getPreviousMenuFromStack();
+      return;
+    }
+    } while(!dialog("Shut down EV3?", 3));
+    canvas.clear();
   }
   
   protected void addCurrentMenuToStack() {
