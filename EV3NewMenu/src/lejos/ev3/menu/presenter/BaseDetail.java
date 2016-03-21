@@ -4,44 +4,37 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import lejos.ev3.menu.components.Viewer;
-import lejos.ev3.menu.control.Control;
 import lejos.ev3.menu.model.Model;
-import lejos.ev3.menu.model.ModelListener;
-import lejos.ev3.menu.viewer.Editor;
 import lejos.ev3.menu.viewer.Menu;
+import lejos.ev3.menu.viewer.Viewer;
 
-public class BaseDetail implements Detail, ModelListener{
+/** Basic implementation of a menu Detail. <br>
+ * @author Aswin Bouwmeester
+ *
+ */
+public class BaseDetail implements Detail{
   protected String key;
   protected String label;
   protected String format;
   protected String value;
   protected boolean selectable = false;
-  protected boolean initialized = false;
+  protected boolean isFresh = false;
   protected Map<String, String> specials = new HashMap<String, String>();
   protected String defaultValue;
-  protected static Control control;
   protected static Menu menu;
   protected static Model model;
-  protected Class<? extends Editor> editor     = null;
   protected boolean autoRefresh =false;
+  protected Node parent;
 
   
-  public static void setEnvironment(Control c, Model m,  Menu m3) {
-    control = c;
+  public static void setEnvironment( Model m,  Menu m3) {
     model =m;
     menu =m3;
   }
   
   
-  public BaseDetail(String key, String label, String format, String defaultValue, Class<? extends Editor> editor) {
-    this(key, label, format, defaultValue, true);
-    this.editor = editor;
-    if (editor == null) selectable = false;
-  }
-
   public BaseDetail(String key, String label, String format, String defaultValue) {
-    this(key, label, format, defaultValue, null);
+    this(key, label, format, defaultValue, true);
   }
 
   
@@ -79,13 +72,6 @@ public class BaseDetail implements Detail, ModelListener{
   }
 
   @Override
-  public void needRefresh() {
-    initialized = false;
-    menu.refreshDetail(this);
-    
-  }
-
-  @Override
   public void setValue(String value) {
     this.value = value;
     
@@ -93,7 +79,7 @@ public class BaseDetail implements Detail, ModelListener{
 
   @Override
   public String getValue() {
-    if (!initialized) initialize();
+    if (!isFresh) refresh();
     return value;
   }
 
@@ -131,24 +117,24 @@ public class BaseDetail implements Detail, ModelListener{
   
   @Override 
   public String toString() {
-    if (!initialized || autoRefresh) initialize();
+    if (!isFresh || autoRefresh) refresh();
     if (specials.containsKey(value)) 
-      return specials.get(value).toString();
+      return String.format(format, key, label,specials.get(value).toString());
     return String.format(format, key, label, value == null ? "" : value);
   }
 
-  @Override
-  public void initialize() {
-    initialized = true;
+  protected void refresh() {
+    isFresh = true;
   }
 
-  public boolean isInitialized() {
-    return initialized;
+  public boolean isFresh() {
+    return isFresh;
   }
   
   @Override
-  public void addSpecialValue(String value, String label) {
+  public Detail addSpecialValue(String value, String label) {
     specials.put(value, label);
+    return this;
   }
 
   @Override
@@ -158,8 +144,11 @@ public class BaseDetail implements Detail, ModelListener{
 
 
   @Override
-  public void keyChanged(String key, String value) {
-    if (key.equals(this.key)) initialized = false;
+  public void keyChanged(String key) {
+    if (key.equals(this.key)) {
+      isFresh = false;
+      parent.needRefresh();
+    }
   }
 
 
@@ -172,6 +161,20 @@ public class BaseDetail implements Detail, ModelListener{
   @Override
   public boolean isAutoFefresh() {
     return autoRefresh;
+  }
+
+
+  @Override
+  public void setParent(Node menuItem) {
+    parent= menuItem;
+    
+  }
+
+
+  @Override
+  public void needRefresh() {
+    isFresh = false;
+    parent.needRefresh();
   }
   
   

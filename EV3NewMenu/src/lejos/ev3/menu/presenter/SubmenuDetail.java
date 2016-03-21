@@ -1,40 +1,21 @@
 package lejos.ev3.menu.presenter;
 
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class SubmenuDetail extends BaseDetail {
 
-  private List<MenuItem> children;
+  private Node subMenu;
   
-  public SubmenuDetail(String label) {
+  public SubmenuDetail(String label, Node subMenu) {
     super("", label, "%2$s", "");
-    children = new ArrayList<MenuItem>();
-    selectable = false;
-    initialized = true;
-  }
-  
-
-  public SubmenuDetail(String label, List<MenuItem> subMenu) {
-    super("", label, "%2$s", "");
-    this.children = subMenu;
+    this.subMenu = subMenu;
     selectable = true;
-    initialized = true;
+    isFresh = true;
   }
 
   @Override
   public void select() {
-    menu.insertAndRun(children);
+    menu.selectFromList(subMenu);
   }
-  
-
-  public SubmenuDetail addChild(MenuItem child) {
-    children.add(child);
-    selectable = true;
-    return this;
-  }
-  
-  
 
 }

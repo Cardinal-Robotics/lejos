@@ -1,4 +1,4 @@
-package lejos.ev3.menu.control;
+package lejos.ev3.menu.model;
 
 import java.io.BufferedReader;
 import java.io.File;

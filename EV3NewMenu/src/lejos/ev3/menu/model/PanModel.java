@@ -16,6 +16,10 @@ import lejos.hardware.BrickFinder;
 import lejos.hardware.Button;
 import lejos.hardware.RemoteBTDevice;
 
+/** Model to maintain PAN settings
+ * @author Aswin Bouwmeester
+ *
+ */
 public class PanModel extends AbstractModel{
     private static final String START_PAN = "/home/root/lejos/bin/startpan";
     private static final String PAN_CONFIG = "/home/root/lejos/config/pan.config";
@@ -46,9 +50,9 @@ public class PanModel extends AbstractModel{
 
     protected PanModel()
     {
-      myKeys = Arrays.asList("Pan.mode" );
-      myLists = Arrays.asList("Pan.modes");
-//      myCommands = Arrays.asList("CONNECT");
+      myKeys = Arrays.asList("Pan.mode","Pan.address","Pan.netmask", "Pan.broadcast","Pan.gateway", "Pan.dns", "Pan.persist", "Pan.service", "Pan.apname", "Pan.apaddress");
+      myCommands = Arrays.asList("PAN_APPLY");
+
         loadConfig();
     }
     
@@ -56,6 +60,15 @@ public class PanModel extends AbstractModel{
     public String getSetting(String key, String defaultValue) {
       switch(key) {
       case "Pan.mode": return modeIDS[curMode];
+      case "Pan.address": return IPAddresses[0];
+      case "Pan.netmask": return IPAddresses[1];
+      case "Pan.broadcast": return IPAddresses[2];
+      case "Pan.gateway": return IPAddresses[3];
+      case "Pan.dns": return IPAddresses[4];
+      case "Pan.persist": return persist;
+      case "Pan.service": return BTService;
+      case "Pan.apname": return this.BTAPName;
+      case "Pan.apaddress": return this.BTAPAddress;
       default: return null;
       }
     }
@@ -63,39 +76,100 @@ public class PanModel extends AbstractModel{
     @Override
     public void setSetting(String key, String value) {
       switch(key) {
-      case "Pan.mode": ;
+      case "Pan.mode": {
+        init(getCurMode(value));
+        break;
       }
+      case "Pan.address": {
+        IPAddresses[0] = value;
+        break;
+      }
+      case "Pan.netmask": {
+        IPAddresses[1] = value;
+        break;
+      }
+      case "Pan.broadcast": {
+        IPAddresses[2] = value;
+        break;
+      }
+      case "Pan.gateway": {
+        IPAddresses[3] = value;
+        break;
+      }
+      case "Pan.dns": {
+        IPAddresses[4] = value;
+        break;
+      }
+      case "Pan.persist": {
+        persist = value;
+        break;
+      }
+      case "Pan.service": {
+        BTService = value;
+        break;
+      }
+      case "Pan.apname": {
+        this.BTAPName = value;
+        this.BTAPAddress = ModelContainer.getModel().getSetting("bluetooth.remote_address", value);
+        broadcast("Pan.apaddress", BTAPAddress);
+        break;
+      }
+      default: return;
+      }
+      broadcast(key, value);
     }
     
     
-
-
     
+ 
 @Override
-    public List<String> getList(String list, String parameter) {
-      switch(list) {
-      case "Pan.modes" : return Arrays.asList(modeIDS);
-      default: return null;
+    public List<String> execute(String command, String target, String... arguments) {
+      switch(command) {
+      case "PAN_APPLY": {
+        runScript();
       }
+      }
+      return null;
     }
 
-    //    public void saveConfig()
-//    {
-//        System.out.println("Save PAN config");
-//        try {
-//            PrintWriter out = new PrintWriter(PAN_CONFIG);
-//            out.print(modeIDS[curMode] + " " + BTAPName.replace(" ", "\\ ") + " " + BTAPAddress);
-//            for(String ip : IPAddresses)
-//                out.print(" " + ip);
-//            out.print(" " + BTService + " " + persist);
-//            out.println();
-//            out.close();
-//            changed = false;
-//        } catch (IOException e) {
-//            System.out.println("Failed to write PAN config to " + PAN_CONFIG + ": " + e);
-//        }            
-//    }
-//    
+private int getCurMode(String id) {
+  for (int i = 0; i< modeIDS.length; i++) {
+    if (id.equals(modeIDS[i])) return i;
+  }
+  return MODE_NONE;
+}
+    
+private void runScript() {
+if (changed)
+{
+    //waitScreen.begin("Restart\nPAN\nServices");
+    //waitScreen.status("Save configuration");
+    saveConfig();
+    this.run(START_PAN);
+    //waitScreen.status("Restart name server");
+    BrickFinder.stopDiscoveryServer();
+    BrickFinder.startDiscoveryServer(curMode == MODE_APP);
+    //waitScreen.end();
+}
+}
+
+ private void saveConfig()
+    {
+        System.out.println("Save PAN config");
+        try {
+            PrintWriter out = new PrintWriter(PAN_CONFIG);
+            out.print(modeIDS[curMode] + " " + BTAPName.replace(" ", "\\ ") + " " + BTAPAddress);
+            for(String ip : IPAddresses)
+                out.print(" " + ip);
+            out.print(" " + BTService + " " + persist);
+            out.println();
+            out.close();
+            changed = false;
+        } catch (IOException e) {
+            System.out.println("Failed to write PAN config to " + PAN_CONFIG + ": " + e);
+        }            
+    }
+    
     private String getConfigString(String[] vals, int offset, String def)
     {
         if (vals == null || offset >= vals.length || vals[offset] == null || vals[offset].length() == 0)
@@ -136,41 +210,48 @@ public class PanModel extends AbstractModel{
         persist = getConfigString(vals, 9, "N");
         changed = false;
     }
-//    
-//    
-//    public void init(int mode)
-//    {
-//        if (mode != curMode)
-//        {
-//            for(int i = 0; i < IPAddresses.length; i++)
-//                IPAddresses[i] = autoIP;
-//            switch(mode)
-//            {
-//            case MODE_AP:
-//                IPAddresses[0] = "10.0.1.1";
-//                break;
-//            case MODE_APP:
-//                // For access point plus we need to use a sub-net within the
-//                // sub-net being used for WiFi. Set a default that may work for
-//                // most - well it does for me!
-//                if (wlanAddress != null)
-//                {
-//                    String[] parts = wlanAddress.split("\\.");
-//                    if (parts.length == 4)
-//                    {
-//                        IPAddresses[0] = parts[0] + "." + parts[1] + "." + parts[2] + ".208";
-//                    }
-//                }
-//                break;
-//            }
-//            BTAPName = anyAP;
-//            BTAPAddress = anyAP;
-//            BTService = "NAP";
-//            persist = "N";
-//            curMode = mode;
-//            changed = true;
-//        }
-//    }
+    
+    
+    public void init(int mode)
+    {
+        if (mode != curMode)
+        {
+            for(int i = 0; i < IPAddresses.length; i++)
+                IPAddresses[i] = autoIP;
+            switch(mode)
+            {
+            case MODE_AP:
+                IPAddresses[0] = "10.0.1.1";
+                break;
+            case MODE_APP:
+                // For access point plus we need to use a sub-net within the
+                // sub-net being used for WiFi. Set a default that may work for
+                // most - well it does for me!
+                
+                {
+                  String wlanAddress = ModelContainer.getModel().getSetting("wlan0", null);
+                  if (wlanAddress == null) {
+                    init(MODE_NONE);
+                    return;
+                  }
+                    String[] parts = wlanAddress.split("\\.");
+                    if (parts.length == 4)
+                    {
+                        IPAddresses[0] = parts[0] + "." + parts[1] + "." + parts[2] + ".208";
+                    }
+                }
+                break;
+            }
+            BTAPName = anyAP;
+            BTAPAddress = anyAP;
+            BTService = "NAP";
+            persist = "N";
+            curMode = mode;
+            changed = true;
+            for (String key : myKeys)
+              broadcast(key, "");
+        }
+    }
 //
 //    /**
 //     * Test to see if the IP address string is the special case auto address
@@ -506,8 +587,57 @@ public class PanModel extends AbstractModel{
 //            BrickFinder.startDiscoveryServer(curMode == MODE_APP);
 //            waitScreen.end();
 //        }
-//    }
 
-  
+    @Override
+    public List<String> getList(String list, String parameter) {
+      return null;
+    }
+    }
 
-}
+ 
+/* Old menu structure
+ * PAN
+ * - BT Client
+ * -- Any
+ * -- Select
+ * --- Devices
+ * ---- device 1
+ * ....
+ * ---- device N
+ * -- Advanced
+ * --- Address
+ * --- Netmask
+ * --- Brdcast
+ * --- Gateway
+ * --- DNS
+ * --- Persist
+ * --- Service 
+ * - USB Client
+ * --- Address
+ * --- Netmask
+ * --- Brdcast
+ * --- Gateway
+ * --- DNS
+ * --- Persist
+ * - None
+ * - Access Pt
+ * -- Address
+ * -- Netmask
+ * -- Brdcast
+ * -- Gateway
+ * -- DNS
+ * - Access Pt+
+ * -- Address
+ * -- Netmask
+ * -- Brdcast
+ * -- Gateway
+ * -- DNS
+ *     
+ *     
+ *     */
+    
+ 
+    
+    
+
+

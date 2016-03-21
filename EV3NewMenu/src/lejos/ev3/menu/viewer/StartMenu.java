@@ -1,8 +1,7 @@
 package lejos.ev3.menu.viewer;
 
+import java.util.ArrayList;
 import lejos.ev3.menu.components.Icons;
-import lejos.ev3.menu.control.EV3Control;
-import lejos.ev3.menu.control.Control;
 import lejos.ev3.menu.model.Model;
 import lejos.ev3.menu.model.ModelContainer;
 import lejos.ev3.menu.presenter.*;
@@ -16,64 +15,62 @@ import lejos.ev3.menu.presenter.*;
 public class StartMenu {
 
   public static void main(String[] args) {
-    Control control = new EV3Control();
-    Menu menu = new GraphicMenu();
+
+
+
     Model model = ModelContainer.getModel();
-    BaseDetail.setEnvironment(control, model, menu);
-    ItemBase.setEnvironment(control, model, menu);
+    Menu menu = GrMenu.getMenu();
 
-    MenuItem top = new ItemBase( "Top", Icons.EV3)
-        .addChild(
-            new ItemBase( "leJOS EV3", Icons.LEJOS)
-                .addDetail(new RunDefault())
-                .addDetail(new SettingDetail( "wlan0", "LAN",  "%2$s: %3$s", ""))
-                .addDetail(new SettingDetail( "br0", "PAN",  "%2$s: %3$s", "")))
-        .addChild(
-            new ItemBase( "System", Icons.EV3)
-                .addDetail(new SettingDetail( "system.hostname", "Name", "%2$s: %3$s", "",EditorString.class))
-                .addDetail(new SettingDetail( "lejos.version", "Ver",  "%2$s: %3$s", ""))
-                .addDetail(new DynamicDetail( "system.time", "Time",  "%2$s: %3$s", ""))
-                .addDetail(new DynamicDetail( "system.volt", "Battery",  "%2$s: %3$s", ""))
-                .addDetail(new DynamicDetail( "system.current", "Current",  "%2$s: %3$s", "")))
-        .addChild(
-            new ItemBase( "Wifi", Icons.WIFI)
-                .addDetail(new SsidDetail("ssid","SSID","%2$s: %3$s"))
-                .addDetail(new SettingDetail( "wlan0", "IP",  "%2$s: %3$s", "")))
-        .addChild(
-            new ItemBase("BlueTooth", Icons.BLUETOOTH)
-                .addDetail(new SubmenuDetail("Pair").addChild( new BtDevices("Pair", Icons.SEARCH)))
-                .addDetail(new SubmenuDetail("Devices").addChild( new BtPairedDevices("Devices", Icons.BLUETOOTH)))
-                .addDetail(new BtDetail( "bluetooth.visibility","Visibility", "%2$s: %3$5s", "false", EditorBoolean.class))
-                .addDetail(new SettingDetail( "bluetooth.pin","PIN:", "%2$s %3$s","1234", EditorBtKey.class))
-                .addDetail(new BtDetail( "bluetooth.address","Address", "%3$s", "?"))
-                .addDetail(new BtDetail( "bluetooth.name","Name", "%3$s", "?"))
-        )        
-        .addChild(new Files( Files.PROGRAMS_DIRECTORY, Icons.PROGRAM))
-        .addChild(new Files( Files.SAMPLES_DIRECTORY, Icons.SAMPLES ))
-        .addChild(new Files( Files.TOOLS_DIRECTORY, Icons.TOOLS))
-        .addChild(new Files( Files.LIB_DIRECTORY, Icons.FILES))
-        .addChild(new Files( "/home/root/lejos/config", Icons.FILES))
-        .addChild(
-            new ItemBase( "Sound", Icons.EYE)
-                .addDetail(new SettingDetail( "audio.volume","Volume", "%2$s : %3$4s", "30", EditorNumeric.class))
-                .addDetail(new SettingDetail( "lejos.keyclick_volume","Key vol", "%2$s : %3$4s", "30", EditorNumeric.class))
-                .addDetail(new SettingDetail( "lejos.keyclick_length","Key length", "%2$s : %3$4s", "30", EditorNumeric.class))
-                .addDetail(new SettingDetail( "lejos.keyclick_frequency","Key freq", "%2$s : %3$4s", "800" , EditorNumeric.class)))
-        .addChild(new ItemBase("PAN",Icons.ACCESSPOINT)
-                .addChild(new ItemBase("PAN mode",Icons.PAN)
-                    .addDetail(new PanMode("NONE"))
-                    .addDetail(new PanMode("AP"))
-                    .addDetail(new PanMode("AP+"))
-                    .addDetail(new PanMode("BT"))
-                    .addDetail(new PanMode("USB"))
-                    )
-                .addDetail(new PanSetting( ))
-                .addDetail(new SettingDetail( "br0", "IP",  "%2$s: %3$s", ""))
-        )
+    BaseDetail.setEnvironment( model, menu);
+    BaseNode.setEnvironment( model, menu);
+    menu.setEnvironment(model);
+    model.initialize();
+
+    ArrayList<Node> top = new ArrayList<Node>();
+    top.add(new BaseNode("leJOS EV3", Icons.LEJOS).addDetail(new RunDefault())
+        .addDetail(new SettingDetail("wlan0", "LAN", "%2$s: %3$s", null).addSpecialValue(null, "No Wifi"))
+        .addDetail(new SettingDetail("br0", "PAN", "%2$s: %3$s", null).addSpecialValue(null, "No PAN")));
+    top.add(new BaseNode("System", Icons.EV3)
+        .addDetail(new SettingDetail("system.hostname", "Name", "%2$s: %3$s", "", EditorString.class))
+        .addDetail(new SettingDetail("lejos.sleeptime", "Sleep time", "%2$s: %3$s", "", EditorNumeric.class))
+        .addDetail(new Command("CLOSE_PORTS","Reset ports",""))
+        .addDetail(new Command("SUSPEND_MENU","Suspend Menu",""))
+        .addDetail(new SettingDetail("lejos.ntp", "NTP", "%2$4s: %3$s", "1.uk.pool.ntp.org", EditorString.class))
+        );
+    top.add(new BaseNode("Info", Icons.INFO)
+        .addDetail(new SettingDetail("lejos.version", "Ver", "%2$s: %3$s", ""))
+        .addDetail(new DynamicDetail("system.time", "Time", "%2$s: %3$s", ""))
+        .addDetail(new DynamicDetail("system.volt", "Battery", "%2$s: %3$s", ""))
+        .addDetail(new DynamicDetail("system.current", "Current", "%2$s: %3$s", "")));
+    top.add(new BaseNode("Wifi", Icons.WIFI)
+        .addDetail(new SettingDetail("ssid", "SSID", "%2$4s: %3$s", "", new LanNode("Access points", Icons.WIFI)).addSpecialValue("", "No Wifi"))
+        .addDetail(new SettingDetail("wlan0", "IP", "%2$4s: %3$s", "").addSpecialValue("", "No connection"))
+        );
+    top.add(new BaseNode("BlueTooth", Icons.BLUETOOTH)
+        .addDetail(new SubmenuDetail("Pair", new BtDevices("Pair", Icons.SEARCH))) 
+        .addDetail(new SubmenuDetail("Devices", new BtPairedDevices("Devices", Icons.BLUETOOTH)))
+        .addDetail(new SettingDetail( "bluetooth.visibility","Visibility", "%2$s: %3$s", "false", EditorBoolean.class).addSpecialValue("true", "on").addSpecialValue("false", "off"))
+        .addDetail(new SettingDetail( "bluetooth.pin","PIN", "%2$s: %3$s","1234", EditorBtKey.class))
+        .addDetail(new SettingDetail( "bluetooth.name","Name", "%2$s: %3$s", "?"))
+       .addDetail(new SettingDetail( "bluetooth.address","Address", "%3$s", "?"))
+    );
+    top.add(new Files(Files.PROGRAMS_DIRECTORY, Icons.PROGRAM));
+    top.add(new Files(Files.SAMPLES_DIRECTORY, Icons.SAMPLES));
+    top.add(new Files(Files.TOOLS_DIRECTORY, Icons.TOOLS));
+    top.add(new Files(Files.LIB_DIRECTORY, Icons.FILES));
+    top.add(new Files("/home/root/lejos/config", Icons.FILES));
+    top.add(new BaseNode("Sound", Icons.EYE)
+        .addDetail(new SettingDetail("audio.volume", "Volume", "%2$s : %3$4s", "30", EditorNumeric.class))
+        .addDetail(new SettingDetail("lejos.keyclick_volume", "Key vol", "%2$s : %3$4s", "30", EditorNumeric.class))
+        .addDetail(new SettingDetail("lejos.keyclick_length", "Key length", "%2$s : %3$4s", "30", EditorNumeric.class))
+        .addDetail(new SettingDetail("lejos.keyclick_frequency", "Key freq", "%2$s : %3$4s", "800", EditorNumeric.class)));
+    top.add(new PanNode("PAN",Icons.ACCESSPOINT));
+
     ;
-    menu.setMenu(top);
-    menu.run();
-
+    menu.runMenu(top);
   }
 
 }
+
+
+

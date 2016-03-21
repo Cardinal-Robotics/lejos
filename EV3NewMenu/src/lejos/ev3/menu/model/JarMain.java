@@ -1,4 +1,4 @@
-package lejos.ev3.menu.control;
+package lejos.ev3.menu.model;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

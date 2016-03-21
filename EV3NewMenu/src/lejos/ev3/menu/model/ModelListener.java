@@ -1,6 +1,6 @@
 package lejos.ev3.menu.model;
 
-/** Interface for objects that want to register by a model as a listener to listen to changes in the model
+/** Interface for objects that want to register with a model as a listener to listen to changes in the model
  * @author Aswin Bouwmeester
  *
  */
@@ -10,7 +10,7 @@ public interface ModelListener {
    * @param key The ID of the setting
    * @param value The new value of the setting
    */
-  public void keyChanged(String key, String value);
+  public void keyChanged(String key);
   
   /** Model calls this method on all listeners of the model whenever a list is changed
    * @param list The ID indicating the type of the list

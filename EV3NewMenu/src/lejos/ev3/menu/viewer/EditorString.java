@@ -1,5 +1,6 @@
 package lejos.ev3.menu.viewer;
 
+import lejos.ev3.menu.components.Panel;
 import lejos.ev3.menu.components.UI;
 import lejos.ev3.menu.presenter.Detail;
 import lejos.ev3.startup.Utils;
@@ -45,6 +46,8 @@ public class EditorString  implements Editor  {
   
   
  public static String editValue() {
+   Panel p = new Panel();
+   p.saveScreen();
    String str = "";
    int sx = 0, sy = 0, keyboard = 0;
 
@@ -155,13 +158,16 @@ public class EditorString  implements Editor  {
          if (str.length() > 0)
            str = str.substring(0, str.length() - 1);
        } else if (sy == 1 && sx == 10) { // Finish Key Pressed
+         p.restoreScreen();
          return str;
        } else
          // Character Key Pressed
          str += keyboards[keyboard][sy].substring(sx, sx + 1);
        break;
-     case Button.ID_ESCAPE:
+     case Button.ID_ESCAPE: {
+       p.restoreScreen();
        return "";
+     }
      }
      lcd.refresh();
 

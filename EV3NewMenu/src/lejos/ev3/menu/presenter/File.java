@@ -14,48 +14,47 @@ public class File extends BaseDetail {
     this.value = file;
     this.label = shortName();
     this.parent = parent;
-    initialized = true;
+    isFresh = true;
   }
 
   @Override
   public void select() {
-    parent.removeChildren();
-    if (value.endsWith(" ")) {
-      // This is a directory
-      Files files = new Files(value);
-      List<MenuItem> submenu = new ArrayList<MenuItem>();
-      submenu.add(files);
-      menu.insertAndRun(submenu);
-      return;
-    }
-    MenuItem child = new ItemFile(value,label, Icons.EYE);
+    Node child = new FileNode(value,label, Icons.EYE);
     if (isFiletype("^.*\\.jar")) {
       if (isIn(Files.PROGRAMS_DIRECTORY)) {
-        child.addDetail(new ControlCommand("RUN_PROGRAM", "Run", value));
-        child.addDetail(new ControlCommand("DEBUG_PROGRAM", "Debug", value));
+        child.addDetail(new Command("RUN_PROGRAM", "Run", value));
+        child.addDetail(new Command("DEBUG_PROGRAM", "Debug", value));
         String d = model.getSetting("lejos.default_program", null);
         if (d == null)
-          child.addDetail(new SetDefault("Set as default", value));
+          child.addDetail(new SetOnSelect("lejos.default_program","Set as default", value));
         else if (d.equals(value))
-          child.addDetail(new SetDefault("Unset as default", ""));
+          child.addDetail(new SetOnSelect("lejos.default_program","Unset as default", ""));
         else
-          child.addDetail(new SetDefault("Set as default", value));
+          child.addDetail(new SetOnSelect("lejos.default_program","Set as default", value));
+        d = model.getSetting("lejos.autorun_program", null);
+        if (d == null)
+          child.addDetail(new SetOnSelect("lejos.autorun_program","Run at start", value));
+        else if (d.equals(value))
+          child.addDetail(new SetOnSelect("lejos.autorun_program","Don't run at start", ""));
+        else
+          child.addDetail(new SetOnSelect("lejos.autorun_program","Run at start", value));
+
+      
       } else if (isIn(Files.TOOLS_DIRECTORY)) {
-        child.addDetail(new ControlCommand("RUN_TOOL", "Run", value));
+        child.addDetail(new Command("RUN_TOOL", "Run", value));
       } else if (isIn(Files.SAMPLES_DIRECTORY)) {
-        child.addDetail(new ControlCommand("RUN_SAMPLE", "Run", value));
+        child.addDetail(new Command("RUN_SAMPLE", "Run", value));
       }
     } 
     if (isFiletype("^.*\\.(out|txt|err|config|conf)$")) {
-      child.addDetail(new FilesCommand("VIEW", "View", value));
+      child.addDetail(new Command("VIEW", "View", value));
     }
     if (isIn(Files.PROGRAMS_DIRECTORY) || isIn(Files.LIB_DIRECTORY)) {
-      child.addDetail(new FilesCommand("DELETE", "Delete", value));
+      child.addDetail(new Command("DELETE", "Delete", value));
     }
-    if (!child.hasDetails())
-      return;
-    parent.addChild(child);
-    menu.selectChild();
+    if (child.hasDetails()) {
+      menu.selectFromList(child);
+    }
   }
 
   /**

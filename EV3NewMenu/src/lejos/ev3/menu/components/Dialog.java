@@ -3,7 +3,6 @@ package lejos.ev3.menu.components;
 import lejos.hardware.Button;
 import lejos.hardware.Keys;
 import lejos.hardware.lcd.GraphicsLCD;
-import lejos.utility.Delay;
 
 public class Dialog {
   public static int         BUTTON_YES = 1;
@@ -31,6 +30,7 @@ public class Dialog {
   }
 
   public static boolean display(String text, int buttons) {
+    window.saveScreen();
     message.setMessage(text);
     window.setWidth(Math.max(60, message.getWidth()) + 2 * window.getMargin());
     window.setHeight(message.getHeight() + Math.max(ok.getHeight(), cancel.getHeight()) + 4 * window.getMargin());
@@ -58,6 +58,7 @@ public class Dialog {
       cancel.paint();
 
       int id = UI.waitForPressAndRelease(Keys.ID_ENTER + Keys.ID_ESCAPE);
+      window.restoreScreen();
       switch (id) {
       case Button.ID_ENTER:
         return true;
