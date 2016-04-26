@@ -185,6 +185,8 @@ public class GraphicMenu extends TextMenu {
 			count++;
 		}
 		display(finalIndex,0,0);
+    voiceOver(_items[finalIndex]);
+
 	}
 	
 	/**
@@ -229,6 +231,7 @@ public class GraphicMenu extends TextMenu {
 			lcd.drawString(_items[index[2]], 8-(_items[index[2]].length()/2), labelLine);
 		
 		lcd.refresh();
+
 	}
 	
 	public void clearArea() {

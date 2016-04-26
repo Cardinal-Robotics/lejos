@@ -47,6 +47,8 @@ public class GraphicListMenu extends GraphicMenu {
 			}
 		}
 		lcd.refresh();
+    voiceOver(_items[selectedIndex]);
+
 	}
 	
 	@Override
