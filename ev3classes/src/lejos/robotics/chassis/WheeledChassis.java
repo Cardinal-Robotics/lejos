@@ -4,6 +4,7 @@ package lejos.robotics.chassis;
 import lejos.robotics.RegulatedMotor;
 import lejos.robotics.chassis.Chassis;
 import lejos.robotics.chassis.Wheel;
+import lejos.robotics.localization.DynamicPoseProvider;
 import lejos.robotics.localization.PoseProvider;
 import lejos.robotics.navigation.Move;
 import lejos.robotics.navigation.Pose;
@@ -658,7 +659,7 @@ public class WheeledChassis implements Chassis {
   
   
   @Override
-  public PoseProvider getPoseProvider() {
+  public DynamicPoseProvider getPoseProvider() {
     if (odometer == null) odometer = new Odometer();
     return  odometer;
   }
@@ -667,14 +668,17 @@ public class WheeledChassis implements Chassis {
    * @author Aswin Bouwmeester
    *
    */
-  private class Odometer implements PoseProvider {
-    Matrix lastTacho;
+  private class Odometer implements DynamicPoseProvider {
+    Matrix lastTacho, speed, lastSpeed, accel;
     double xPose, yPose, aPose;
+    long lastTime;
+    
 
-    int    time = 64;
+    int    interval = 64;
 
     private Odometer() {
       lastTacho = getAttribute(TACHOCOUNT);
+      lastTime = System.currentTimeMillis();
       PoseTracker tracker = new PoseTracker();
       tracker.setDaemon(true);
       tracker.start();
@@ -693,12 +697,15 @@ public class WheeledChassis implements Chassis {
     }
 
     private synchronized void updatePose() {
+      long thisTime;
       Matrix currentTacho = getAttribute(TACHOCOUNT);
+      thisTime = System.currentTimeMillis();
       Matrix delta = currentTacho.minus(lastTacho);
 
       int max = (int) getMax(delta);
 
       delta = reverse.times(delta);
+      // update position
       double sin = Math.sin(Math.toRadians(aPose));
       double cos = Math.cos(Math.toRadians(aPose));
       double x = delta.get(0, 0);
@@ -711,21 +718,88 @@ public class WheeledChassis implements Chassis {
         aPose += 360;
       while (aPose > 180)
         aPose -= 360;
+      
+      // calculate speed
+      speed = delta.times(1000 / (thisTime - lastTime));
+      
+      // calculate acceleration 
+      accel = speed.minus(lastSpeed).times(1000 / (thisTime - lastTime));
 
       // adjust loop speed (between 4 and 64 msec);
-      if (max > 10) time=time / 2;
-      if (max < 10) time=time * 2;
-      time = Math.max(Math.min(time, 64), 4);
+      if (max > 10) interval=interval / 2;
+      if (max < 10) interval=interval * 2;
+      interval = Math.max(Math.min(interval, 64), 4);
       lastTacho = currentTacho;
+      lastSpeed = speed;
+      lastTime = thisTime;
     }
 
     private class PoseTracker extends Thread {
       public void run() {
         while (true) {
           updatePose();
-          Delay.msDelay(time);
+          Delay.msDelay(interval);
         }
       }
+    }
+
+    @Override
+    public double getX() {
+      return xPose;
+    }
+
+    @Override
+    public double getY() {
+      return yPose;
+    }
+
+    @Override
+    public double getHeading() {
+      return aPose;
+    }
+
+    @Override
+    public double getLinearSpeed() {
+      double x = speed.get(0, 0);
+      double y = speed.get(1, 0);
+      return Math.sqrt(x*x + y* y);
+    }
+
+    @Override
+    public double getDirectionOfLinearSpeed() {
+      return Math.toDegrees(Math.atan2(speed.get(1,0), speed.get(0,0)));
+    }
+
+    @Override
+    public double getAngularSpeed() {
+      return speed.get(2, 0);
+    }
+
+    @Override
+    public Matrix getSpeed() {
+      return speed.copy();
+    }
+
+    @Override
+    public double getLinearAcceleration() {
+      double x = accel.get(0, 0);
+      double y = accel.get(1, 0);
+      return Math.sqrt(x*x + y* y);
+    }
+
+    @Override
+    public double getAngularAcceleration() {
+      return accel.get(2, 0);
+    }
+
+    @Override
+    public double getDirectionOfLinearAcceleration() {
+      return Math.toDegrees(Math.atan2(accel.get(1,0), accel.get(0,0)));
+    }
+
+    @Override
+    public Matrix getAcceleration() {
+      return accel.copy();
     }
   }
   
